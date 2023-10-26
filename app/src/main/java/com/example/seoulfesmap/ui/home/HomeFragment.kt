@@ -17,6 +17,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 
 class HomeFragment : Fragment() {
 
@@ -49,6 +50,7 @@ class HomeFragment : Fragment() {
             mapView.cameraPosition = cameraPosition
 
             val marker = Marker()
+            marker.icon = OverlayImage.fromResource(R.drawable.icon)
             marker.position = LatLng(37.5666102, 126.9783881) // 마커의 위치 설정
             marker.map = mapView
 
