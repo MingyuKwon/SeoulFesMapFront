@@ -13,6 +13,10 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.MapFragment
+import com.naver.maps.map.overlay.Marker
 
 class HomeFragment : Fragment() {
 
@@ -39,6 +43,17 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         val mapView: FragmentContainerView = binding.mapFragment
+        val mapFragment = childFragmentManager.findFragmentById(mapView.id) as MapFragment?
+        mapFragment?.getMapAsync { mapView ->
+            val cameraPosition = CameraPosition(LatLng(37.5666102, 126.9783881), 16.0)
+            mapView.cameraPosition = cameraPosition
+
+            val marker = Marker()
+            marker.position = LatLng(37.5666102, 126.9783881) // 마커의 위치 설정
+            marker.map = mapView
+
+            // 다른 마커를 추가하려면 위의 코드를 반복
+        }
         homeViewModel.text.observe(viewLifecycleOwner) {
             mapView.id
         }
