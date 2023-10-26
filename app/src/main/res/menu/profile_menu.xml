@@ -2,7 +2,7 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/list_menu_button1"
+        android:id="@+id/profile_menu_button1"
         android:title="Button1"
         android:icon="@drawable/baseline_autorenew_24"
         app:showAsAction="always" />
