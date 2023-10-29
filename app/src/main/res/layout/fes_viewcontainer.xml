@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/VieTotal"
+    >
+
+    <ImageView
+        android:id="@+id/FesImage"
+        android:layout_width="150dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/FesTitle"
+        android:layout_width="210dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="61dp"
+        android:gravity="center"
+        android:text="Title"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/FestLocation"
+        app:layout_constraintStart_toEndOf="@+id/FesImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/FestLocation"
+        android:layout_width="210dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginBottom="55dp"
+        android:gravity="center"
+        android:text="Location"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/FesDate"
+        app:layout_constraintStart_toEndOf="@+id/FesImage" />
+
+    <TextView
+        android:id="@+id/FesDate"
+        android:layout_width="210dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginBottom="489dp"
+        android:gravity="center"
+        android:text="Start Date"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/FesImage" />
+</androidx.constraintlayout.widget.ConstraintLayout>

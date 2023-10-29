@@ -1,4 +1,4 @@
-package com.example.seoulfesmap.ui.dashboard
+package com.example.seoulfesmap.ui.List
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -16,26 +16,28 @@ import com.kizitonwose.calendar.view.CalendarView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.R
+import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.databinding.FragmentDashboardBinding
 import com.example.seoulfesmap.ui.calender.DayViewContainer
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.view.MonthDayBinder
-import com.kizitonwose.calendar.view.ViewContainer
-import org.w3c.dom.Text
-import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.Month
+import java.time.LocalDateTime
 import java.time.YearMonth
-import kotlin.time.Duration.Companion.days
 
 class DashboardFragment : Fragment() {
 
     private var selectedDate: LocalDate? = null
     private var _binding: FragmentDashboardBinding? = null
-    private lateinit var context: Context
+    private lateinit var activityContext: Context
+
+    private var list: ArrayList<FestivalData> = ArrayList()
+    lateinit var adapter: RecyclerAdapter
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -44,12 +46,12 @@ class DashboardFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        context = requireActivity();
+        activityContext = requireActivity();
     }
 
 
     fun showCalendarDialog() {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_calendar, null)
+        val dialogView = LayoutInflater.from(activityContext).inflate(R.layout.dialog_calendar, null)
         val daysOfWeek = daysOfWeek()
 
         val currentMonth = YearMonth.now()
@@ -80,7 +82,7 @@ class DashboardFragment : Fragment() {
         calendarView.scrollToMonth(currentMonth)
 
 
-        val alertDialog = AlertDialog.Builder(context)
+        val alertDialog = AlertDialog.Builder(activityContext)
             .setView(dialogView)
             .setPositiveButton("OK") { _, _ ->
                 // 다이얼로그 확인 버튼을 눌렀을 때 선택된 값을 처리합니다.
@@ -112,11 +114,17 @@ class DashboardFragment : Fragment() {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        initRecyclerView()
+        adapter = RecyclerAdapter(list)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = adapter
+
         return root
+    }
+
+    fun initRecyclerView()
+    {
+        list.add(FestivalData(R.drawable.fesimageexample,  "아무튼 신나는 축제", "건국대 앞", LocalDateTime.of(2023, 10, 20, 9, 0) , LocalDateTime.of(2023, 11, 10, 21, 0)))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.seoulfesmap.ui.home.HomeFragment"
+        android:name="com.example.seoulfesmap.ui.Map.HomeFragment"
         android:label="@string/title_map"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.seoulfesmap.ui.dashboard.DashboardFragment"
+        android:name="com.example.seoulfesmap.ui.List.DashboardFragment"
         android:label="@string/title_list"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.seoulfesmap.ui.notifications.NotificationsFragment"
+        android:name="com.example.seoulfesmap.ui.Hot.NotificationsFragment"
         android:label="@string/title_hot"
         tools:layout="@layout/fragment_notifications" />
 

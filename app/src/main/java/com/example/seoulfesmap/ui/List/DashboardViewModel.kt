@@ -1,4 +1,4 @@
-package com.example.seoulfesmap.ui.dashboard
+package com.example.seoulfesmap.ui.List
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

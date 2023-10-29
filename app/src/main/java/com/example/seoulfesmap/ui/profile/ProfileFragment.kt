@@ -12,9 +12,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.example.seoulfesmap.R
-import com.example.seoulfesmap.databinding.FragmentNotificationsBinding
 import com.example.seoulfesmap.databinding.FragmentProfileBinding
-import com.example.seoulfesmap.ui.notifications.NotificationsViewModel
 
 class ProfileFragment : Fragment() {
 
