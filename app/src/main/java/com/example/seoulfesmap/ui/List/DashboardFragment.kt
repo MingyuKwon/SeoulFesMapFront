@@ -125,6 +125,8 @@ class DashboardFragment : Fragment() {
     fun initRecyclerView()
     {
         list.add(FestivalData(R.drawable.fesimageexample,  "아무튼 신나는 축제", "건국대 앞", LocalDateTime.of(2023, 10, 20, 9, 0) , LocalDateTime.of(2023, 11, 10, 21, 0)))
+        list.add(FestivalData(R.drawable.fesimageexample2,  "아무튼 신나는 축제 2", "건국대 뒤", LocalDateTime.of(2023, 12, 25, 9, 0) , LocalDateTime.of(2023, 12, 31, 21, 0)))
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
