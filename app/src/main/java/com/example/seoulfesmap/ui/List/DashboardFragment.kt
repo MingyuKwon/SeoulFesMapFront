@@ -14,8 +14,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.kizitonwose.calendar.view.CalendarView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.R
@@ -115,9 +117,6 @@ class DashboardFragment : Fragment() {
         val root: View = binding.root
 
         initRecyclerView()
-        adapter = RecyclerAdapter(list)
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = adapter
 
         return root
     }
@@ -127,6 +126,15 @@ class DashboardFragment : Fragment() {
         list.add(FestivalData(R.drawable.fesimageexample,  "아무튼 신나는 축제", "건국대 앞", LocalDateTime.of(2023, 10, 20, 9, 0) , LocalDateTime.of(2023, 11, 10, 21, 0)))
         list.add(FestivalData(R.drawable.fesimageexample2,  "아무튼 신나는 축제 2", "건국대 뒤", LocalDateTime.of(2023, 12, 25, 9, 0) , LocalDateTime.of(2023, 12, 31, 21, 0)))
 
+        adapter = RecyclerAdapter(list)
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+
+        val dividerDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        
+        binding.recyclerView.addItemDecoration(dividerDecoration)
+
+        binding.recyclerView.adapter = adapter
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
