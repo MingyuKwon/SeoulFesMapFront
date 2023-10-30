@@ -1,6 +1,7 @@
 package com.example.seoulfesmap
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,6 +18,13 @@ class StartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_start)
 
         requestLocationPermission()
+    }
+
+    private fun moveToMainActivity()
+    {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
 
@@ -48,10 +56,13 @@ class StartActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 권한이 사용자에 의해 허용됨
                 Toast.makeText(this, "위치 권한이 승인되었습니다.", Toast.LENGTH_SHORT).show()
+                moveToMainActivity()
             } else {
                 // 권한이 거부됨
                 Toast.makeText(this, "위치 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+
 }
