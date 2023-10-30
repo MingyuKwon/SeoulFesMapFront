@@ -42,7 +42,6 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        requestLocationPermission()
     }
 
     @SuppressLint("MissingPermission")
@@ -58,13 +57,11 @@ class HomeFragment : Fragment() {
             requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         }
 
-        requestLocationPermission()
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val mapView: FragmentContainerView = binding.mapFragment
         val mapFragment = childFragmentManager.findFragmentById(mapView.id) as MapFragment?
         mapFragment?.getMapAsync { mapView ->
-            requestLocationPermission()
             val cameraPosition = CameraPosition(LatLng(37.540693, 127.07023), 10.0)
             mapView.cameraPosition = cameraPosition
 
@@ -130,40 +127,6 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun requestLocationPermission() {
-        val context: Context = requireContext()
-        val fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION
-        val coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION
-
-        if (ContextCompat.checkSelfPermission(context, fineLocationPermission) == PackageManager.PERMISSION_GRANTED
-            && ContextCompat.checkSelfPermission(context, coarseLocationPermission) == PackageManager.PERMISSION_GRANTED) {
-            // 권한이 이미 허용되어 있음
-            // 현재 위치를 가져오는 코드를 이곳에 추가할 수 있음
-        } else {
-            // 권한을 요청
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(fineLocationPermission, coarseLocationPermission),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 권한이 사용자에 의해 허용됨
-                // 현재 위치를 가져오는 코드를 이곳에 추가할 수 있음
-            } else {
-                // 권한이 거부됨
-                Toast.makeText(requireContext(), "위치 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 
 
 }
