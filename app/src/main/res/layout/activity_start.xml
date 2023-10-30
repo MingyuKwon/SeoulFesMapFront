@@ -6,14 +6,63 @@
     android:layout_height="match_parent"
     tools:context=".StartActivity">
 
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/start_background" />
+
+    <ImageView
+        android:id="@+id/imagevector"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/start_background_vector" />
+
+    <ImageView
+        android:id="@+id/seoul"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="124dp"
+        app:layout_constraintBottom_toTopOf="@+id/fesmap"
+        app:layout_constraintEnd_toEndOf="@+id/fesmap"
+        app:layout_constraintStart_toStartOf="@+id/fesmap"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/start_background_seoul" />
+
+    <ImageView
+        android:id="@+id/fesmap"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seoul"
+        app:srcCompat="@drawable/start_background_fesmap" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="139dp"
-        android:text="SeoulFesMap"
-        android:textSize="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="17dp"
+        android:layout_marginBottom="349dp"
+        android:gravity="center_horizontal"
+        android:text="서울의 축제를\n 색다르게 즐겨보자!"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/fesmap"
+        app:layout_constraintTop_toBottomOf="@+id/fesmap" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
