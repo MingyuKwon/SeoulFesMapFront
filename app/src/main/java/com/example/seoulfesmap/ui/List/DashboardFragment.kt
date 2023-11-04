@@ -12,9 +12,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import com.kizitonwose.calendar.view.CalendarView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -22,11 +20,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
+import com.example.seoulfesmap.RecyclerView.filterApdater
 import com.example.seoulfesmap.databinding.FragmentDashboardBinding
 import com.example.seoulfesmap.ui.calender.DayViewContainer
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
+import com.kizitonwose.calendar.view.CalendarView
 import com.kizitonwose.calendar.view.MonthDayBinder
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -39,7 +39,10 @@ class DashboardFragment : Fragment() {
     private lateinit var activityContext: Context
 
     private var list: ArrayList<FestivalData> = ArrayList()
+    private var filterlist: ArrayList<String> = ArrayList()
     lateinit var adapter: RecyclerAdapter
+    lateinit var filteradapter: filterApdater
+
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -126,15 +129,23 @@ class DashboardFragment : Fragment() {
         list.add(FestivalData(R.drawable.fesimageexample,  "아무튼 신나는 축제", "건국대 앞", LocalDateTime.of(2023, 10, 20, 9, 0) , LocalDateTime.of(2023, 11, 10, 21, 0)))
         list.add(FestivalData(R.drawable.fesimageexample2,  "아무튼 신나는 축제 2", "건국대 뒤", LocalDateTime.of(2023, 12, 25, 9, 0) , LocalDateTime.of(2023, 12, 31, 21, 0)))
 
+        filterlist.add("전체")
+        filterlist.add("콘서트")
+        filterlist.add("전통문화")
+        filterlist.add("뮤지컬")
+
         adapter = RecyclerAdapter(list)
+        filteradapter = filterApdater(filterlist)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-
         val dividerDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-        
         binding.recyclerView.addItemDecoration(dividerDecoration)
-
         binding.recyclerView.adapter = adapter
+
+
+        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.filterRecycle.setLayoutManager(layoutManager)
+        binding.filterRecycle.adapter = filteradapter
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
