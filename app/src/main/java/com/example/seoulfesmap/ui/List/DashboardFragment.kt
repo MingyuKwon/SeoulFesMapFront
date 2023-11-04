@@ -133,6 +133,9 @@ class DashboardFragment : Fragment() {
         filterlist.add("콘서트")
         filterlist.add("전통문화")
         filterlist.add("뮤지컬")
+        filterlist.add("뮤지컬1")
+        filterlist.add("뮤지컬1")
+        filterlist.add("뮤지컬1")
 
         adapter = RecyclerAdapter(list)
         filteradapter = filterApdater(filterlist)

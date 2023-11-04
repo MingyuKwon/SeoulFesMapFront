@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
     <TextView
         android:id="@+id/textView"
         android:layout_margin="10sp"
-        android:padding="5sp"
+        android:paddingHorizontal="15sp"
+        android:paddingVertical="8sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="콘서트"/>
+        android:textSize="15sp"
+        android:text="콘서트"
+        android:textStyle="bold"
+        android:background="@drawable/filterbuttonstyle"
+        />
 </LinearLayout>
