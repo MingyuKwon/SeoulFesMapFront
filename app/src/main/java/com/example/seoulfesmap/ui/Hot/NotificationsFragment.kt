@@ -16,6 +16,8 @@ import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.databinding.FragmentNotificationsBinding
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 
 class NotificationsFragment : Fragment() {
 
@@ -42,9 +44,17 @@ class NotificationsFragment : Fragment() {
         val root: View = binding.root
 
         initRecyclerView()
-
+        initCurrentTimeTextView()
 
         return root
+    }
+
+    fun initCurrentTimeTextView()
+    {
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("MM월 dd일 HH:mm")
+        val formattedDateTime = currentDateTime.format(formatter)
+        binding.textView.text = formattedDateTime + " 현재 인기 TOP 10"
     }
 
     fun initRecyclerView()

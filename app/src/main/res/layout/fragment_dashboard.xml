@@ -9,7 +9,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/filterRecycle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55sp"
         android:layout_margin="5sp"
         />
 
