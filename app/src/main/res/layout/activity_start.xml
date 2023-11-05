@@ -54,8 +54,16 @@
         android:id="@+id/btn_kakaoLogin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="30dp"
         android:src="@drawable/kakao_login_medium_narrow">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/btn_naverLogin"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:src="@drawable/naver_login_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
     </ImageView>
 
@@ -63,7 +71,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="349dp"
         android:gravity="center_horizontal"
         android:text="서울의 축제를\n 색다르게 즐겨보자!"
