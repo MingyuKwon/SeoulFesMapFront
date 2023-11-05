@@ -22,6 +22,12 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                    <action android:name="android.intent.action.VIEW" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                    <category android:name="android.intent.category.BROWSABLE" />
+                    <data android:host="oauth"
+                        android:scheme="kakao85eeb2478a8e803514fcfc7845ba55b3" />
             </intent-filter>
         </activity>
         <activity
@@ -34,5 +40,6 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="oat0g56d85" />
     </application>
+
 
 </manifest>

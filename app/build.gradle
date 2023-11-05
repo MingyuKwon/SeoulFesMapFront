@@ -55,6 +55,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     implementation("com.naver.maps:map-sdk:3.17.0")
     implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.kakao.sdk:v2-user:2.10.0'
     implementation 'androidx.fragment:fragment:1.6.1'
     implementation 'com.google.firebase:firebase-inappmessaging:20.4.0'
     testImplementation 'junit:junit:4.13.2'

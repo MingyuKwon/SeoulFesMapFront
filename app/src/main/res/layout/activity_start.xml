@@ -50,6 +50,15 @@
         app:layout_constraintTop_toBottomOf="@+id/seoul"
         app:srcCompat="@drawable/start_background_fesmap" />
 
+    <ImageView
+        android:id="@+id/btn_kakaoLogin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/kakao_login_medium_narrow">
+
+    </ImageView>
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"

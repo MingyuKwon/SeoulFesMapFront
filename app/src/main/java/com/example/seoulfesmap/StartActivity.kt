@@ -1,14 +1,22 @@
 package com.example.seoulfesmap
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.common.util.Utility
+import com.kakao.sdk.user.UserApiClient
 
 class StartActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
@@ -17,7 +25,54 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
 
-        requestLocationPermission()
+        Log.d(TAG, "keyhash : ${Utility.getKeyHash(this)}")
+
+        val btnKakaoLogin = findViewById<ImageView>(R.id.btn_kakaoLogin)
+
+        btnKakaoLogin.setOnClickListener {
+            kakaoLogin()
+        }
+
+//        requestLocationPermission()
+    }
+
+    private fun kakaoLogin()
+    {
+        KakaoSdk.init(this, "kakao85eeb2478a8e803514fcfc7845ba55b3")
+
+        // 이메일 로그인 콜백
+        val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+            if (error != null) {
+                Log.e(TAG, "로그인 실패 $error")
+            } else if (token != null) {
+                Log.e(TAG, "로그인 성공 ${token.accessToken}")
+            }
+        }
+
+        // 카카오톡 설치 확인
+        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+            // 카카오톡 로그인
+            UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
+                // 로그인 실패 부분
+                if (error != null) {
+                    Log.e(TAG, "로그인 실패 $error")
+                    // 사용자가 취소
+                    if (error is ClientError && error.reason == ClientErrorCause.Cancelled ) {
+                        return@loginWithKakaoTalk
+                    }
+                    // 다른 오류
+                    else {
+                        UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback) // 카카오 이메일 로그인
+                    }
+                }
+                // 로그인 성공 부분
+                else if (token != null) {
+                    Log.e(TAG, "로그인 성공 ${token.accessToken}")
+                }
+            }
+        } else {
+            UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback) // 카카오 이메일 로그인
+        }
     }
 
     private fun moveToMainActivity()
