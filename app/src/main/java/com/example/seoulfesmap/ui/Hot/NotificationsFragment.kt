@@ -1,5 +1,7 @@
 package com.example.seoulfesmap.ui.Hot
 
+import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -19,10 +21,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-class NotificationsFragment : Fragment() {
+class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
     private var _binding: FragmentNotificationsBinding? = null
     private val binding get() = _binding!!
+    private lateinit var activityContext: Context
 
     private var list: ArrayList<FestivalData> = ArrayList()
     lateinit var adapter: RecyclerAdapter
@@ -30,6 +33,7 @@ class NotificationsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        activityContext = requireActivity();
     }
 
     override fun onCreateView(
@@ -57,6 +61,20 @@ class NotificationsFragment : Fragment() {
         binding.textView.text = formattedDateTime + " 현재 인기 TOP 10"
     }
 
+    fun showFesDataPopUp(position : Int) {
+        val dialogView = LayoutInflater.from(activityContext).inflate(R.layout.fespopup, null)
+
+        val alertDialog = AlertDialog.Builder(activityContext)
+            .setView(dialogView)
+            .create()
+
+        alertDialog.show()
+    }
+
+    override fun OnItemClick(position: Int) {
+        showFesDataPopUp(position)
+    }
+
     fun initRecyclerView()
     {
         list.add(FestivalData(R.drawable.fesimageexample,  "아무튼 신나는 축제", "건국대 앞", LocalDateTime.of(2023, 10, 20, 9, 0) , LocalDateTime.of(2023, 11, 10, 21, 0)))
@@ -71,7 +89,7 @@ class NotificationsFragment : Fragment() {
 
         binding.recyclerView.addItemDecoration(dividerDecoration)
 
-
+        adapter.itemClickListener = this
         binding.recyclerView.adapter = adapter
 
     }

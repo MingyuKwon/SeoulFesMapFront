@@ -55,7 +55,7 @@ class filterApdater(var items: ArrayList<String>)
 
     fun changeViewBorderColor(view: View, newColor: Int) {
         val background = view.background
-        val borderWidth = 7
+        val borderWidth = 9
         if (background is GradientDrawable) {
             background.setStroke(borderWidth, newColor) // borderWidth는 테두리의 두께입니다.
         }

@@ -30,17 +30,17 @@ class StartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_start)
 
         val btnKakaoLogin = findViewById<ImageView>(R.id.btn_kakaoLogin)
-        val btnNaverLogin = findViewById<ImageView>(R.id.btn_naverLogin)
+       val btnNaverLogin = findViewById<ImageView>(R.id.btn_naverLogin)
+//
+//        btnKakaoLogin.setOnClickListener {
+//            kakaoLogin()
+//        }
+//
+//        btnNaverLogin.setOnClickListener {
+//            naverLogin()
+//        }
 
-        btnKakaoLogin.setOnClickListener {
-            kakaoLogin()
-        }
-
-        btnNaverLogin.setOnClickListener {
-            naverLogin()
-        }
-
-//        requestLocationPermission()
+        requestLocationPermission()
     }
 
     private fun kakaoLogin()
