@@ -2,63 +2,22 @@ package com.example.seoulfesmap.Data
 
 import java.time.LocalDateTime
 
-class FestivalData(id: Int, title: String?, location: String?, startTime: LocalDateTime?, endTime: LocalDateTime?) {
+class FestivalData(imageResource : String?, title: String?, location: String?, startTime: LocalDateTime?, endTime: LocalDateTime?) {
+    var FesTitle: String? = null
+    var FesLocation: String? = null
+    var FesStartDate: LocalDateTime? = null
+    var FesEndDate: LocalDateTime? = null
 
-    private var imageResourceID = 0
-    private var FesTitle: String? = null
-    private var FesLocation: String? = null
-    private var FesStartDate: LocalDateTime? = null
-    private var FesEndDate: LocalDateTime? = null
+    // 여기 까지는 반드시 축제가 초기화 될 때 있어야 하는 정보들 입니다
+    var imageResourceUrl : String? = null
+    var homepageUrl : String? = null
 
     init{
-        imageResourceID = id
+        imageResourceUrl = imageResource
         FesTitle = title
         FesLocation = location
         FesStartDate = startTime
         FesEndDate = endTime
     }
 
-
-
-    fun getImageResourceID(): Int {
-        return imageResourceID
-    }
-
-    fun getFesTitle(): String? {
-        return FesTitle
-    }
-
-    fun getFesLocation(): String? {
-        return FesLocation
-    }
-
-    fun getFesStartDate(): LocalDateTime? {
-        return FesStartDate
-    }
-
-    fun getFesEndDate(): LocalDateTime? {
-        return FesEndDate
-    }
-
-
-
-    fun setImageResourceID(imageResourceID: Int) {
-        this.imageResourceID = imageResourceID
-    }
-
-    fun setFesTitle(FesTitle : String?){
-        this.FesTitle = FesTitle
-    }
-
-    fun setFesLocation(FesLocation : String?) {
-        this.FesLocation = FesLocation
-    }
-
-    fun setFesStartDate(FesStartDate : LocalDateTime?){
-        this.FesStartDate = FesStartDate
-    }
-
-    fun setFesEndDate(FesStartDate : LocalDateTime?) {
-        this.FesStartDate = FesStartDate
-    }
 }

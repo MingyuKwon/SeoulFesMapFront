@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.databinding.FesViewcontainerBinding
 import java.util.ArrayList
@@ -82,10 +83,13 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.binding.FesImage.setImageResource(items[position].getImageResourceID())
-        holder.binding.FesTitle.text = items[position].getFesTitle()
-        holder.binding.FestLocation.text = items[position].getFesLocation()
-        holder.binding.FesDate.text = items[position].getFesStartDate()?.toLocalDate().toString()
+        Glide.with(holder.itemView.context)
+            .load(items[position].imageResourceUrl)
+            .into(holder.binding.FesImage)
+
+        holder.binding.FesTitle.text = items[position].FesTitle
+        holder.binding.FestLocation.text = items[position].FesLocation
+        holder.binding.FesDate.text = items[position].FesStartDate?.toLocalDate().toString()
     }
 
 }
