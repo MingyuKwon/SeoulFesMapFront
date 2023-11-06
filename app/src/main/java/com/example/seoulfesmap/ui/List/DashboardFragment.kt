@@ -136,19 +136,30 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
     fun initRecyclerView()
     {
-        list.add(FestivalData("https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "아무튼 신나는 축제", "건국대 앞", LocalDateTime.of(2023, 10, 20, 9, 0) , LocalDateTime.of(2023, 11, 10, 21, 0)))
-        list.add(FestivalData("https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=d5e5494491b1481081180ac991c410db&thumb=Y","아무튼 신나는 축제 2", "건국대 뒤", LocalDateTime.of(2023, 12, 25, 9, 0) , LocalDateTime.of(2023, 12, 31, 21, 0)))
+        list.add(FestivalData(8037, "콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143909&menuNo=200008",
+            "아무튼 신나는 축제", "건국대 앞", LocalDateTime.of(2023, 10, 20, 9, 0) , LocalDateTime.of(2023, 11, 10, 21, 0), "37.5499060881738", "126.945533810385"))
+        list.add(FestivalData(8038,"콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=d5e5494491b1481081180ac991c410db&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143406&menuNo=200008",
+            "아무튼 신나는 축제 2", "건국대 뒤", LocalDateTime.of(2023, 12, 25, 9, 0) , LocalDateTime.of(2023, 12, 31, 21, 0), "37.6202544613023", "127.044324732036"))
+        list.add(FestivalData(8037, "콘서트1","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143909&menuNo=200008",
+            "아무튼 신나는 축제", "건국대 앞", LocalDateTime.of(2023, 10, 20, 9, 0) , LocalDateTime.of(2023, 11, 10, 21, 0), "37.5499060881738", "126.945533810385"))
+        list.add(FestivalData(8038,"콘서트2","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=d5e5494491b1481081180ac991c410db&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143406&menuNo=200008",
+            "아무튼 신나는 축제 2", "건국대 뒤", LocalDateTime.of(2023, 12, 25, 9, 0) , LocalDateTime.of(2023, 12, 31, 21, 0), "37.6202544613023", "127.044324732036"))
 
+        val uniqueCategories = list.map { it.category }.toSet().filterNotNull()
+        val uniqueCategoriesList = ArrayList(uniqueCategories)
         filterlist.add("전체")
-        filterlist.add("콘서트")
-        filterlist.add("전통문화")
-        filterlist.add("뮤지컬")
-        filterlist.add("뮤지컬1")
-        filterlist.add("뮤지컬1")
-        filterlist.add("뮤지컬1")
+        filterlist.addAll(uniqueCategoriesList)
 
         adapter = RecyclerAdapter(list)
         filteradapter = filterApdater(filterlist)
+
+        filteradapter.itemClickListener = object : filterApdater.OnItemClickListener{
+            override fun OnItemClick(position: Int) {
+                val selectedCategory = filteradapter.items[position]
+                // 다른 RecyclerView의 데이터를 정렬하는 메서드 호출
+                updateOtherRecyclerView(selectedCategory)
+            }
+        }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         val dividerDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
@@ -156,10 +167,17 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         adapter.itemClickListener = this
         binding.recyclerView.adapter = adapter
 
-
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.filterRecycle.setLayoutManager(layoutManager)
         binding.filterRecycle.adapter = filteradapter
+    }
+
+    // 액티비티 혹은 프래그먼트 내부에서 다른 RecyclerView를 업데이트하는 메서드
+    fun updateOtherRecyclerView(category: String) {
+        // 다른 RecyclerView의 어댑터를 업데이트합니다.
+        // 예: filteredList를 새로운 조건에 맞게 필터링하고, 어댑터에 알립니다.
+        adapter.filter("Category",category)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

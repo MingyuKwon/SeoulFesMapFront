@@ -22,11 +22,9 @@ class filterApdater(var items: ArrayList<String>)
 
     var itemClickListener: OnItemClickListener? = object : filterApdater.OnItemClickListener{
         override fun OnItemClick(position: Int) {
-            Log.d("OnItemClick", "OnItemClick");
             notifyDataSetChanged()
         }
     }
-
 
     inner class MyViewHolder(val binding: com.example.seoulfesmap.databinding.FilterbuttonBinding) : RecyclerView.ViewHolder(binding.root)
     {

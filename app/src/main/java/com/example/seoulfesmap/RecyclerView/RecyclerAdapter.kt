@@ -12,24 +12,17 @@ import java.util.ArrayList
 class RecyclerAdapter(var items: ArrayList<FestivalData>)
     : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
 
-    // 이걸 호출하면 리사이클러 뷰 안의 아이템들이 우선도 오름차순으로 정렬이 됩니다. -> 초록색일 수록 위에, 빨간색 일 수록 아래에 깔리게 됩니다
-    fun sortItemwithAscendingPriority()
-    {
-//        val comparator: Comparator<ToDo> = object : Comparator<ToDo> {
-//            override fun compare(o1: ToDo?, o2: ToDo?): Int {
-//
-//                return if(o1!!.priority - o2!!.priority < 0) {
-//                    -1
-//                }else if(o1!!.priority - o2!!.priority > 0) {
-//                    1
-//                }else {
-//                    0
-//                }
-//            }
-//
-//        }
-//        items.sortWith(comparator)
-//        notifyDataSetChanged()
+    var filteredList: List<FestivalData> = items
+
+    fun filter(filterType: String, condition: String) {
+        filteredList = when {
+            condition.isEmpty() -> items
+            condition == "전체" -> items
+            filterType == "Category" -> items.filter { it.category == condition }
+            filterType == "Search" -> items.filter { it.FesTitle!!.contains(condition, ignoreCase = true) }
+            else -> items
+        }
+        notifyDataSetChanged()
     }
 
 
@@ -79,17 +72,17 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>)
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return filteredList.size
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         Glide.with(holder.itemView.context)
-            .load(items[position].imageResourceUrl)
+            .load(filteredList[position].imageResourceUrl)
             .into(holder.binding.FesImage)
 
-        holder.binding.FesTitle.text = items[position].FesTitle
-        holder.binding.FestLocation.text = items[position].FesLocation
-        holder.binding.FesDate.text = items[position].FesStartDate?.toLocalDate().toString()
+        holder.binding.FesTitle.text = filteredList[position].FesTitle
+        holder.binding.FestLocation.text = filteredList[position].FesLocation
+        holder.binding.FesDate.text = filteredList[position].FesStartDate?.toLocalDate().toString()
     }
 
 }
