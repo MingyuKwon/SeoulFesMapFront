@@ -34,7 +34,6 @@ class StartActivity : AppCompatActivity() {
 
         btnNaverLogin.setOnClickListener {
             naverLogin()
-            moveToMainActivity()
         }
 
         requestLocationPermission()
@@ -76,6 +75,7 @@ class StartActivity : AppCompatActivity() {
 
                 //로그인 유저 정보 가져오기
                 NidOAuthLogin().callProfileApi(profileCallback)
+                moveToMainActivity()
             }
             override fun onFailure(httpStatus: Int, message: String) {
                 val errorCode = NaverIdLoginSDK.getLastErrorCode().code

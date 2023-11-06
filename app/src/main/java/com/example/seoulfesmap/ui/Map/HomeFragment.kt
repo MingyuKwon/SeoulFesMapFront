@@ -1,7 +1,6 @@
 package com.example.seoulfesmap.ui.Map
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
 import android.location.Location
 import android.location.LocationManager
@@ -13,6 +12,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
@@ -24,6 +24,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 
 class HomeFragment : Fragment() {
@@ -74,16 +75,28 @@ class HomeFragment : Fragment() {
                 currentLocationMarker.position = currentLatLng
                 currentLocationMarker.map = mapView
             }
+            val markerList = arrayOf<Marker>() // 마커들을 저장할 ArrayList
+            val marker0 = createMarker(LatLng(37.5666102, 126.9783881))
+            val marker1 = createMarker(LatLng(37.540693, 127.07023))
+            val marker2 = createMarker(LatLng(37.567191, 127.010490))
 
-            val marker = Marker()
-            marker.icon = OverlayImage.fromResource(R.drawable.icon)
-            marker.position = LatLng(37.5666102, 126.9783881) // 마커의 위치 설정
-            marker.map = mapView
+            marker0.setOnClickListener {
+                showToast("Marker 0 Clicked")
 
-            val marker2 = Marker()
-            marker2.icon = OverlayImage.fromResource(R.drawable.icon2)
-            marker2.position = LatLng(37.540693, 127.07023) // 마커의 위치 설정
+            }
+
+            marker1.setOnClickListener {
+                showToast("Marker 1 Clicked")
+            }
+
+            marker2.setOnClickListener {
+                showToast("Marker 2 Clicked")
+            }
+            marker0.map = mapView
+            marker1.map = mapView
             marker2.map = mapView
+
+
             // 다른 마커를 추가하려면 위의 코드를 반복
 
             val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -105,14 +118,16 @@ class HomeFragment : Fragment() {
         return root
     }
 
-    fun showFesDataPopUp(position : Int) {
-        val dialogView = LayoutInflater.from(activityContext).inflate(R.layout.fespopup, null)
+    fun createMarker(position: LatLng): Marker {
+        val marker = Marker()
+        marker.icon = OverlayImage.fromResource(R.drawable.icon)
+        marker.position = position
+        return marker
+    }
 
-        val alertDialog = AlertDialog.Builder(activityContext)
-            .setView(dialogView)
-            .create()
-
-        alertDialog.show()
+    private fun showToast(message: String): Boolean {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -125,6 +140,9 @@ class HomeFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun Marker.setOnClickListener(function: (Overlay) -> Unit) {
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.map_menu, menu)
     }
@@ -133,7 +151,5 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
 
 }
