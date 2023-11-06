@@ -1,9 +1,8 @@
 package com.example.seoulfesmap.ui.Map
 
-import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
-import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -14,9 +13,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
@@ -38,6 +34,7 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var activityContext: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +103,16 @@ class HomeFragment : Fragment() {
             mapView.id
         }
         return root
+    }
+
+    fun showFesDataPopUp(position : Int) {
+        val dialogView = LayoutInflater.from(activityContext).inflate(R.layout.fespopup, null)
+
+        val alertDialog = AlertDialog.Builder(activityContext)
+            .setView(dialogView)
+            .create()
+
+        alertDialog.show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

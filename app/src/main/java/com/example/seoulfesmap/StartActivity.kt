@@ -1,21 +1,14 @@
 package com.example.seoulfesmap
 
 import android.Manifest
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.KakaoSdk
-import com.kakao.sdk.common.model.ClientError
-import com.kakao.sdk.common.model.ClientErrorCause
-import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
@@ -29,57 +22,22 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
 
-        val btnKakaoLogin = findViewById<ImageView>(R.id.btn_kakaoLogin)
-       val btnNaverLogin = findViewById<ImageView>(R.id.btn_naverLogin)
-//
+//        val kakaoNativeKey = getString(R.string.social_login_info_kakao_Native_key)
+//        KakaoSdk.init(this, "kakao$kakaoNativeKey")
+//        val btnKakaoLogin = findViewById<ImageView>(R.id.btn_kakaoLogin)
+        val btnNaverLogin = findViewById<ImageView>(R.id.btn_naverLogin)
+
 //        btnKakaoLogin.setOnClickListener {
+//            // 카카오 로그인 요청
 //            kakaoLogin()
 //        }
-//
-//        btnNaverLogin.setOnClickListener {
-//            naverLogin()
-//        }
+
+        btnNaverLogin.setOnClickListener {
+            naverLogin()
+            moveToMainActivity()
+        }
 
         requestLocationPermission()
-    }
-
-    private fun kakaoLogin()
-    {
-        KakaoSdk.init(this, "kakao85eeb2478a8e803514fcfc7845ba55b3")
-
-        // 이메일 로그인 콜백
-        val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-            if (error != null) {
-                Log.e(TAG, "로그인 실패 $error")
-            } else if (token != null) {
-                Log.e(TAG, "로그인 성공 ${token.accessToken}")
-            }
-        }
-
-        // 카카오톡 설치 확인
-        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-            // 카카오톡 로그인
-            UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-                // 로그인 실패 부분
-                if (error != null) {
-                    Log.e(TAG, "로그인 실패 $error")
-                    // 사용자가 취소
-                    if (error is ClientError && error.reason == ClientErrorCause.Cancelled ) {
-                        return@loginWithKakaoTalk
-                    }
-                    // 다른 오류
-                    else {
-                        UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback) // 카카오 이메일 로그인
-                    }
-                }
-                // 로그인 성공 부분
-                else if (token != null) {
-                    Log.e(TAG, "로그인 성공 ${token.accessToken}")
-                }
-            }
-        } else {
-            UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback) // 카카오 이메일 로그인
-        }
     }
 
     fun naverLogin(){
@@ -169,7 +127,7 @@ class StartActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 권한이 사용자에 의해 허용됨
                 Toast.makeText(this, "위치 권한이 승인되었습니다.", Toast.LENGTH_SHORT).show()
-                moveToMainActivity()
+//                moveToMainActivity()
             } else {
                 // 권한이 거부됨
                 Toast.makeText(this, "위치 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
@@ -177,5 +135,46 @@ class StartActivity : AppCompatActivity() {
         }
     }
 
+    //    private fun kakaoLogin()
+//    {
+////        val kakaoAdminKey = getString(R.string.social_login_info_kakao_Admin_key)
+////        val kakaoNativeKey = getString(R.string.social_login_info_kakao_Native_key)
+////        val kakaoRESTKey = getString(R.string.social_login_info_kakao_REST_key)
+////        KakaoSdk.init(this, "kakao$kakaoNativeKey")
+//
+//        // 이메일 로그인 콜백
+//        val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+//            if (error != null) {
+//                Log.e(TAG, "로그인 실패 $error")
+//            } else if (token != null) {
+//                Log.e(TAG, "로그인 성공 ${token.accessToken}")
+//            }
+//        }
+//
+//        // 카카오톡 설치 확인
+//        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+//            // 카카오톡 로그인
+//            UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
+//                // 로그인 실패 부분
+//                if (error != null) {
+//                    Log.e(TAG, "로그인 실패 $error")
+//                    // 사용자가 취소
+//                    if (error is ClientError && error.reason == ClientErrorCause.Cancelled ) {
+//                        return@loginWithKakaoTalk
+//                    }
+//                    // 다른 오류
+//                    else {
+//                        UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback) // 카카오 이메일 로그인
+//                    }
+//                }
+//                // 로그인 성공 부분
+//                else if (token != null) {
+//                    Log.e(TAG, "로그인 성공 ${token.accessToken}")
+//                }
+//            }
+//        } else {
+//            UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback) // 카카오 이메일 로그인
+//        }
+//    }
 
 }
