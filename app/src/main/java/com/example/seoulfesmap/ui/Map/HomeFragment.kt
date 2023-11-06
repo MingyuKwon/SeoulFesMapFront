@@ -1,6 +1,7 @@
 package com.example.seoulfesmap.ui.Map
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.location.Location
 import android.location.LocationManager
@@ -150,6 +151,16 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun showFesDataPopUp() {
+        val dialogView = LayoutInflater.from(activityContext).inflate(R.layout.fespopup, null)
+
+        val alertDialog = AlertDialog.Builder(activityContext)
+            .setView(dialogView)
+            .create()
+
+        alertDialog.show()
     }
 
 }
