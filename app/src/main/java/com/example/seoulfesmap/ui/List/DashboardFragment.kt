@@ -30,6 +30,7 @@ import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.RecyclerView.filterApdater
 import com.example.seoulfesmap.databinding.FragmentDashboardBinding
 import com.example.seoulfesmap.ui.calender.CalendarDialogFragment
+import com.example.seoulfesmap.ui.calender.CalendarDialogListener
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
@@ -40,8 +41,9 @@ import okhttp3.internal.notify
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
+import java.time.format.DateTimeParseException
 
-class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
+class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, CalendarDialogListener {
 
     private var selectedDate: LocalDate? = null
     private var _binding: FragmentDashboardBinding? = null
@@ -63,24 +65,22 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         activityContext = requireActivity()
     }
 
+    override fun onDateSelected(startDate: String?, endDate: String?) {
+        try {
+            val start = startDate?.let { LocalDate.parse(it) }
+            val end = endDate?.let { LocalDate.parse(it) }
 
-    class DayViewContainer(view: View) : ViewContainer(view) {
-        val textView = view.findViewById<TextView>(R.id.calendarDayText)
-        // Will be set when this container is bound
-        lateinit var day: CalendarDay
-        init {
-            view.setOnClickListener {
-//                val dateStartTextView = dialogView.findViewById<TextView>(R.id.FesDate)
-//                val dateEndTextView = dialogView.findViewById<TextView>(R.id.FesDate)
-//
-//
-//                popupTextView.text = day.date.toString()
+            if (start != null && end != null) {
+                Log.d("onDateSelected", "$start $end")
+                // 두 날짜가 유효한 경우 이후 로직 처리
             }
+        } catch (e: DateTimeParseException) {
+
         }
     }
-
     fun showCalendarDialog() {
         val dialogFragment = CalendarDialogFragment()
+        dialogFragment.calendarDialogListener = this
         dialogFragment.show(requireFragmentManager(), "calendarDialog")
     }
 
@@ -106,8 +106,6 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
         return root
     }
-
-    // dp를 픽셀로 변환하는 확장 함수
 
     fun showFesDataPopUp(fesData : FestivalData) {
         val dialogView = LayoutInflater.from(activityContext).inflate(R.layout.fespopup, null)
