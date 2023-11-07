@@ -29,12 +29,13 @@ import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.RecyclerView.filterApdater
 import com.example.seoulfesmap.databinding.FragmentDashboardBinding
-import com.example.seoulfesmap.ui.calender.DayViewContainer
+import com.example.seoulfesmap.ui.calender.CalendarDialogFragment
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.view.CalendarView
 import com.kizitonwose.calendar.view.MonthDayBinder
+import com.kizitonwose.calendar.view.ViewContainer
 import okhttp3.internal.notify
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -62,43 +63,25 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         activityContext = requireActivity()
     }
 
-    fun showCalendarDialog() {
-        val dialogView = LayoutInflater.from(activityContext).inflate(R.layout.dialog_calendar, null)
-        val daysOfWeek = daysOfWeek()
 
-        val currentMonth = YearMonth.now()
-        val startMonth = currentMonth
-        val endMonth = currentMonth.plusMonths(12)
-
-        val monthTextView = dialogView.findViewById<TextView>(R.id.month)
-        val calendarView = dialogView.findViewById<CalendarView>(R.id.calendarView)
-        calendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
-            override fun create(view: View) = DayViewContainer(view)
-            override fun bind(container: DayViewContainer, data: CalendarDay) {
-                // Set the calendar day for this container.
-                container.day = data
-                // Set the date text
-                container.textView.text = data.date.dayOfMonth.toString()
-                // Any other binding logic
-
-                if (data.position == DayPosition.MonthDate) {
-                    container.textView.setTextColor(Color.BLACK)
-                } else {
-                    container.textView.setTextColor(Color.GRAY)
-                }
+    class DayViewContainer(view: View) : ViewContainer(view) {
+        val textView = view.findViewById<TextView>(R.id.calendarDayText)
+        // Will be set when this container is bound
+        lateinit var day: CalendarDay
+        init {
+            view.setOnClickListener {
+//                val dateStartTextView = dialogView.findViewById<TextView>(R.id.FesDate)
+//                val dateEndTextView = dialogView.findViewById<TextView>(R.id.FesDate)
+//
+//
+//                popupTextView.text = day.date.toString()
             }
         }
+    }
 
-        calendarView.monthScrollListener = { updateTitle(calendarView, monthTextView) }
-        calendarView.setup(startMonth, endMonth, daysOfWeek.first())
-        calendarView.scrollToMonth(currentMonth)
-
-
-        val alertDialog = AlertDialog.Builder(activityContext)
-            .setView(dialogView)
-            .create()
-
-        alertDialog.show()
+    fun showCalendarDialog() {
+        val dialogFragment = CalendarDialogFragment()
+        dialogFragment.show(requireFragmentManager(), "calendarDialog")
     }
 
     @SuppressLint("SetTextI18n")
