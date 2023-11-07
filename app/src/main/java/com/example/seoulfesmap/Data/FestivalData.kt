@@ -1,8 +1,13 @@
 package com.example.seoulfesmap.Data
 
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
-class FestivalData(FID : Int?, Category : String?,imageResource : String?, homepageurl : String?,title: String?, location: String?, startTime: LocalDateTime?, endTime: LocalDateTime?, Xpos: String?, Ypos: String?) {
+
+
+
+class FestivalData(FID : Int?, Category : String?,imageResource : String?, homepageurl : String?,title: String?, location: String?, startTime: String?, endTime: String?, Xpos: String?, Ypos: String?) {
     var fid : Int? = null
     var category : String? = null
     var imageResourceUrl : String? = null
@@ -23,8 +28,13 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
         homepageUrl = homepageurl
         FesTitle = title
         FesLocation = location
-        FesStartDate = startTime
-        FesEndDate = endTime
+
+        FesStartDate = ZonedDateTime.parse(startTime)
+            .withZoneSameInstant(ZoneId.systemDefault())
+            .toLocalDateTime()
+        FesEndDate = ZonedDateTime.parse(endTime)
+            .withZoneSameInstant(ZoneId.systemDefault())
+            .toLocalDateTime()
 
         xpos = Xpos!!.toDouble()
         ypos = Ypos!!.toDouble()

@@ -77,8 +77,7 @@ class filterApdater(var items: ArrayList<String>)
             val color = if (newColor == -1) {
                 Color.WHITE
             } else {
-                // 원하는 투명도 값으로 설정. 여기서는 50% 투명도를 설정.
-                val alpha = 70 // 50%의 투명도 (255의 절반)
+                val alpha = 70
                 val red = Color.red(newColor)
                 val green = Color.green(newColor)
                 val blue = Color.blue(newColor)
