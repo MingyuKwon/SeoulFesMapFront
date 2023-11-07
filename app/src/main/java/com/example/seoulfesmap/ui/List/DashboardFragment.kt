@@ -66,17 +66,26 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
     }
 
     override fun onDateSelected(startDate: String?, endDate: String?) {
+        var _startDate = startDate
+        var _endDate = endDate
+
         try {
             val start = startDate?.let { LocalDate.parse(it) }
-            val end = endDate?.let { LocalDate.parse(it) }
-
-            if (start != null && end != null) {
-                Log.d("onDateSelected", "$start $end")
-                // 두 날짜가 유효한 경우 이후 로직 처리
-            }
         } catch (e: DateTimeParseException) {
-
+            _startDate = ""
         }
+
+        try {
+            val end = endDate?.let { LocalDate.parse(it) }
+        } catch (e: DateTimeParseException) {
+            _endDate = ""
+        }
+
+        Log.d("SEX", "$_startDate $_endDate");
+
+        if(_startDate == "" && _endDate == "") return
+        Log.d("SEX2", "$_startDate $_endDate");
+        adapter.filter("Date",_startDate!!, _endDate!!)
     }
     fun showCalendarDialog() {
         val dialogFragment = CalendarDialogFragment()

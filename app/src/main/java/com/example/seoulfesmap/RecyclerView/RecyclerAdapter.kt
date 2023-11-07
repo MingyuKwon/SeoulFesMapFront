@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.databinding.FesViewcontainerBinding
+import java.time.LocalDate
 import java.util.ArrayList
 
 class RecyclerAdapter(var items: ArrayList<FestivalData>)
@@ -14,12 +15,36 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>)
 
     var filteredList: List<FestivalData> = items
 
-    fun filter(filterType: String, condition: String) {
+    fun filter(filterType: String, condition1: String, condition2: String = "") {
         filteredList = when {
-            condition.isEmpty() -> items
-            condition == "전체" -> items
-            filterType == "Category" -> items.filter { it.category == condition }
-            filterType == "Search" -> items.filter { it.FesTitle!!.contains(condition, ignoreCase = true) }
+            condition1.isEmpty() -> items
+            condition1 == "전체" -> items
+            filterType == "Category" -> items.filter { it.category == condition1 }
+            filterType == "Search" -> items.filter { it.FesTitle!!.contains(condition1, ignoreCase = true) }
+            filterType == "Date" -> {
+                val startDate = if (condition1.isNotEmpty()) LocalDate.parse(condition1) else null
+                val endDate = if (condition2.isNotEmpty()) LocalDate.parse(condition2) else null
+
+                items.filter { item ->
+                    val festivalStart = item.FesStartDate?.toLocalDate()
+                    val festivalEnd = item.FesEndDate?.toLocalDate()
+
+                    when {
+                        startDate != null && endDate == null -> {
+                            festivalEnd == null || festivalEnd.isAfter(startDate) || festivalEnd.isEqual(startDate)
+                        }
+                        startDate == null && endDate != null -> {
+                            festivalStart == null || festivalStart.isBefore(endDate) || festivalStart.isEqual(endDate)
+                        }
+                        startDate != null && endDate != null -> {
+                            !(festivalStart == null || festivalEnd == null || festivalEnd.isBefore(startDate) || festivalEnd.isEqual(startDate) || festivalStart.isAfter(endDate) || festivalStart.isEqual(endDate))
+                        }
+                        else -> false
+                    }
+                }
+            }
+
+
             else -> items
         }
         notifyDataSetChanged()
@@ -82,7 +107,7 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>)
 
         holder.binding.FesTitle.text = filteredList[position].FesTitle
         holder.binding.FestLocation.text = filteredList[position].FesLocation
-        holder.binding.FesDate.text = filteredList[position].FesStartDate?.toLocalDate().toString()
+        holder.binding.FesDate.text = filteredList[position].FesStartDate?.toLocalDate().toString() + " ~ "  + filteredList[position].FesEndDate?.toLocalDate().toString()
     }
 
 }
