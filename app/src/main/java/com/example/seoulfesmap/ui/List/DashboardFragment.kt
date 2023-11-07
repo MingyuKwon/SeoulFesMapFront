@@ -81,10 +81,7 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
             _endDate = ""
         }
 
-        Log.d("SEX", "$_startDate $_endDate");
-
-        if(_startDate == "" && _endDate == "") return
-        Log.d("SEX2", "$_startDate $_endDate");
+        if(_startDate == "" || _endDate == "") return
         adapter.filter("Date",_startDate!!, _endDate!!)
     }
     fun showCalendarDialog() {

@@ -34,10 +34,11 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>)
                             festivalEnd == null || festivalEnd.isAfter(startDate) || festivalEnd.isEqual(startDate)
                         }
                         startDate == null && endDate != null -> {
-                            festivalStart == null || festivalStart.isBefore(endDate) || festivalStart.isEqual(endDate)
+//                            festivalStart == null || festivalStart.isBefore(endDate) || festivalStart.isEqual(endDate)
+                            false
                         }
                         startDate != null && endDate != null -> {
-                            !(festivalStart == null || festivalEnd == null || festivalEnd.isBefore(startDate) || festivalEnd.isEqual(startDate) || festivalStart.isAfter(endDate) || festivalStart.isEqual(endDate))
+                            !(festivalStart == null || festivalEnd == null || festivalEnd.isBefore(startDate)  || festivalStart.isAfter(endDate) )
                         }
                         else -> false
                     }

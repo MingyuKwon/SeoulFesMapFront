@@ -60,7 +60,7 @@ class CalendarDialogFragment : DialogFragment() {
 
     companion object {
         // 이곳에 정적(static-like) 변수와 메소드를 정의할 수 있습니다.
-        var mode = 1 // 1은 start 입력, 2는 end 입력
+        var mode = 0 // 1은 start 입력, 2는 end 입력
         var startText : TextView? = null
         var endText : TextView? = null
         var startButton : Button? = null
