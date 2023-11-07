@@ -30,6 +30,7 @@ import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.view.CalendarView
 import com.kizitonwose.calendar.view.MonthDayBinder
+import okhttp3.internal.notify
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -158,6 +159,8 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                 val selectedCategory = filteradapter.items[position]
                 // 다른 RecyclerView의 데이터를 정렬하는 메서드 호출
                 updateOtherRecyclerView(selectedCategory)
+                filteradapter.currentIndex = position
+                filteradapter.notifyDataSetChanged()
             }
         }
 

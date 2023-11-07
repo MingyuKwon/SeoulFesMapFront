@@ -7,7 +7,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.seoulfesmap.R
 import com.example.seoulfesmap.databinding.FilterbuttonBinding
 import com.google.android.material.color.utilities.MaterialDynamicColors.background
 
@@ -19,6 +21,7 @@ class filterApdater(var items: ArrayList<String>)
         fun OnItemClick(position : Int)
     }
 
+    var currentIndex = 0;
 
     var itemClickListener: OnItemClickListener? = object : filterApdater.OnItemClickListener{
         override fun OnItemClick(position: Int) {
@@ -49,6 +52,14 @@ class filterApdater(var items: ArrayList<String>)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         changeViewBorderColor(holder.binding.textView, getBorderColorForItem(position));
         holder.binding.textView.text = items[position];
+
+        if(currentIndex == position)
+        {
+            changeClickColor(holder.binding.textView, getBorderColorForItem(position))
+        }else
+        {
+            changeClickColor(holder.binding.textView, -1)
+        }
     }
 
     fun changeViewBorderColor(view: View, newColor: Int) {
@@ -59,6 +70,27 @@ class filterApdater(var items: ArrayList<String>)
         }
     }
 
+    fun changeClickColor(view: View, newColor: Int) {
+        val background = view.background as? GradientDrawable
+        background?.let {
+            // 색상 값이 유효하지 않은 경우 흰색으로 설정
+            val color = if (newColor == -1) {
+                Color.WHITE
+            } else {
+                // 원하는 투명도 값으로 설정. 여기서는 50% 투명도를 설정.
+                val alpha = 70 // 50%의 투명도 (255의 절반)
+                val red = Color.red(newColor)
+                val green = Color.green(newColor)
+                val blue = Color.blue(newColor)
+
+                // 새로운 ARGB 값을 생성
+                Color.argb(alpha, red, green, blue)
+            }
+
+            // 새 색상으로 내부 채우기
+            it.setColor(color)
+        }
+    }
 
     // 아이템 위치에 따라 색상 결정
     private fun getBorderColorForItem(position: Int): Int {
