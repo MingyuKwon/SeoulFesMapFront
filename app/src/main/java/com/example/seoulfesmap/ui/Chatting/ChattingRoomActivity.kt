@@ -14,6 +14,7 @@ import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.Message
 import com.example.seoulfesmap.Data.User
 import com.example.seoulfesmap.R
+import com.example.seoulfesmap.RecyclerView.RecyclerMessagesAdapter
 import com.example.seoulfesmap.databinding.ActivityChattingRoomBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -51,7 +52,9 @@ class ChattingRoomActivity : AppCompatActivity() {
     }
 
     fun initializeProperty() {  //변수 초기화
-        myUid = FirebaseAuth.getInstance().currentUser?.uid!!              //현재 로그인한 유저 id
+        myUid = "sex"
+            //FirebaseAuth.getInstance().currentUser?.uid!!              //현재 로그인한 유저 id
+        Log.d("Chatting", (FirebaseDatabase.getInstance() == null).toString())
         firebaseDatabase = FirebaseDatabase.getInstance().reference!!
 
         chatRoom = (intent.getSerializableExtra("ChatRoom")) as ChatRoom      //채팅방 정보

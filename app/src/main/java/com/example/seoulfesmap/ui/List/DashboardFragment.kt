@@ -24,11 +24,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.FestivalData
+import com.example.seoulfesmap.Data.User
+import com.example.seoulfesmap.MainActivity
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.RecyclerView.filterApdater
 import com.example.seoulfesmap.databinding.FragmentDashboardBinding
+import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
 import com.example.seoulfesmap.ui.calender.CalendarDialogFragment
 import com.example.seoulfesmap.ui.calender.CalendarDialogListener
 import com.kizitonwose.calendar.view.CalendarView
@@ -143,7 +147,7 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
             }
         }
         communitybutton.setOnClickListener {
-            alertDialog.dismiss()
+            moveToChattingRoom(fesData.fid!!)
         }
         closebutton.setOnClickListener {
             alertDialog.dismiss()
@@ -163,6 +167,24 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
 
     override fun OnItemClick(position: Int) {
         showFesDataPopUp(adapter.filteredList[position])
+    }
+
+    private fun moveToChattingRoom(fesId : Int)
+    {
+        val exampleUser = User(name="사용자 이름", uid="사용자 UID", email="사용자 이메일")
+        val exampleChatRoom = ChatRoom(users= mapOf(exampleUser.uid!! to true))
+// 채팅방 키를 미리 알고 있다고 가정하거나 서버로부터 얻어와야 함
+        val chatRoomKey = fesId.toString()
+
+// Intent 생성
+        val intent = Intent(context, ChattingRoomActivity::class.java).apply {
+            putExtra("ChatRoom", exampleChatRoom)
+            putExtra("ChatRoomKey", chatRoomKey)
+            putExtra("Opponent", exampleUser)
+        }
+
+// Activity 시작
+        startActivity(intent)
     }
 
     fun initRecyclerView()

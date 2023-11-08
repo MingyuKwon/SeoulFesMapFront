@@ -4,11 +4,13 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.FirebaseApp
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
@@ -21,6 +23,11 @@ class StartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
+
+        Log.d("Before Firebase" , "  ")
+        FirebaseApp.initializeApp(this)
+        Log.d("After Firebase" , "  ")
+
 
 //        val kakaoNativeKey = getString(R.string.social_login_info_kakao_Native_key)
 //        KakaoSdk.init(this, "kakao$kakaoNativeKey")
@@ -37,6 +44,7 @@ class StartActivity : AppCompatActivity() {
         }
 
         requestLocationPermission()
+
     }
 
     fun naverLogin(){
