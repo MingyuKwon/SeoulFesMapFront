@@ -2,7 +2,9 @@ package com.example.seoulfesmap.ui.Hot
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Point
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -14,6 +16,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -94,7 +97,14 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
         dateText.text = fesData.FesStartDate!!.toLocalDate().toString()
 
         detailbutton.setOnClickListener {
-            alertDialog.dismiss()
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(fesData.homepageUrl)
+            }
+            if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireActivity(), "링크를 열 수 있는 앱이 설치되어 있지 않습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
         communitybutton.setOnClickListener {
             alertDialog.dismiss()

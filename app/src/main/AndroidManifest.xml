@@ -16,6 +16,9 @@
         android:theme="@style/Theme.SeoulFesMap"
         tools:targetApi="31">
         <activity
+            android:name=".ui.Chatting.ChattingRoomActivity"
+            android:exported="false" />
+        <activity
             android:name=".StartActivity"
             android:exported="true">
             <intent-filter>
@@ -23,26 +26,27 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
 
-                    <action android:name="android.intent.action.VIEW" />
-                    <category android:name="android.intent.category.DEFAULT" />
-                    <category android:name="android.intent.category.BROWSABLE" />
-                    <data android:host="oauth"
-                        android:scheme="kakao85eeb2478a8e803514fcfc7845ba55b3" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="oauth"
+                    android:scheme="kakao85eeb2478a8e803514fcfc7845ba55b3" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name">
-        </activity>
+            android:label="@string/app_name"></activity>
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="oat0g56d85" />
         <meta-data
             android:name="com.kakao.sdk.Appkey"
-            android:value="kakao85eeb2478a8e803514fcfc7845ba55b3"/>
+            android:value="kakao85eeb2478a8e803514fcfc7845ba55b3" />
     </application>
-
 
 </manifest>

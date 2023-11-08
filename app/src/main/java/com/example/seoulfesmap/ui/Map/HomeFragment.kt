@@ -3,9 +3,11 @@ package com.example.seoulfesmap.ui.Map
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Point
 import android.location.Location
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -187,7 +189,14 @@ class HomeFragment : Fragment() {
         dateText.text = fesData.FesStartDate!!.toLocalDate().toString()
 
         detailbutton.setOnClickListener {
-            alertDialog.dismiss()
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(fesData.homepageUrl)
+            }
+            if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireActivity(), "링크를 열 수 있는 앱이 설치되어 있지 않습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
         communitybutton.setOnClickListener {
             alertDialog.dismiss()

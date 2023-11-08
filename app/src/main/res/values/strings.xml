@@ -4,7 +4,7 @@
     <string name="title_list">List</string>
     <string name="title_hot">Hot</string>
     <string name="title_profile">Profile</string>
-    
+
     <string name="social_login_info_kakao_Admin_key">kakaoa11176a03abea29058387b64bce0b517</string>
     <string name="social_login_info_kakao_Native_key">kakao85eeb2478a8e803514fcfc7845ba55b3</string>
     <string name="social_login_info_kakao_REST_key">kakao1f6316350ddf8ce606a3b6cb06cf78ea</string>
