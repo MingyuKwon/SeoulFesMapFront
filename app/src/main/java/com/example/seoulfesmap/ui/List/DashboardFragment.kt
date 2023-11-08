@@ -3,11 +3,11 @@ package com.example.seoulfesmap.ui.List
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Color
+import android.content.Intent
 import android.graphics.Point
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -17,8 +17,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -31,17 +31,10 @@ import com.example.seoulfesmap.RecyclerView.filterApdater
 import com.example.seoulfesmap.databinding.FragmentDashboardBinding
 import com.example.seoulfesmap.ui.calender.CalendarDialogFragment
 import com.example.seoulfesmap.ui.calender.CalendarDialogListener
-import com.kizitonwose.calendar.core.CalendarDay
-import com.kizitonwose.calendar.core.DayPosition
-import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.view.CalendarView
-import com.kizitonwose.calendar.view.MonthDayBinder
-import com.kizitonwose.calendar.view.ViewContainer
-import okhttp3.internal.notify
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.YearMonth
 import java.time.format.DateTimeParseException
+
 
 class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, CalendarDialogListener {
 
@@ -140,7 +133,14 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
         dateText.text = fesData.FesStartDate!!.toLocalDate().toString()
 
         detailbutton.setOnClickListener {
-            alertDialog.dismiss()
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(fesData.homepageUrl)
+            }
+            if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireActivity(), "링크를 열 수 있는 앱이 설치되어 있지 않습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
         communitybutton.setOnClickListener {
             alertDialog.dismiss()
