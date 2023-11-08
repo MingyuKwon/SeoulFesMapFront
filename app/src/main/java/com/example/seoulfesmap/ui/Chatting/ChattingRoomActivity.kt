@@ -15,6 +15,7 @@ import com.example.seoulfesmap.Data.Message
 import com.example.seoulfesmap.Data.User
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerMessagesAdapter
+import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.ActivityChattingRoomBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -36,9 +37,10 @@ class ChattingRoomActivity : AppCompatActivity() {
     lateinit var firebaseDatabase: DatabaseReference
     lateinit var recycler_talks: RecyclerView
     lateinit var chatRoom: ChatRoom
-    lateinit var opponentUser: User
     lateinit var chatRoomKey: String
     lateinit var myUid: String
+
+    var fesID: Int? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,14 +54,15 @@ class ChattingRoomActivity : AppCompatActivity() {
     }
 
     fun initializeProperty() {  //변수 초기화
-        myUid = "sex"
+        myUid = if(appStaticData.userUid != null) appStaticData.userUid!! else ""
             //FirebaseAuth.getInstance().currentUser?.uid!!              //현재 로그인한 유저 id
+
         Log.d("Chatting", (FirebaseDatabase.getInstance() == null).toString())
         firebaseDatabase = FirebaseDatabase.getInstance().reference!!
 
         chatRoom = (intent.getSerializableExtra("ChatRoom")) as ChatRoom      //채팅방 정보
         chatRoomKey = intent.getStringExtra("ChatRoomKey")!!            //채팅방 키
-        opponentUser = (intent.getSerializableExtra("Opponent")) as User    //상대방 유저 정보
+        fesID = intent.getSerializableExtra("RoomTitle").toString().toIntOrNull()
     }
 
     fun initializeView() {    //뷰 초기화
@@ -68,7 +71,7 @@ class ChattingRoomActivity : AppCompatActivity() {
         recycler_talks = binding.recyclerMessages
         btn_submit = binding.btnSubmit
         txt_title = binding.txtTItle
-        txt_title.text = opponentUser!!.name ?: ""
+        txt_title.text = fesID.toString()
     }
 
     fun initializeListener() {   //버튼 클릭 시 리스너 초기화
@@ -91,7 +94,7 @@ class ChattingRoomActivity : AppCompatActivity() {
 
     fun setupChatRoomKey() {            //chatRoomKey 없을 경우 초기화 후 목록 초기화
         FirebaseDatabase.getInstance().getReference("ChatRoom")
-            .child("chatRooms").orderByChild("users/${opponentUser.uid}").equalTo(true)    //상대방의 Uid가 포함된 목록이 있는지 확인
+            .child("chatRooms").orderByChild("users/${fesID}").equalTo(true)    //상대방의 Uid가 포함된 목록이 있는지 확인
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {}
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -137,6 +140,6 @@ class ChattingRoomActivity : AppCompatActivity() {
 
     fun setupRecycler() {            //목록 초기화 및 업데이트
         recycler_talks.layoutManager = LinearLayoutManager(this)
-        recycler_talks.adapter = RecyclerMessagesAdapter(this, chatRoomKey, opponentUser.uid)
+        recycler_talks.adapter = RecyclerMessagesAdapter(this, chatRoomKey)
     }
 }

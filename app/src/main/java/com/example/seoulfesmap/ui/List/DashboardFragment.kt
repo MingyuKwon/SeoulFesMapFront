@@ -147,7 +147,7 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
             }
         }
         communitybutton.setOnClickListener {
-            moveToChattingRoom(fesData.fid!!)
+            moveToChattingRoom(fesData.fid!!, fesData.FesTitle!!)
         }
         closebutton.setOnClickListener {
             alertDialog.dismiss()
@@ -169,7 +169,7 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
         showFesDataPopUp(adapter.filteredList[position])
     }
 
-    private fun moveToChattingRoom(fesId : Int)
+    private fun moveToChattingRoom(fesId : Int, fesName: String)
     {
         val exampleUser = User(name="사용자 이름", uid="사용자 UID", email="사용자 이메일")
         val exampleChatRoom = ChatRoom(users= mapOf(exampleUser.uid!! to true))
@@ -180,7 +180,7 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
         val intent = Intent(context, ChattingRoomActivity::class.java).apply {
             putExtra("ChatRoom", exampleChatRoom)
             putExtra("ChatRoomKey", chatRoomKey)
-            putExtra("Opponent", exampleUser)
+            putExtra("RoomTitle", fesName)
         }
 
 // Activity 시작

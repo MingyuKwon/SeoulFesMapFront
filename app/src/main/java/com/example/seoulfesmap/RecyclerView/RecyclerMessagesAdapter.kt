@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seoulfesmap.Data.Message
 import com.example.seoulfesmap.R
+import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.MychatboxBinding
 import com.example.seoulfesmap.databinding.OpponentchatboxBinding
 import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
@@ -20,12 +21,11 @@ import com.google.firebase.database.ValueEventListener
 class RecyclerMessagesAdapter(
     val context: Context,
     var chatRoomKey: String?,
-    val opponentUid: String?
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var messages: ArrayList<Message> = arrayListOf()     //메시지 목록
     var messageKeys: ArrayList<String> = arrayListOf()   //메시지 키 목록
-    val myUid = FirebaseAuth.getInstance().currentUser?.uid.toString()
+    val myUid = appStaticData.userUid
     val recyclerView = (context as ChattingRoomActivity).recycler_talks   //목록이 표시될 리사이클러 뷰
 
     init {
