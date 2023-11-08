@@ -25,9 +25,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.FestivalData
+import com.example.seoulfesmap.Data.User
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
+import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
@@ -199,7 +202,7 @@ class HomeFragment : Fragment() {
             }
         }
         communitybutton.setOnClickListener {
-            alertDialog.dismiss()
+            moveToChattingRoom(fesData.fid!!, fesData.FesTitle!!)
         }
         closebutton.setOnClickListener {
             alertDialog.dismiss()
@@ -215,6 +218,24 @@ class HomeFragment : Fragment() {
             // 화면 너비의 일정 비율로 팝업 크기를 설정할 수 있습니다.
             window.setLayout((size.x * 1).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
         }
+    }
+
+    private fun moveToChattingRoom(fesId : Int, fesName: String)
+    {
+        val exampleUser = User(name="사용자 이름", uid="사용자 UID", email="사용자 이메일")
+        val exampleChatRoom = ChatRoom(users= mapOf(exampleUser.uid!! to true))
+// 채팅방 키를 미리 알고 있다고 가정하거나 서버로부터 얻어와야 함
+        val chatRoomKey = fesId.toString()
+
+// Intent 생성
+        val intent = Intent(context, ChattingRoomActivity::class.java).apply {
+            putExtra("ChatRoom", exampleChatRoom)
+            putExtra("ChatRoomKey", chatRoomKey)
+            putExtra("RoomTitle", fesName)
+        }
+
+// Activity 시작
+        startActivity(intent)
     }
 
 

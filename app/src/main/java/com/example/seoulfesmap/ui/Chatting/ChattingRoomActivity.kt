@@ -40,7 +40,7 @@ class ChattingRoomActivity : AppCompatActivity() {
     lateinit var chatRoomKey: String
     lateinit var myUid: String
 
-    var fesID: Int? = null
+    var fesName: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,12 +57,11 @@ class ChattingRoomActivity : AppCompatActivity() {
         myUid = if(appStaticData.userUid != null) appStaticData.userUid!! else ""
             //FirebaseAuth.getInstance().currentUser?.uid!!              //현재 로그인한 유저 id
 
-        Log.d("Chatting", (FirebaseDatabase.getInstance() == null).toString())
         firebaseDatabase = FirebaseDatabase.getInstance().reference!!
 
         chatRoom = (intent.getSerializableExtra("ChatRoom")) as ChatRoom      //채팅방 정보
         chatRoomKey = intent.getStringExtra("ChatRoomKey")!!            //채팅방 키
-        fesID = intent.getSerializableExtra("RoomTitle").toString().toIntOrNull()
+        fesName = intent.getSerializableExtra("RoomTitle").toString()
     }
 
     fun initializeView() {    //뷰 초기화
@@ -71,7 +70,7 @@ class ChattingRoomActivity : AppCompatActivity() {
         recycler_talks = binding.recyclerMessages
         btn_submit = binding.btnSubmit
         txt_title = binding.txtTItle
-        txt_title.text = fesID.toString()
+        txt_title.text = fesName.toString()
     }
 
     fun initializeListener() {   //버튼 클릭 시 리스너 초기화
@@ -94,7 +93,7 @@ class ChattingRoomActivity : AppCompatActivity() {
 
     fun setupChatRoomKey() {            //chatRoomKey 없을 경우 초기화 후 목록 초기화
         FirebaseDatabase.getInstance().getReference("ChatRoom")
-            .child("chatRooms").orderByChild("users/${fesID}").equalTo(true)    //상대방의 Uid가 포함된 목록이 있는지 확인
+            .child("chatRooms").orderByChild("users/${chatRoomKey}").equalTo(true)    //상대방의 Uid가 포함된 목록이 있는지 확인
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {}
                 override fun onDataChange(snapshot: DataSnapshot) {
