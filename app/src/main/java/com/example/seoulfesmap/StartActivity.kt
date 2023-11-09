@@ -11,12 +11,25 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.seoulfesmap.Data.FestivalData
+import com.example.seoulfesmap.Data.FestivalHitService
+import com.example.seoulfesmap.Data.TokenService
 import com.google.firebase.FirebaseApp
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
+import okhttp3.OkHttpClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.security.cert.X509Certificate
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 class StartActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
@@ -52,10 +65,17 @@ class StartActivity : AppCompatActivity() {
         NaverIdLoginSDK.initialize(this, naverClientId, naverClientSecret , naverClientName)
 
         var naverToken :String? = ""
+        var userId :String? = ""
+        var userEmail :String? = ""
+        var userProfile_image :String?= ""
+        var userName :String?= ""
 
         val profileCallback = object : NidProfileCallback<NidProfileResponse> {
             override fun onSuccess(response: NidProfileResponse) {
-                val userId = response.profile?.id
+                userId = response.profile?.id
+                userEmail = response.profile?.email
+                userProfile_image = response.profile?.profileImage
+                userName = response.profile?.name
             }
             override fun onFailure(httpStatus: Int, message: String) {
                 val errorCode = NaverIdLoginSDK.getLastErrorCode().code
@@ -80,7 +100,8 @@ class StartActivity : AppCompatActivity() {
 
                 //로그인 유저 정보 가져오기
                 NidOAuthLogin().callProfileApi(profileCallback)
-                moveToMainActivity()
+
+                SetUserData(userId, userEmail, userProfile_image, userName)
             }
             override fun onFailure(httpStatus: Int, message: String) {
                 val errorCode = NaverIdLoginSDK.getLastErrorCode().code
@@ -94,6 +115,55 @@ class StartActivity : AppCompatActivity() {
         }
 
         NaverIdLoginSDK.authenticate(this, oauthLoginCallback)
+    }
+
+    fun SetUserData(userId :String?, userEmail :String?, userProfile_image :String?, userName :String? )
+    {
+        Log.d("CHEKC", userId + " " + userEmail + " " + userProfile_image + " " + userName)
+        val unsafeOkHttpClient = OkHttpClient.Builder().apply {
+            // Create a trust manager that does not validate certificate chains
+            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
+                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
+                override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+            })
+
+            // Install the all-trusting trust manager
+            val sslContext = SSLContext.getInstance("SSL").apply {
+                init(null, trustAllCerts, java.security.SecureRandom())
+            }
+            sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+
+            // Don't check Hostnames, either.
+            // CAUTION: This makes the connection vulnerable to MITM attacks!
+            hostnameVerifier { _, _ -> true }
+        }.build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://konkukcapstone.dwer.kr:3000/")
+            .client(unsafeOkHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+
+        val service = retrofit.create(TokenService::class.java)
+        service.sendToken(userId, userEmail, userProfile_image, userName)!!.enqueue(object : Callback<String?> {
+
+            override fun onResponse(call: Call<String?>, response: Response<String?>) {
+                if (response.isSuccessful) {
+                    // 성공적으로 데이터를 받아왔을 때의 처리
+                    val jsonResponse = response.body()
+                    moveToMainActivity()
+                } else {
+                    // 서버 에러 처리
+                    Log.e("TokenError", "Response not successful: " + response.code())
+                }
+            }
+
+            override fun onFailure(call: Call<String?>, t: Throwable) {
+                Log.e("TokenError", "Network error or the request was aborted", t)
+            }
+        })
     }
 
     fun googleLogin(){
