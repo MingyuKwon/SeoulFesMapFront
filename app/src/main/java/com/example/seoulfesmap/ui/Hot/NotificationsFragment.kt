@@ -296,6 +296,7 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.hot_menu_button1 -> {
+                initRecyclerView()
                 return true
             }
         }
