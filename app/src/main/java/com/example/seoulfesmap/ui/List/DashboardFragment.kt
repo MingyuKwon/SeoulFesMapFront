@@ -36,13 +36,18 @@ import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
 import com.example.seoulfesmap.ui.calender.CalendarDialogFragment
 import com.example.seoulfesmap.ui.calender.CalendarDialogListener
 import com.kizitonwose.calendar.view.CalendarView
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.cert.X509Certificate
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 
 class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, CalendarDialogListener {
@@ -192,45 +197,7 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
         startActivity(intent)
     }
 
-    fun initRecyclerView()
-    {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://konkukcapstone.dwer.kr:3000/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val service = retrofit.create(FestivalService::class.java)
-        service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?>  {
-
-            override fun onResponse(
-                call: Call<List<FestivalData?>?>,
-                response: Response<List<FestivalData?>?>
-            ) {
-                if (response.isSuccessful) {
-                    // 성공적으로 데이터를 받아왔을 때의 처리
-                    list = response.body() as ArrayList<FestivalData>
-                    // TODO: festivals 리스트 사용
-                } else {
-                    // 서버 에러 처리
-                    Log.i("FestivalError", "Response not successful: " + response.code())
-                }
-            }
-
-            override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
-                Log.i("FestivalError", "Network error or the request was aborted", t)
-            }
-        })
-
-
-
-        // list.add(FestivalData(8037, "콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143909&menuNo=200008",
-        //    "마포아트센터 M 레트로 시리즈 2024 신년맞이 어떤가요 #7", "마포아트센터 아트홀 맥", "2024-01-18T00:00:00.000Z" , "2024-01-18T00:00:00.000Z", "37.5499060881738", "126.945533810385"))
-       // list.add(FestivalData(8038,"콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=d5e5494491b1481081180ac991c410db&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143406&menuNo=200008",
-       //     "딕펑스×두번째달_Spice of life", "꿈의숲 퍼포먼스홀", "2023-12-23T00:00:00.000Z" , "2023-12-23T00:00:00.000Z", "37.6202544613023", "127.044324732036"))
-       // list.add(FestivalData(8039, "전시/미술","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=cc68500bcc0a4e0f89143a5a89d5facb&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143763&menuNo=200009",
-        //    "서울일러스트레이션페어V.16", "코엑스 B&D1홀", "2023-12-21T00:00:00.000Z", "2023-12-24T00:00:00.000Z", "37.5103947", "127.0611127"))
-
-
+    private fun setupRecyclerView() {
         val uniqueCategories = list.map { it.category }.toSet().filterNotNull()
         val uniqueCategoriesList = ArrayList(uniqueCategories)
         filterlist.add("전체")
@@ -258,6 +225,67 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.filterRecycle.setLayoutManager(layoutManager)
         binding.filterRecycle.adapter = filteradapter
+        }
+
+    fun initRecyclerView()
+    {
+        val unsafeOkHttpClient = OkHttpClient.Builder().apply {
+            // Create a trust manager that does not validate certificate chains
+            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
+                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
+                override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+            })
+
+            // Install the all-trusting trust manager
+            val sslContext = SSLContext.getInstance("SSL").apply {
+                init(null, trustAllCerts, java.security.SecureRandom())
+            }
+            sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+
+            // Don't check Hostnames, either.
+            // CAUTION: This makes the connection vulnerable to MITM attacks!
+            hostnameVerifier { _, _ -> true }
+        }.build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://konkukcapstone.dwer.kr:3000/")
+            .client(unsafeOkHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+
+        val service = retrofit.create(FestivalService::class.java)
+        service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?>  {
+
+            override fun onResponse(
+                call: Call<List<FestivalData?>?>,
+                response: Response<List<FestivalData?>?>
+            ) {
+                if (response.isSuccessful) {
+                    // 성공적으로 데이터를 받아왔을 때의 처리
+                    activity?.runOnUiThread {
+                        list = response.body() as ArrayList<FestivalData>
+                        setupRecyclerView() // 여기서 RecyclerView를 초기화합니다.
+                    }
+
+                } else {
+                    // 서버 에러 처리
+                    Log.e("FestivalError", "Response not successful: " + response.code())
+                }
+            }
+
+            override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
+                Log.e("FestivalError", "Network error or the request was aborted", t)
+            }
+        })
+
+        // list.add(FestivalData(8037, "콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143909&menuNo=200008",
+        //    "마포아트센터 M 레트로 시리즈 2024 신년맞이 어떤가요 #7", "마포아트센터 아트홀 맥", "2024-01-18T00:00:00.000Z" , "2024-01-18T00:00:00.000Z", "37.5499060881738", "126.945533810385"))
+       // list.add(FestivalData(8038,"콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=d5e5494491b1481081180ac991c410db&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143406&menuNo=200008",
+       //     "딕펑스×두번째달_Spice of life", "꿈의숲 퍼포먼스홀", "2023-12-23T00:00:00.000Z" , "2023-12-23T00:00:00.000Z", "37.6202544613023", "127.044324732036"))
+       // list.add(FestivalData(8039, "전시/미술","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=cc68500bcc0a4e0f89143a5a89d5facb&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143763&menuNo=200009",
+        //    "서울일러스트레이션페어V.16", "코엑스 B&D1홀", "2023-12-21T00:00:00.000Z", "2023-12-24T00:00:00.000Z", "37.5103947", "127.0611127")
     }
 
     // 액티비티 혹은 프래그먼트 내부에서 다른 RecyclerView를 업데이트하는 메서드

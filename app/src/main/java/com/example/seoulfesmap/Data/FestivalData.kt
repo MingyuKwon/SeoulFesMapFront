@@ -34,10 +34,10 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
     @SerializedName("place")
     var FesLocation: String? = null
 
-    @SerializedName("start_date")
-    var FesStartDate: LocalDateTime? = null
+    var start_date: String? = null
+    var end_date: String? = null
 
-    @SerializedName("end_date")
+    var FesStartDate: LocalDateTime? = null
     var FesEndDate: LocalDateTime? = null
 
     @SerializedName("xpos")
@@ -55,10 +55,14 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
         FesTitle = title
         FesLocation = location
 
-        FesStartDate = ZonedDateTime.parse(startTime)
+        start_date = startTime
+        end_date = endTime
+
+
+        FesStartDate = ZonedDateTime.parse(start_date)
             .withZoneSameInstant(ZoneId.systemDefault())
             .toLocalDateTime()
-        FesEndDate = ZonedDateTime.parse(endTime)
+        FesEndDate = ZonedDateTime.parse(end_date)
             .withZoneSameInstant(ZoneId.systemDefault())
             .toLocalDateTime()
 
