@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.Data.FestivalHitService
 import com.example.seoulfesmap.Data.TokenService
+import com.example.seoulfesmap.Data.User
 import com.google.firebase.FirebaseApp
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
@@ -148,21 +149,21 @@ class StartActivity : AppCompatActivity() {
 
 
         val service = retrofit.create(TokenService::class.java)
-        service.sendToken(userId, userEmail, userProfile_image, userName)!!.enqueue(object : Callback<String?> {
+        service.sendToken(userId, userEmail, userProfile_image, userName)!!.enqueue(object : Callback<List<User?>> {
 
-            override fun onResponse(call: Call<String?>, response: Response<String?>) {
+            override fun onFailure(call: Call<List<User?>>, t: Throwable) {
+                Log.e("TokenError", "Network error or the request was aborted", t)
+            }
+
+            override fun onResponse(call: Call<List<User?>>, response: Response<List<User?>>) {
                 if (response.isSuccessful) {
                     // 성공적으로 데이터를 받아왔을 때의 처리
-                    val jsonResponse = response.body()
+                    val jsonResponse = (response.body() as ArrayList<User>).get(0)
                     moveToMainActivity()
                 } else {
                     // 서버 에러 처리
                     Log.e("TokenError", "Response not successful: " + response.code())
                 }
-            }
-
-            override fun onFailure(call: Call<String?>, t: Throwable) {
-                Log.e("TokenError", "Network error or the request was aborted", t)
             }
         })
     }

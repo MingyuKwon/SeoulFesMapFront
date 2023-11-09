@@ -9,12 +9,16 @@ import java.io.Serializable
 
 interface TokenService {
     @GET("login/redirect/naver")
-    fun sendToken(@Query("userId") userId: String?,@Query("userEmail") userEmail: String?,@Query("userProfile_image") userProfileimage: String? ,@Query("userName") userName: String? ): Call<String?>
+    fun sendToken(@Query("userId") userId: String?,@Query("userEmail") userEmail: String?,@Query("userProfile_image") userProfileimage: String? ,@Query("userName") userName: String? ): Call<List<User?>>
 }
-data class User(val name:String?="",
-                val uid:String?="",
-                val email:String?=""): Serializable {
 
+
+class User {
+
+    var uID : String? = null
+    var email : String? = null
+    var name : String? = null
+    var profile_img_link : String? = null
 
 
 }

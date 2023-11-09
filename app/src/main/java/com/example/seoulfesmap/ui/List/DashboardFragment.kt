@@ -183,8 +183,8 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
 
     private fun moveToChattingRoom(fesId : Int, fesName: String)
     {
-        val exampleUser = User(name="사용자 이름", uid="사용자 UID", email="사용자 이메일")
-        val exampleChatRoom = ChatRoom(users= mapOf(exampleUser.uid!! to true))
+        val exampleUser = User()
+        val exampleChatRoom = ChatRoom(users= mapOf(exampleUser.uID!! to true))
 // 채팅방 키를 미리 알고 있다고 가정하거나 서버로부터 얻어와야 함
         val chatRoomKey = fesId.toString()
 
