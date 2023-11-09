@@ -1,5 +1,6 @@
 package com.example.seoulfesmap.Data
 
+import android.util.Log
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.http.GET
@@ -33,8 +34,9 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
 
     @SerializedName("place")
     var FesLocation: String? = null
-
+    @SerializedName("start_date")
     var start_date: String? = null
+    @SerializedName("end_date")
     var end_date: String? = null
 
     var FesStartDate: LocalDateTime? = null
@@ -45,6 +47,10 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
 
     @SerializedName("ypos")
     var ypos: Double? = null
+
+    @SerializedName("hit")
+    var hit: Int? = null
+
 
 
     init{
@@ -58,7 +64,14 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
         start_date = startTime
         end_date = endTime
 
+        xpos = Xpos!!.toDouble()
+        ypos = Ypos!!.toDouble()
 
+        changeStringToOtherType()
+    }
+
+    fun changeStringToOtherType()
+    {
         FesStartDate = ZonedDateTime.parse(start_date)
             .withZoneSameInstant(ZoneId.systemDefault())
             .toLocalDateTime()
@@ -66,8 +79,6 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
             .withZoneSameInstant(ZoneId.systemDefault())
             .toLocalDateTime()
 
-        xpos = Xpos!!.toDouble()
-        ypos = Ypos!!.toDouble()
     }
 
 }

@@ -198,6 +198,10 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
     }
 
     private fun setupRecyclerView() {
+        for(fes in list)
+        {
+            fes.changeStringToOtherType()
+        }
         val uniqueCategories = list.map { it.category }.toSet().filterNotNull()
         val uniqueCategoriesList = ArrayList(uniqueCategories)
         filterlist.add("전체")
