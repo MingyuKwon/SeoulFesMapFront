@@ -4,6 +4,6 @@ import android.app.Application
 
 class appStaticData : Application() {
     companion object {
-        var userUid: String? = "user1"
+        var userUid: String? = "user3"
     }
 }

@@ -26,8 +26,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.FestivalData
+import com.example.seoulfesmap.Data.FestivalService
 import com.example.seoulfesmap.Data.User
-import com.example.seoulfesmap.MainActivity
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.RecyclerView.filterApdater
@@ -36,6 +36,11 @@ import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
 import com.example.seoulfesmap.ui.calender.CalendarDialogFragment
 import com.example.seoulfesmap.ui.calender.CalendarDialogListener
 import com.kizitonwose.calendar.view.CalendarView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 
@@ -189,12 +194,41 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
 
     fun initRecyclerView()
     {
-        list.add(FestivalData(8037, "콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143909&menuNo=200008",
-            "마포아트센터 M 레트로 시리즈 2024 신년맞이 어떤가요 #7", "마포아트센터 아트홀 맥", "2024-01-18T00:00:00.000Z" , "2024-01-18T00:00:00.000Z", "37.5499060881738", "126.945533810385"))
-        list.add(FestivalData(8038,"콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=d5e5494491b1481081180ac991c410db&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143406&menuNo=200008",
-            "딕펑스×두번째달_Spice of life", "꿈의숲 퍼포먼스홀", "2023-12-23T00:00:00.000Z" , "2023-12-23T00:00:00.000Z", "37.6202544613023", "127.044324732036"))
-        list.add(FestivalData(8039, "전시/미술","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=cc68500bcc0a4e0f89143a5a89d5facb&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143763&menuNo=200009",
-            "서울일러스트레이션페어V.16", "코엑스 B&D1홀", "2023-12-21T00:00:00.000Z", "2023-12-24T00:00:00.000Z", "37.5103947", "127.0611127"))
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://konkukcapstone.dwer.kr:3000/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val service = retrofit.create(FestivalService::class.java)
+        service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?>  {
+
+            override fun onResponse(
+                call: Call<List<FestivalData?>?>,
+                response: Response<List<FestivalData?>?>
+            ) {
+                if (response.isSuccessful) {
+                    // 성공적으로 데이터를 받아왔을 때의 처리
+                    list = response.body() as ArrayList<FestivalData>
+                    // TODO: festivals 리스트 사용
+                } else {
+                    // 서버 에러 처리
+                    Log.i("FestivalError", "Response not successful: " + response.code())
+                }
+            }
+
+            override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
+                Log.i("FestivalError", "Network error or the request was aborted", t)
+            }
+        })
+
+
+
+        // list.add(FestivalData(8037, "콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143909&menuNo=200008",
+        //    "마포아트센터 M 레트로 시리즈 2024 신년맞이 어떤가요 #7", "마포아트센터 아트홀 맥", "2024-01-18T00:00:00.000Z" , "2024-01-18T00:00:00.000Z", "37.5499060881738", "126.945533810385"))
+       // list.add(FestivalData(8038,"콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=d5e5494491b1481081180ac991c410db&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143406&menuNo=200008",
+       //     "딕펑스×두번째달_Spice of life", "꿈의숲 퍼포먼스홀", "2023-12-23T00:00:00.000Z" , "2023-12-23T00:00:00.000Z", "37.6202544613023", "127.044324732036"))
+       // list.add(FestivalData(8039, "전시/미술","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=cc68500bcc0a4e0f89143a5a89d5facb&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143763&menuNo=200009",
+        //    "서울일러스트레이션페어V.16", "코엑스 B&D1홀", "2023-12-21T00:00:00.000Z", "2023-12-24T00:00:00.000Z", "37.5103947", "127.0611127"))
 
 
         val uniqueCategories = list.map { it.category }.toSet().filterNotNull()

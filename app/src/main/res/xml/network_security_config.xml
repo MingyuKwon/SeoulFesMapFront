@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- 모든 인증서를 신뢰하지 않는 기본 설정 -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <!-- 시스템 기본 인증서만 신뢰 -->
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- 특정 도메인 설정 -->
+    <domain-config>
+        <domain includeSubdomains="true">https://konkukcapstone.dwer.kr</domain>
+        <!-- 사용자가 정의한 인증서를 신뢰 -->
+        <trust-anchors>
+            <!-- res/raw/my_ca.pem에 저장된 사용자 정의 인증서 -->
+            <certificates src="@raw/my_ca" />
+        </trust-anchors>
+        <!-- 해당 도메인에 대해 모든 연결에 대해 평문 허용 (권장하지 않음) -->
+        <cleartextTrafficPermitted>true</cleartextTrafficPermitted>
+    </domain-config>
+</network-security-config>
