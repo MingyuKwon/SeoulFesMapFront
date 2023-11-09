@@ -9,8 +9,9 @@
     <string name="social_login_info_kakao_Native_key">kakao85eeb2478a8e803514fcfc7845ba55b3</string>
     <string name="social_login_info_kakao_REST_key">kakao1f6316350ddf8ce606a3b6cb06cf78ea</string>
 
-    <string name="social_login_info_naver_client_id">Ky8mX0jeTmI6HqslWDMr</string>
-    <string name="social_login_info_naver_client_secret">YGK2lWJb_W</string>
+    <string name="social_login_info_naver_client_id">RbeCk9ELvSyfeToFRqF8</string>
+    <string name="social_login_info_naver_client_secret">fxTmkjaiRu</string>
+    <string name="social_login_info_naver_client_token">ca72431bf6bc7729c82dbb19ed7a9f2c</string>
     <string name="social_login_info_naver_client_name">네이버아이디 로그인</string>
 
     <!-- TODO: Remove or change this placeholder text -->
