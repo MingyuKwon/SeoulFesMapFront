@@ -76,6 +76,8 @@ class StartActivity : AppCompatActivity() {
                 userEmail = response.profile?.email
                 userProfile_image = response.profile?.profileImage
                 userName = response.profile?.name
+                SetUserData(userId, userEmail, userProfile_image, userName)
+
             }
             override fun onFailure(httpStatus: Int, message: String) {
                 val errorCode = NaverIdLoginSDK.getLastErrorCode().code
@@ -101,7 +103,6 @@ class StartActivity : AppCompatActivity() {
                 //로그인 유저 정보 가져오기
                 NidOAuthLogin().callProfileApi(profileCallback)
 
-                SetUserData(userId, userEmail, userProfile_image, userName)
             }
             override fun onFailure(httpStatus: Int, message: String) {
                 val errorCode = NaverIdLoginSDK.getLastErrorCode().code
