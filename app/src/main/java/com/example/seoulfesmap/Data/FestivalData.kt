@@ -1,13 +1,17 @@
 package com.example.seoulfesmap.Data
 
-import android.util.Log
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Query
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
+interface FestivalHitCountService {
+    @GET("festival/hit/add")
+    fun incrementFestivalHit(@Query("fID") festivalId: Int): Call<Void?>?
+}
 
 interface FestivalService {
     @GET("festival")
