@@ -15,39 +15,32 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>)
 
     var filteredList: List<FestivalData> = items
 
-    fun filter(filterType: String, condition1: String, condition2: String = "") {
+    fun filter(categortType: String, dateStart: String, dateEnd: String) {
         filteredList = when {
-            condition1.isEmpty() -> items
-            condition1 == "전체" -> items
-            filterType == "Category" -> items.filter { it.category == condition1 }
-            filterType == "Search" -> items.filter { it.FesTitle!!.contains(condition1, ignoreCase = true) }
-            filterType == "Date" -> {
-                val startDate = if (condition1.isNotEmpty()) LocalDate.parse(condition1) else null
-                val endDate = if (condition2.isNotEmpty()) LocalDate.parse(condition2) else null
-
-                items.filter { item ->
-                    val festivalStart = item.FesStartDate?.toLocalDate()
-                    val festivalEnd = item.FesEndDate?.toLocalDate()
-
-                    when {
-                        startDate != null && endDate == null -> {
-                            festivalEnd == null || festivalEnd.isAfter(startDate) || festivalEnd.isEqual(startDate)
-                        }
-                        startDate == null && endDate != null -> {
-//                            festivalStart == null || festivalStart.isBefore(endDate) || festivalStart.isEqual(endDate)
-                            false
-                        }
-                        startDate != null && endDate != null -> {
-                            !(festivalStart == null || festivalEnd == null || festivalEnd.isBefore(startDate)  || festivalStart.isAfter(endDate) )
-                        }
-                        else -> false
-                    }
-                }
-            }
-
-
-            else -> items
+            categortType == "전체" -> items
+            else -> items.filter { it.category == categortType }
         }
+
+        filteredList = when {
+            dateStart.isEmpty()  -> filteredList
+            else -> filteredList.filter { item->
+                val startDate =  LocalDate.parse(dateStart)
+                val festivalEnd = item.FesEndDate?.toLocalDate()
+
+                startDate.isBefore(festivalEnd)
+            }
+        }
+
+        filteredList = when {
+            dateEnd.isEmpty()  -> filteredList
+            else -> filteredList.filter { item->
+                val endDate =  LocalDate.parse(dateEnd)
+                val festivalStart = item.FesStartDate?.toLocalDate()
+
+                endDate.isAfter(festivalStart)
+            }
+        }
+
         notifyDataSetChanged()
     }
 

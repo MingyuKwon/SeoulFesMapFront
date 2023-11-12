@@ -62,6 +62,10 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
     lateinit var adapter: RecyclerAdapter
     lateinit var filteradapter: filterApdater
 
+    var dateStartFilter : String = ""
+    var dateEndFilter : String = ""
+    var categoryFilter : String = "전체"
+
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -74,23 +78,22 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
     }
 
     override fun onDateSelected(startDate: String?, endDate: String?) {
-        var _startDate = startDate
-        var _endDate = endDate
+        dateStartFilter = startDate!!
+        dateEndFilter = endDate!!
 
         try {
             val start = startDate?.let { LocalDate.parse(it) }
         } catch (e: DateTimeParseException) {
-            _startDate = ""
+            dateStartFilter = ""
         }
 
         try {
             val end = endDate?.let { LocalDate.parse(it) }
         } catch (e: DateTimeParseException) {
-            _endDate = ""
+            dateEndFilter = ""
         }
 
-        if(_startDate == "" || _endDate == "") return
-        adapter.filter("Date",_startDate!!, _endDate!!)
+        adapter.filter(categoryFilter,dateStartFilter, dateEndFilter)
     }
     fun showCalendarDialog() {
         val dialogFragment = CalendarDialogFragment()
@@ -348,7 +351,8 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
     fun updateOtherRecyclerView(category: String) {
         // 다른 RecyclerView의 어댑터를 업데이트합니다.
         // 예: filteredList를 새로운 조건에 맞게 필터링하고, 어댑터에 알립니다.
-        adapter.filter("Category",category)
+        categoryFilter = category
+        adapter.filter(categoryFilter,dateStartFilter, dateEndFilter)
         adapter.notifyDataSetChanged()
     }
 
