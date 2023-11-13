@@ -3,18 +3,21 @@ package com.example.seoulfesmap
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.seoulfesmap.Data.FestivalData
-import com.example.seoulfesmap.Data.FestivalHitService
 import com.example.seoulfesmap.Data.TokenService
 import com.example.seoulfesmap.Data.User
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
@@ -35,6 +38,12 @@ import javax.net.ssl.X509TrustManager
 class StartActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
 
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestEmail()
+        .build()
+
+    val mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
@@ -44,15 +53,15 @@ class StartActivity : AppCompatActivity() {
         Log.d("After Firebase" , "  ")
 
         val btnNaverLogin = findViewById<ImageView>(R.id.btn_naverLogin)
-//        val btnGoogleLogin = findViewById<ImageView>(R.id.btn_googleLogin)
+        val btnGoogleLogin = findViewById<ImageView>(R.id.btn_googleLogin)
 
         btnNaverLogin.setOnClickListener {
             naverLogin()
         }
 
-//        btnGoogleLogin.setOnClickListener {
-//            googleLogin()
-//        }
+        btnGoogleLogin.setOnClickListener {
+            googleLogin()
+        }
 
         requestLocationPermission()
 //        moveToMainActivity()
@@ -96,10 +105,6 @@ class StartActivity : AppCompatActivity() {
             override fun onSuccess() {
                 // 네이버 로그인 인증이 성공했을 때 수행할 코드 추가
                 naverToken = NaverIdLoginSDK.getAccessToken()
-//                var naverRefreshToken = NaverIdLoginSDK.getRefreshToken()
-//                var naverExpiresAt = NaverIdLoginSDK.getExpiresAt().toString()
-//                var naverTokenType = NaverIdLoginSDK.getTokenType()
-//                var naverState = NaverIdLoginSDK.getState().toString()
 
                 //로그인 유저 정보 가져오기
                 NidOAuthLogin().callProfileApi(profileCallback)
@@ -119,6 +124,34 @@ class StartActivity : AppCompatActivity() {
         NaverIdLoginSDK.authenticate(this, oauthLoginCallback)
     }
 
+    private fun googleLogin(){
+        val signInIntent = mGoogleSignInClient.signInIntent
+        resultLauncher.launch(signInIntent)
+    }
+
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == 1) {
+            val data: Intent? = result.data
+            val task: Task<GoogleSignInAccount> =
+                GoogleSignIn.getSignedInAccountFromIntent(data)
+            googleSignInResult(task)
+        }
+    }
+    private fun googleSignInResult(completedTask: Task<GoogleSignInAccount>){
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            var userId = account?.id.toString()
+            var userEmail = account?.email.toString()
+            var userProfile_image = account?.photoUrl.toString()
+            var userName = account?.displayName.toString()
+            SetUserData(userId, userEmail, userProfile_image, userName)
+//            val familyname = account?.familyName
+//            val givenname = account?.givenName
+//            val name = familyname + givenname
+        } catch (e: ApiException){
+            Log.w("failed", "signInResult:failed code=" + e.statusCode)
+        }
+    }
     fun SetUserData(userId :String?, userEmail :String?, userProfile_image :String?, userName :String? )
     {
         Log.d("CHEKC", userId + " " + userEmail + " " + userProfile_image + " " + userName)
@@ -147,7 +180,6 @@ class StartActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-
         val service = retrofit.create(TokenService::class.java)
         service.sendToken(userId, userEmail, userProfile_image, userName)!!.enqueue(object : Callback<List<User?>> {
 
@@ -167,21 +199,12 @@ class StartActivity : AppCompatActivity() {
             }
         })
     }
-
-    fun googleLogin(){
-        val googleLoginUrl = "https://konkukcapstone.dwer.kr:3000/login/google"
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(googleLoginUrl))
-        startActivity(intent)
-    }
-
     private fun moveToMainActivity()
     {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
-
-
     private fun requestLocationPermission() {
         val fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION
         val coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION
