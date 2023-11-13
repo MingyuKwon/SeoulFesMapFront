@@ -6,4 +6,11 @@
         android:title="Button1"
         android:icon="@drawable/baseline_autorenew_24"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/profile_menu_design"
+        android:title="profile_design"
+        android:icon="@drawable/four"
+        app:actionLayout="@layout/profile_design_item"
+        app:showAsAction="always" />
 </menu>

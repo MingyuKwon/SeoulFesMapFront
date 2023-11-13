@@ -6,4 +6,11 @@
         android:title="Button1"
         android:icon="@drawable/baseline_autorenew_24"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/hot_menu_design"
+        android:title="hot_design"
+        android:icon="@drawable/three"
+        app:actionLayout="@layout/hot_design_item"
+        app:showAsAction="always" />
 </menu>
