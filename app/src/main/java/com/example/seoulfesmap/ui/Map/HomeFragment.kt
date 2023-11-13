@@ -291,15 +291,16 @@ class HomeFragment : Fragment() {
                         {
                             fes.changeStringToOtherType()
                         }
-
-                        val currentDateTime = LocalDateTime.now()
-                        list.filter {
+                        Log.i("Before Filter", list.size.toString())
+                        list = list.filter {
                             val currentDateTime = LocalDateTime.now()
                             val startDate = it.FesStartDate
                             val endDate = it.FesEndDate
 
-                            currentDateTime.isBefore(endDate) && currentDateTime.isAfter(startDate)
-                        }
+                            currentDateTime.isBefore(endDate) and currentDateTime.isAfter(startDate)
+                        } as ArrayList<FestivalData>
+                        Log.i("After Filter", list.size.toString())
+
 
                         initializeMap()
                     }
