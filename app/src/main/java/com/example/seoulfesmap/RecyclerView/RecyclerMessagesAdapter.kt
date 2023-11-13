@@ -1,6 +1,7 @@
 package com.example.seoulfesmap.RecyclerView
 
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -93,6 +94,16 @@ class RecyclerMessagesAdapter(
         var txtDate = itemView.txtDate
         var IDShow = itemView.opponentID
 
+        fun setMessageColor(string : String) : Int
+        {
+            val hash = string.hashCode()
+            val red = (hash and 0xFF0000) shr 16
+            val green = (hash and 0x00FF00) shr 8
+            val blue = hash and 0x0000FF
+
+            return Color.rgb(red, green, blue)
+        }
+
         fun bind(position: Int) {           //메시지 UI 항목 초기화
             var message = messages[position]
             var sendDate = message.sended_date
@@ -102,6 +113,9 @@ class RecyclerMessagesAdapter(
             txtDate.text = getDateText(sendDate)
 
             IDShow.text = message.senderUid
+
+            val color = setMessageColor(message.senderUid)
+            IDShow.setTextColor(color)
 
             setShown(position)             //해당 메시지 확인하여 서버로 전송
         }
