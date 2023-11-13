@@ -27,7 +27,8 @@ interface CalendarDialogListener {
     fun onDateSelected(startDate: String?, endDate: String?)
 }
 
-class CalendarDialogFragment : DialogFragment() {
+class CalendarDialogFragment (var startFilter : String? ,
+                              var endFilter : String?): DialogFragment() {
 
     var calendarDialogListener: CalendarDialogListener? = null
 
@@ -69,7 +70,6 @@ class CalendarDialogFragment : DialogFragment() {
 
     override fun onDetach() {
         super.onDetach()
-        calendarDialogListener!!.onDateSelected(startText!!.text.toString(), endText!!.text.toString())
         mode = 0
         startText = null
         endText = null
@@ -96,7 +96,14 @@ class CalendarDialogFragment : DialogFragment() {
         startButton = dialogView.findViewById<Button>(R.id.DateStartButton)
         endButton = dialogView.findViewById<Button>(R.id.DateEndButton)
 
+        var startClearButton = dialogView.findViewById<Button>(R.id.DateStartClearButton)
+        var EndClearButton = dialogView.findViewById<Button>(R.id.DateEndClearButton)
+
+
         val closeButton = dialogView.findViewById<Button>(R.id.CLoseButton)
+
+        startText!!.text = startFilter
+        endText!!.text = endFilter
 
         startButton!!.setOnClickListener {
             mode = 1 // 시작 날짜를 선택하는 모드로 설정
@@ -110,8 +117,17 @@ class CalendarDialogFragment : DialogFragment() {
             startButton!!.isEnabled = false
             endButton!!.isEnabled = false
         }
+        startClearButton.setOnClickListener {
+            startText!!.text = ""
+        }
+
+        EndClearButton.setOnClickListener {
+            endText!!.text = ""
+        }
+
 
         closeButton.setOnClickListener {
+            calendarDialogListener!!.onDateSelected(startText!!.text.toString(), endText!!.text.toString())
             dismiss()
         }
 

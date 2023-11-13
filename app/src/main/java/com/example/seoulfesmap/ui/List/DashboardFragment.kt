@@ -96,17 +96,10 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
         adapter.filter(categoryFilter,dateStartFilter, dateEndFilter)
     }
     fun showCalendarDialog() {
-        val dialogFragment = CalendarDialogFragment()
+        val dialogFragment = CalendarDialogFragment(dateStartFilter, dateEndFilter)
         dialogFragment.calendarDialogListener = this
         dialogFragment.show(requireFragmentManager(), "calendarDialog")
     }
-
-    @SuppressLint("SetTextI18n")
-    private fun updateTitle(calender : CalendarView, monthText : TextView) {
-        val month = calender.findFirstVisibleMonth()?.yearMonth ?: return
-        monthText.text = month.year.toString() + " - " + month.monthValue.toString()
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -359,7 +352,6 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.list_menu_button1-> {
-                Log.d("Calender", "Calender");
                 showCalendarDialog()
                 return true
             }
