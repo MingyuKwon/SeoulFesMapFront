@@ -174,7 +174,7 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
     }
 
     override fun OnItemClick(position: Int) {
-        hitcountupSend(adapter.filteredList[position].fid!!);
+        hitcountupSend(adapter.filteredList[position].fid!!)
         showFesDataPopUp(adapter.filteredList[position])
     }
 

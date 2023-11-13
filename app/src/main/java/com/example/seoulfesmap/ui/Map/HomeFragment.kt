@@ -27,6 +27,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.FestivalData
+import com.example.seoulfesmap.Data.FestivalHitCountService
+import com.example.seoulfesmap.Data.FestivalService
 import com.example.seoulfesmap.Data.User
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
@@ -39,11 +41,24 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
+import okhttp3.OkHttpClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.security.cert.X509Certificate
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
+
+    private var list: ArrayList<FestivalData> = ArrayList()
+
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -53,9 +68,10 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        activityContext = requireActivity()
+
     }
 
-    @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,14 +80,25 @@ class HomeFragment : Fragment() {
     ): View {
         val homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
-        val locationManager: LocationManager by lazy {
-            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        }
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val mapView: FragmentContainerView = binding.mapFragment
-        val mapFragment = childFragmentManager.findFragmentById(mapView.id) as MapFragment?
+
+        ShowMapFesDataFromServer()
+
+        homeViewModel.text.observe(viewLifecycleOwner) {
+            binding.mapFragment.id
+        }
+        return root
+    }
+
+    @SuppressLint("MissingPermission")
+    fun initializeMap()
+    {
+        val locationManager: LocationManager by lazy {
+            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        }
+        val mapFragment = childFragmentManager.findFragmentById(binding.mapFragment.id) as MapFragment?
         mapFragment?.getMapAsync { mapView ->
             val cameraPosition = CameraPosition(LatLng(37.540693, 127.07023), 10.0)
             mapView.cameraPosition = cameraPosition
@@ -88,48 +115,37 @@ class HomeFragment : Fragment() {
                 currentLocationMarker.position = currentLatLng
                 currentLocationMarker.map = mapView
             }
-            val markerList = arrayOf<Marker>() // 마커들을 저장할 ArrayList
-            val marker0 = createMarker(LatLng(37.5666102, 126.9783881))
-            val marker1 = createMarker(LatLng(37.540693, 127.07023))
-            val marker2 = createMarker(LatLng(37.567191, 127.010490))
 
-            marker0.setOnClickListener {
-                showToast("Marker 0 Clicked")
+            var index = 0
 
-            }
-
-            marker1.setOnClickListener {
-                showToast("Marker 1 Clicked")
-            }
-
-            marker2.setOnClickListener {
-                showToast("Marker 2 Clicked")
-            }
-            marker0.map = mapView
-            marker1.map = mapView
-            marker2.map = mapView
-
-
-            // 다른 마커를 추가하려면 위의 코드를 반복
-
-            val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                location?.let {
-                    val currentLatLng = LatLng(it.latitude, it.longitude)
-
-                    // 현재 위치를 지도에 표시
-                    val marker = Marker()
-                    marker.icon = OverlayImage.fromResource(R.drawable.current_location_icon)
-                    marker.position = currentLatLng
-                    marker.map = mapView
+            for (fesData in list) {
+                val _index = index
+                val marker = Marker()
+                marker.position = LatLng(fesData.xpos!!, fesData.ypos!!)
+                marker.map = mapView
+                marker.setOnClickListener {
+                    hitcountupSend(list[_index].fid!!)
+                    showFesDataPopUp(list[_index])
+                    true
                 }
+                index++
             }
+
+//            val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+//            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+//                location?.let {
+//                    val currentLatLng = LatLng(it.latitude, it.longitude)
+//
+//                    // 현재 위치를 지도에 표시
+//                    val marker = Marker()
+//                    marker.icon = OverlayImage.fromResource(R.drawable.current_location_icon)
+//                    marker.position = currentLatLng
+//                    marker.map = mapView
+//                }
+//            }
         }
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            mapView.id
-        }
-        return root
     }
+
 
     fun createMarker(position: LatLng): Marker {
         val marker = Marker()
@@ -154,6 +170,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun Marker.setOnClickListener(function: (Overlay) -> Unit) {
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -164,6 +181,7 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 
     fun showFesDataPopUp(fesData : FestivalData) {
         val dialogView = LayoutInflater.from(activityContext).inflate(R.layout.fespopup, null)
@@ -186,6 +204,7 @@ class HomeFragment : Fragment() {
         Glide.with(activityContext)
             .load(fesData.imageResourceUrl)
             .into(fesImage)
+        Log.d("Map", fesData.toString())
 
         titleText.text = fesData.FesTitle
         locationText.text = fesData.FesLocation
@@ -237,6 +256,119 @@ class HomeFragment : Fragment() {
 // Activity 시작
         startActivity(intent)
     }
+
+    fun hitcountupSend(fid : Int)
+    {
+        // Retrofit 인스턴스 생성
+        val unsafeOkHttpClient = OkHttpClient.Builder().apply {
+            // Create a trust manager that does not validate certificate chains
+            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
+                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
+                override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+            })
+
+            // Install the all-trusting trust manager
+            val sslContext = SSLContext.getInstance("SSL").apply {
+                init(null, trustAllCerts, java.security.SecureRandom())
+            }
+            sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+
+            // Don't check Hostnames, either.
+            // CAUTION: This makes the connection vulnerable to MITM attacks!
+            hostnameVerifier { _, _ -> true }
+        }.build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://konkukcapstone.dwer.kr:3000/")
+            .client(unsafeOkHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+// 서비스 구현체 생성
+        val service = retrofit.create(FestivalHitCountService::class.java)
+
+// 요청 실행
+        val call = service.incrementFestivalHit(fid)
+        call!!.enqueue(object : Callback<Void?> {
+            override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
+                if (response.isSuccessful) {
+                    // 요청 성공 처리
+                } else {
+                    Log.e("FestivalError", "Network error or the request was aborted")
+                }
+            }
+
+            override fun onFailure(call: Call<Void?>, t: Throwable) {
+                Log.e("FestivalError", "Network error or the request was aborted", t)
+            }
+        }
+        )
+
+    }
+
+
+    fun ShowMapFesDataFromServer()
+    {
+        val unsafeOkHttpClient = OkHttpClient.Builder().apply {
+            // Create a trust manager that does not validate certificate chains
+            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
+                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
+                override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+            })
+
+            // Install the all-trusting trust manager
+            val sslContext = SSLContext.getInstance("SSL").apply {
+                init(null, trustAllCerts, java.security.SecureRandom())
+            }
+            sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+
+            // Don't check Hostnames, either.
+            // CAUTION: This makes the connection vulnerable to MITM attacks!
+            hostnameVerifier { _, _ -> true }
+        }.build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://konkukcapstone.dwer.kr:3000/")
+            .client(unsafeOkHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+
+        val service = retrofit.create(FestivalService::class.java)
+        service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?>  {
+
+            override fun onResponse(
+                call: Call<List<FestivalData?>?>,
+                response: Response<List<FestivalData?>?>
+            ) {
+                if (response.isSuccessful) {
+                    // 성공적으로 데이터를 받아왔을 때의 처리
+                    activity?.runOnUiThread {
+                        list = response.body() as ArrayList<FestivalData>
+                        initializeMap()
+                    }
+
+                } else {
+                    // 서버 에러 처리
+                    Log.e("FestivalError", "Response not successful: " + response.code())
+                }
+            }
+
+            override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
+                Log.e("FestivalError", "Network error or the request was aborted", t)
+            }
+        })
+
+        // list.add(FestivalData(8037, "콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143909&menuNo=200008",
+        //    "마포아트센터 M 레트로 시리즈 2024 신년맞이 어떤가요 #7", "마포아트센터 아트홀 맥", "2024-01-18T00:00:00.000Z" , "2024-01-18T00:00:00.000Z", "37.5499060881738", "126.945533810385"))
+        // list.add(FestivalData(8038,"콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=d5e5494491b1481081180ac991c410db&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143406&menuNo=200008",
+        //     "딕펑스×두번째달_Spice of life", "꿈의숲 퍼포먼스홀", "2023-12-23T00:00:00.000Z" , "2023-12-23T00:00:00.000Z", "37.6202544613023", "127.044324732036"))
+        // list.add(FestivalData(8039, "전시/미술","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=cc68500bcc0a4e0f89143a5a89d5facb&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143763&menuNo=200009",
+        //    "서울일러스트레이션페어V.16", "코엑스 B&D1홀", "2023-12-21T00:00:00.000Z", "2023-12-24T00:00:00.000Z", "37.5103947", "127.0611127")
+    }
+
 
 
 }

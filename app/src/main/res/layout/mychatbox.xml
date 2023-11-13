@@ -37,7 +37,7 @@
         app:layout_constraintVertical_bias="0.8" />
 
     <TextView
-        android:id="@+id/txt_isShown"
+        android:id="@+id/chatID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
