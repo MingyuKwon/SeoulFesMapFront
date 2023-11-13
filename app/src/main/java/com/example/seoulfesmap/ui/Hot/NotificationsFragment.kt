@@ -34,6 +34,7 @@ import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentNotificationsBinding
 import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
+import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
 import com.google.android.play.integrity.internal.t
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -90,76 +91,10 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     }
 
     fun showFesDataPopUp(fesData : FestivalData) {
-        val dialogView = LayoutInflater.from(activityContext).inflate(R.layout.fespopup, null)
-
-        val alertDialog = AlertDialog.Builder(activityContext)
-            .setView(dialogView)
-            .create()
-
-        val fesImage : ImageView = dialogView.findViewById(R.id.imageView)
-
-        val titleText : TextView = dialogView.findViewById(R.id.FesTitle)
-        val locationText : TextView = dialogView.findViewById(R.id.FestLocation)
-        val dateText : TextView = dialogView.findViewById(R.id.FesDate)
-
-        val detailbutton: Button = dialogView.findViewById(R.id.button1)
-        val communitybutton: Button = dialogView.findViewById(R.id.button2)
-        val closebutton: Button = dialogView.findViewById(R.id.button3)
-
-
-        Glide.with(activityContext)
-            .load(fesData.imageResourceUrl)
-            .into(fesImage)
-
-        titleText.text = fesData.FesTitle
-        locationText.text = fesData.FesLocation
-        dateText.text = fesData.start_date!!.toString()
-
-        detailbutton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(fesData.homepageUrl)
-            }
-            if (intent.resolveActivity(requireActivity().packageManager) != null) {
-                startActivity(intent)
-            } else {
-                Toast.makeText(requireActivity(), "링크를 열 수 있는 앱이 설치되어 있지 않습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-        communitybutton.setOnClickListener {
-            moveToChattingRoom(fesData.fid!!, fesData.FesTitle!!)
-        }
-        closebutton.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        alertDialog.show()
-
-        val window = alertDialog.window
-        if (window != null) {
-            val size = Point()
-            val display = window.windowManager.defaultDisplay
-            display.getSize(size)
-            // 화면 너비의 일정 비율로 팝업 크기를 설정할 수 있습니다.
-            window.setLayout((size.x * 1).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
-        }
+        val dialogFragment = FesDataDialogFragment(fesData)
+        dialogFragment.show(requireFragmentManager(), "FesDataPopUp")
     }
 
-    private fun moveToChattingRoom(fesId : Int, fesName: String)
-    {
-        val exampleChatRoom = ChatRoom(users= mapOf(appStaticData.USER?.uID!! to true))
-// 채팅방 키를 미리 알고 있다고 가정하거나 서버로부터 얻어와야 함
-        val chatRoomKey = fesId.toString()
-
-// Intent 생성
-        val intent = Intent(context, ChattingRoomActivity::class.java).apply {
-            putExtra("ChatRoom", exampleChatRoom)
-            putExtra("ChatRoomKey", chatRoomKey)
-            putExtra("RoomTitle", fesName)
-        }
-
-// Activity 시작
-        startActivity(intent)
-    }
 
     override fun OnItemClick(position: Int) {
         hitcountupSend(adapter.filteredList[position].fid!!);

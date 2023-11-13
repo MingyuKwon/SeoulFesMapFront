@@ -1,11 +1,9 @@
-package com.example.seoulfesmap.ui.calender
+package com.example.seoulfesmap.ui.Popup
 
 import android.app.AlertDialog
 import android.app.Dialog
 import android.graphics.Color
-import android.graphics.Color.WHITE
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -13,14 +11,12 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.example.seoulfesmap.R
-import com.example.seoulfesmap.ui.List.DashboardFragment
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.view.CalendarView
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.ViewContainer
-import org.w3c.dom.Text
 import java.time.YearMonth
 
 interface CalendarDialogListener {

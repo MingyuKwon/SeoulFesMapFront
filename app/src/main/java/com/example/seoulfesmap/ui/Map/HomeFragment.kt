@@ -34,6 +34,7 @@ import com.example.seoulfesmap.R
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
 import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
+import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
@@ -49,6 +50,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.cert.X509Certificate
+import java.time.LocalDateTime
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
@@ -192,76 +194,8 @@ class HomeFragment : Fragment() {
 
 
     fun showFesDataPopUp(fesData : FestivalData) {
-        val dialogView = LayoutInflater.from(activityContext).inflate(R.layout.fespopup, null)
-
-        val alertDialog = AlertDialog.Builder(activityContext)
-            .setView(dialogView)
-            .create()
-
-        val fesImage : ImageView = dialogView.findViewById(R.id.imageView)
-
-        val titleText : TextView = dialogView.findViewById(R.id.FesTitle)
-        val locationText : TextView = dialogView.findViewById(R.id.FestLocation)
-        val dateText : TextView = dialogView.findViewById(R.id.FesDate)
-
-        val detailbutton: Button = dialogView.findViewById(R.id.button1)
-        val communitybutton: Button = dialogView.findViewById(R.id.button2)
-        val closebutton: Button = dialogView.findViewById(R.id.button3)
-
-
-        Glide.with(activityContext)
-            .load(fesData.imageResourceUrl)
-            .into(fesImage)
-        Log.d("Map", fesData.toString())
-
-        titleText.text = fesData.FesTitle
-        locationText.text = fesData.FesLocation
-        dateText.text = fesData.FesStartDate!!.toString()
-
-        detailbutton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(fesData.homepageUrl)
-            }
-            if (intent.resolveActivity(requireActivity().packageManager) != null) {
-                startActivity(intent)
-            } else {
-                Toast.makeText(requireActivity(), "링크를 열 수 있는 앱이 설치되어 있지 않습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-        communitybutton.setOnClickListener {
-            moveToChattingRoom(fesData.fid!!, fesData.FesTitle!!)
-        }
-        closebutton.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        alertDialog.show()
-
-        val window = alertDialog.window
-        if (window != null) {
-            val size = Point()
-            val display = window.windowManager.defaultDisplay
-            display.getSize(size)
-            // 화면 너비의 일정 비율로 팝업 크기를 설정할 수 있습니다.
-            window.setLayout((size.x * 1).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
-        }
-    }
-
-    private fun moveToChattingRoom(fesId : Int, fesName: String)
-    {
-        val exampleChatRoom = ChatRoom(users= mapOf(appStaticData.USER?.name!! to true))
-// 채팅방 키를 미리 알고 있다고 가정하거나 서버로부터 얻어와야 함
-        val chatRoomKey = fesId.toString()
-
-// Intent 생성
-        val intent = Intent(context, ChattingRoomActivity::class.java).apply {
-            putExtra("ChatRoom", exampleChatRoom)
-            putExtra("ChatRoomKey", chatRoomKey)
-            putExtra("RoomTitle", fesName)
-        }
-
-// Activity 시작
-        startActivity(intent)
+        val dialogFragment = FesDataDialogFragment(fesData)
+        dialogFragment.show(requireFragmentManager(), "FesDataPopUp")
     }
 
     fun hitcountupSend(fid : Int)
@@ -357,6 +291,16 @@ class HomeFragment : Fragment() {
                         {
                             fes.changeStringToOtherType()
                         }
+
+                        val currentDateTime = LocalDateTime.now()
+                        list.filter {
+                            val currentDateTime = LocalDateTime.now()
+                            val startDate = it.FesStartDate
+                            val endDate = it.FesEndDate
+
+                            currentDateTime.isBefore(endDate) && currentDateTime.isAfter(startDate)
+                        }
+
                         initializeMap()
                     }
 
