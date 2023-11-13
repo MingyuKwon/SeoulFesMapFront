@@ -1,5 +1,6 @@
 package com.example.seoulfesmap.Data
 
+import android.util.Log
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.http.GET
@@ -61,7 +62,35 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
     var hit: Int? = null
 
 
+    override fun toString(): String {
+        var str = ""
+        str += fid
+        str += "\n"
 
+        str += category
+        str += "\n"
+
+        str += imageResourceUrl
+        str += "\n"
+
+        str += homepageUrl
+        str += "\n"
+
+        str += FesTitle
+        str += "\n"
+
+        str += FesLocation
+        str += "\n"
+
+        str += start_date
+        str += "\n"
+
+        str += end_date
+        str += "\n"
+
+        Log.i("FesData" , str)
+        return super.toString()
+    }
     init{
         fid = FID
         category = Category

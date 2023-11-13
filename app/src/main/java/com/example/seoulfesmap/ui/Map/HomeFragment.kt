@@ -98,6 +98,7 @@ class HomeFragment : Fragment() {
         val locationManager: LocationManager by lazy {
             requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         }
+
         val mapFragment = childFragmentManager.findFragmentById(binding.mapFragment.id) as MapFragment?
         mapFragment?.getMapAsync { mapView ->
             val cameraPosition = CameraPosition(LatLng(37.540693, 127.07023), 10.0)
@@ -118,31 +119,37 @@ class HomeFragment : Fragment() {
 
             var index = 0
 
-            for (fesData in list) {
+            val subList: List<FestivalData> = list.subList(0, 100)
+
+
+            for (fesData in subList) {
                 val _index = index
                 val marker = Marker()
                 marker.position = LatLng(fesData.xpos!!, fesData.ypos!!)
                 marker.map = mapView
                 marker.setOnClickListener {
+                    Log.d("HomeFragment", "setOnClickListener");
                     hitcountupSend(list[_index].fid!!)
                     showFesDataPopUp(list[_index])
                     true
                 }
+                Log.d("HomeFragment Index", "index");
+
                 index++
             }
 
-//            val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-//            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-//                location?.let {
-//                    val currentLatLng = LatLng(it.latitude, it.longitude)
-//
-//                    // 현재 위치를 지도에 표시
-//                    val marker = Marker()
-//                    marker.icon = OverlayImage.fromResource(R.drawable.current_location_icon)
-//                    marker.position = currentLatLng
-//                    marker.map = mapView
-//                }
-//            }
+            val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                location?.let {
+                    val currentLatLng = LatLng(it.latitude, it.longitude)
+
+                    // 현재 위치를 지도에 표시
+                    val marker = Marker()
+                    marker.icon = OverlayImage.fromResource(R.drawable.current_location_icon)
+                    marker.position = currentLatLng
+                    marker.map = mapView
+                }
+            }
         }
     }
 
@@ -208,7 +215,7 @@ class HomeFragment : Fragment() {
 
         titleText.text = fesData.FesTitle
         locationText.text = fesData.FesLocation
-        dateText.text = fesData.FesStartDate!!.toLocalDate().toString()
+        dateText.text = fesData.FesStartDate!!.toString()
 
         detailbutton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -338,7 +345,6 @@ class HomeFragment : Fragment() {
 
         val service = retrofit.create(FestivalService::class.java)
         service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?>  {
-
             override fun onResponse(
                 call: Call<List<FestivalData?>?>,
                 response: Response<List<FestivalData?>?>
@@ -347,6 +353,10 @@ class HomeFragment : Fragment() {
                     // 성공적으로 데이터를 받아왔을 때의 처리
                     activity?.runOnUiThread {
                         list = response.body() as ArrayList<FestivalData>
+                        for(fes in list)
+                        {
+                            fes.changeStringToOtherType()
+                        }
                         initializeMap()
                     }
 

@@ -142,8 +142,7 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
 
         titleText.text = fesData.FesTitle
         locationText.text = fesData.FesLocation
-        dateText.text = fesData.FesStartDate!!.toLocalDate().toString()
-
+        dateText.text = fesData.start_date!!.toString()
         detailbutton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse(fesData.homepageUrl)
@@ -248,10 +247,7 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
     }
 
     private fun setupRecyclerView() {
-        for(fes in list)
-        {
-            fes.changeStringToOtherType()
-        }
+
         val uniqueCategories = list.map { it.category }.toSet().filterNotNull()
         val uniqueCategoriesList = ArrayList(uniqueCategories)
         filterlist.add("전체")
@@ -320,6 +316,10 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
                     // 성공적으로 데이터를 받아왔을 때의 처리
                     activity?.runOnUiThread {
                         list = response.body() as ArrayList<FestivalData>
+                        for(fes in list)
+                        {
+                            fes.changeStringToOtherType()
+                        }
                         setupRecyclerView() // 여기서 RecyclerView를 초기화합니다.
                     }
 

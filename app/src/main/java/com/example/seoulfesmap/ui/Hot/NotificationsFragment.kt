@@ -112,7 +112,7 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
         titleText.text = fesData.FesTitle
         locationText.text = fesData.FesLocation
-        dateText.text = fesData.FesStartDate!!.toLocalDate().toString()
+        dateText.text = fesData.start_date!!.toString()
 
         detailbutton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -216,11 +216,6 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     }
 
     private fun setupRecyclerView() {
-        for(fes in list)
-        {
-            fes.changeStringToOtherType()
-        }
-
         adapter = RecyclerAdapter(list)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
@@ -269,6 +264,10 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                     // 성공적으로 데이터를 받아왔을 때의 처리
                     activity?.runOnUiThread {
                         list = response.body() as ArrayList<FestivalData>
+                        for(fes in list)
+                        {
+                            fes.changeStringToOtherType()
+                        }
                         setupRecyclerView() // 여기서 RecyclerView를 초기화합니다.
                     }
 
