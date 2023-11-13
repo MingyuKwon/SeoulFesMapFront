@@ -20,5 +20,4 @@ class User {
     var name : String? = null
     var profile_img_link : String? = null
 
-
 }

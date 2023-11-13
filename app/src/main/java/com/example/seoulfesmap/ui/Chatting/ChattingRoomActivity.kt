@@ -54,7 +54,7 @@ class ChattingRoomActivity : AppCompatActivity() {
     }
 
     fun initializeProperty() {  //변수 초기화
-        myUid = if(appStaticData.userUid != null) appStaticData.userUid!! else ""
+        myUid = if(appStaticData.USER?.uID != null) appStaticData.USER?.uID!! else ""
             //FirebaseAuth.getInstance().currentUser?.uid!!              //현재 로그인한 유저 id
 
         firebaseDatabase = FirebaseDatabase.getInstance().reference!!

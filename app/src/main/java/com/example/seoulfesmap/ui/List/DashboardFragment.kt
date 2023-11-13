@@ -32,6 +32,7 @@ import com.example.seoulfesmap.Data.User
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.RecyclerView.filterApdater
+import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentDashboardBinding
 import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
 import com.example.seoulfesmap.ui.calender.CalendarDialogFragment
@@ -179,8 +180,9 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
 
     private fun moveToChattingRoom(fesId : Int, fesName: String)
     {
-        val exampleUser = User()
-        val exampleChatRoom = ChatRoom(users= mapOf(exampleUser.uID!! to true))
+        if(appStaticData.USER == null) return
+
+        val exampleChatRoom = ChatRoom(users= mapOf(appStaticData.USER?.uID!! to true))
 // 채팅방 키를 미리 알고 있다고 가정하거나 서버로부터 얻어와야 함
         val chatRoomKey = fesId.toString()
 

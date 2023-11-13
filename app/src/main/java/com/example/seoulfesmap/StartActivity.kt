@@ -159,6 +159,7 @@ class StartActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     // 성공적으로 데이터를 받아왔을 때의 처리
                     val jsonResponse = (response.body() as ArrayList<User>).get(0)
+                    appStaticData.USER = jsonResponse
                     moveToMainActivity()
                 } else {
                     // 서버 에러 처리

@@ -25,7 +25,7 @@ class RecyclerMessagesAdapter(
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var messages: ArrayList<Message> = arrayListOf()     //메시지 목록
     var messageKeys: ArrayList<String> = arrayListOf()   //메시지 키 목록
-    val myUid = appStaticData.userUid
+    val myUid = appStaticData.USER?.uID
     val recyclerView = (context as ChattingRoomActivity).recycler_talks   //목록이 표시될 리사이클러 뷰
 
     init {

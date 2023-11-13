@@ -1,9 +1,10 @@
 package com.example.seoulfesmap
 
 import android.app.Application
+import com.example.seoulfesmap.Data.User
 
 class appStaticData : Application() {
     companion object {
-        var userUid: String? = "user3"
+        var USER: User? = null
     }
 }
