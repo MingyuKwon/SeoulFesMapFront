@@ -6,4 +6,11 @@
         android:title="Button1"
         android:icon="@drawable/baseline_filter_list_24"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/map_menu_design"
+        android:title="map_design"
+        android:icon="@drawable/one"
+        app:actionLayout="@layout/map_design_item"
+        app:showAsAction="always" />
 </menu>
