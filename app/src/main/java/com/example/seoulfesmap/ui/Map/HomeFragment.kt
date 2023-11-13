@@ -31,6 +31,7 @@ import com.example.seoulfesmap.Data.FestivalHitCountService
 import com.example.seoulfesmap.Data.FestivalService
 import com.example.seoulfesmap.Data.User
 import com.example.seoulfesmap.R
+import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
 import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -248,8 +249,7 @@ class HomeFragment : Fragment() {
 
     private fun moveToChattingRoom(fesId : Int, fesName: String)
     {
-        val exampleUser = User()
-        val exampleChatRoom = ChatRoom(users= mapOf(exampleUser.uID!! to true))
+        val exampleChatRoom = ChatRoom(users= mapOf(appStaticData.USER?.name!! to true))
 // 채팅방 키를 미리 알고 있다고 가정하거나 서버로부터 얻어와야 함
         val chatRoomKey = fesId.toString()
 

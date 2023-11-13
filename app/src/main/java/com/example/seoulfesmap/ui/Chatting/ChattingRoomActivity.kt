@@ -38,7 +38,6 @@ class ChattingRoomActivity : AppCompatActivity() {
     lateinit var recycler_talks: RecyclerView
     lateinit var chatRoom: ChatRoom
     lateinit var chatRoomKey: String
-    lateinit var myUid: String
 
     var fesName: String? = null
 
@@ -54,7 +53,6 @@ class ChattingRoomActivity : AppCompatActivity() {
     }
 
     fun initializeProperty() {  //변수 초기화
-        myUid = if(appStaticData.USER?.uID != null) appStaticData.USER?.uID!! else ""
             //FirebaseAuth.getInstance().currentUser?.uid!!              //현재 로그인한 유저 id
 
         firebaseDatabase = FirebaseDatabase.getInstance().reference!!
@@ -109,7 +107,7 @@ class ChattingRoomActivity : AppCompatActivity() {
 
     fun putMessage() {       //메시지 전송
         try {
-            var message = Message(myUid, getDateTimeString(), edt_message.text.toString())    //메시지 정보 초기화
+            var message = Message(appStaticData.USER?.name!!, getDateTimeString(), edt_message.text.toString())    //메시지 정보 초기화
             Log.i("ChatRoomKey", chatRoomKey)
             FirebaseDatabase.getInstance().getReference("ChatRoom").child("chatRooms")
                 .child(chatRoomKey).child("messages")                   //현재 채팅방에 메시지 추가

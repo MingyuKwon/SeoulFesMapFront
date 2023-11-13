@@ -25,7 +25,6 @@ class RecyclerMessagesAdapter(
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var messages: ArrayList<Message> = arrayListOf()     //메시지 목록
     var messageKeys: ArrayList<String> = arrayListOf()   //메시지 키 목록
-    val myUid = appStaticData.USER?.uID
     val recyclerView = (context as ChattingRoomActivity).recycler_talks   //목록이 표시될 리사이클러 뷰
 
     init {
@@ -54,7 +53,7 @@ class RecyclerMessagesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {               //메시지의 id에 따라 내 메시지/상대 메시지 구분
-        return if (messages[position].senderUid.equals(myUid)) 1 else 0
+        return if (messages[position].senderUid.equals(appStaticData.USER?.name)) 1 else 0
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -76,7 +75,7 @@ class RecyclerMessagesAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (messages[position].senderUid.equals(myUid)) {       //레이아웃 항목 초기화
+        if (messages[position].senderUid.equals(appStaticData.USER?.name)) {       //레이아웃 항목 초기화
             (holder as MyMessageViewHolder).bind(position)
         } else {
             (holder as OtherMessageViewHolder).bind(position)
