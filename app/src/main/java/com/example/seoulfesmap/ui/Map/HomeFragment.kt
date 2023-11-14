@@ -2,7 +2,9 @@ package com.example.seoulfesmap.ui.Map
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Context.LOCATION_SERVICE
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +15,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.seoulfesmap.Data.FestivalData
@@ -88,28 +91,39 @@ class HomeFragment : Fragment() {
             requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         }
 
+        val locationListener = LocationListener { location ->
+            val latitude = location.latitude
+            val longitude = location.longitude
+            Log.d("activity", "latitude : $latitude, longitude : $longitude")
+            PinMarkerInMap(latitude, longitude)
+        }
+
+        locationManager.requestLocationUpdates(
+            LocationManager.GPS_PROVIDER,
+            1000L,
+            10.0F,
+            locationListener
+        )
+    }
+
+    fun PinMarkerInMap(latitude : Double, longitude : Double)
+    {
         val mapFragment = childFragmentManager.findFragmentById(binding.mapFragment.id) as MapFragment?
         mapFragment?.getMapAsync { mapView ->
-            val cameraPosition = CameraPosition(LatLng(37.540693, 127.07023), 10.0)
+
+            val currentLatLng = LatLng(latitude, longitude)
+            val cameraPosition = CameraPosition(currentLatLng, 10.0)
             mapView.cameraPosition = cameraPosition
 
-            val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            if (location != null) {
-                val currentLatLng = LatLng(location.latitude, location.longitude)
-                val cameraPosition = CameraPosition(currentLatLng, 10.0)
-                mapView.cameraPosition = cameraPosition
-
-                // 현재 위치를 네이버 지도에 표시
-                val currentLocationMarker = Marker()
-                currentLocationMarker.icon = OverlayImage.fromResource(R.drawable.current_location_icon)
-                currentLocationMarker.position = currentLatLng
-                currentLocationMarker.map = mapView
-            }
+            // 현재 위치를 네이버 지도에 표시
+            val currentLocationMarker = Marker()
+            currentLocationMarker.icon = OverlayImage.fromResource(R.drawable.current_location_icon)
+            currentLocationMarker.position = currentLatLng
+            currentLocationMarker.map = mapView
 
             var index = 0
 
             val subList: List<FestivalData> = list.subList(0, 100)
-
 
             for (fesData in subList) {
                 val marker = CreateFestivalMarker(fesData.xpos!!, fesData.ypos!!, index)
@@ -117,17 +131,6 @@ class HomeFragment : Fragment() {
                 index++
             }
 
-            val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                location?.let {
-                    val currentLatLng = LatLng(it.latitude, it.longitude)
-                    // 현재 위치를 지도에 표시
-                    val marker = Marker()
-                    marker.icon = OverlayImage.fromResource(R.drawable.current_location_icon)
-                    marker.position = currentLatLng
-                    marker.map = mapView
-                }
-            }
         }
     }
 
@@ -139,6 +142,7 @@ class HomeFragment : Fragment() {
         marker.setOnClickListener {
             hitcountupSend(list[index].fid!!)
             showFesDataPopUp(list[index])
+            marker.icon = OverlayImage.fromResource(R.drawable.current_location_icon)
             true
         }
         return marker
