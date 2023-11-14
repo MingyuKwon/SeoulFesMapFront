@@ -1,13 +1,9 @@
 package com.example.seoulfesmap.ui.Map
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
-import android.graphics.Point
 import android.location.Location
 import android.location.LocationManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,24 +12,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
-import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.Data.FestivalHitCountService
 import com.example.seoulfesmap.Data.FestivalService
-import com.example.seoulfesmap.Data.User
 import com.example.seoulfesmap.R
-import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
-import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
 import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -126,18 +112,8 @@ class HomeFragment : Fragment() {
 
 
             for (fesData in subList) {
-                val _index = index
-                val marker = Marker()
-                marker.position = LatLng(fesData.xpos!!, fesData.ypos!!)
+                val marker = CreateFestivalMarker(fesData.xpos!!, fesData.ypos!!, index)
                 marker.map = mapView
-                marker.setOnClickListener {
-                    Log.d("HomeFragment", "setOnClickListener");
-                    hitcountupSend(list[_index].fid!!)
-                    showFesDataPopUp(list[_index])
-                    true
-                }
-                Log.d("HomeFragment Index", "index");
-
                 index++
             }
 
@@ -145,7 +121,6 @@ class HomeFragment : Fragment() {
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 location?.let {
                     val currentLatLng = LatLng(it.latitude, it.longitude)
-
                     // 현재 위치를 지도에 표시
                     val marker = Marker()
                     marker.icon = OverlayImage.fromResource(R.drawable.current_location_icon)
@@ -157,10 +132,15 @@ class HomeFragment : Fragment() {
     }
 
 
-    fun createMarker(position: LatLng): Marker {
+    fun CreateFestivalMarker(x: Double, y :Double, index : Int): Marker {
         val marker = Marker()
         marker.icon = OverlayImage.fromResource(R.drawable.icon)
-        marker.position = position
+        marker.position = LatLng(x, y)
+        marker.setOnClickListener {
+            hitcountupSend(list[index].fid!!)
+            showFesDataPopUp(list[index])
+            true
+        }
         return marker
     }
 
