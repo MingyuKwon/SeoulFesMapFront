@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.Data.FestivalHitCountService
 import com.example.seoulfesmap.Data.FestivalService
+import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
 import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
@@ -184,34 +185,10 @@ class HomeFragment : Fragment() {
 
     fun hitcountupSend(fid : Int)
     {
-        // Retrofit 인스턴스 생성
-        val unsafeOkHttpClient = OkHttpClient.Builder().apply {
-            // Create a trust manager that does not validate certificate chains
-            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
-                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
-                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
-                override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
-            })
 
-            // Install the all-trusting trust manager
-            val sslContext = SSLContext.getInstance("SSL").apply {
-                init(null, trustAllCerts, java.security.SecureRandom())
-            }
-            sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
-
-            // Don't check Hostnames, either.
-            // CAUTION: This makes the connection vulnerable to MITM attacks!
-            hostnameVerifier { _, _ -> true }
-        }.build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://konkukcapstone.dwer.kr:3000/")
-            .client(unsafeOkHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
 // 서비스 구현체 생성
-        val service = retrofit.create(FestivalHitCountService::class.java)
+        val service = RetrofitClient.getClient()!!.create(FestivalHitCountService::class.java)
 
 // 요청 실행
         val call = service.incrementFestivalHit(fid)
@@ -235,33 +212,7 @@ class HomeFragment : Fragment() {
 
     fun ShowMapFesDataFromServer()
     {
-        val unsafeOkHttpClient = OkHttpClient.Builder().apply {
-            // Create a trust manager that does not validate certificate chains
-            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
-                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
-                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
-                override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
-            })
-
-            // Install the all-trusting trust manager
-            val sslContext = SSLContext.getInstance("SSL").apply {
-                init(null, trustAllCerts, java.security.SecureRandom())
-            }
-            sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
-
-            // Don't check Hostnames, either.
-            // CAUTION: This makes the connection vulnerable to MITM attacks!
-            hostnameVerifier { _, _ -> true }
-        }.build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://konkukcapstone.dwer.kr:3000/")
-            .client(unsafeOkHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-
-        val service = retrofit.create(FestivalService::class.java)
+        val service = RetrofitClient.getClient()!!.create(FestivalService::class.java)
         service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?>  {
             override fun onResponse(
                 call: Call<List<FestivalData?>?>,

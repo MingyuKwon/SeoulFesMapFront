@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.Data.FestivalHitService
+import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.Data.TokenService
 import com.example.seoulfesmap.Data.User
 import com.google.firebase.FirebaseApp
@@ -43,6 +44,8 @@ class StartActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
         Log.d("After Firebase" , "  ")
 
+
+
         val btnNaverLogin = findViewById<ImageView>(R.id.btn_naverLogin)
 //        val btnGoogleLogin = findViewById<ImageView>(R.id.btn_googleLogin)
 
@@ -55,7 +58,7 @@ class StartActivity : AppCompatActivity() {
 //        }
 
         requestLocationPermission()
-//        moveToMainActivity()
+//      moveToMainActivity()
     }
 
     fun naverLogin(){
@@ -122,33 +125,7 @@ class StartActivity : AppCompatActivity() {
     fun SetUserData(userId :String?, userEmail :String?, userProfile_image :String?, userName :String? )
     {
         Log.d("CHEKC", userId + " " + userEmail + " " + userProfile_image + " " + userName)
-        val unsafeOkHttpClient = OkHttpClient.Builder().apply {
-            // Create a trust manager that does not validate certificate chains
-            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
-                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
-                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
-                override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
-            })
-
-            // Install the all-trusting trust manager
-            val sslContext = SSLContext.getInstance("SSL").apply {
-                init(null, trustAllCerts, java.security.SecureRandom())
-            }
-            sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
-
-            // Don't check Hostnames, either.
-            // CAUTION: This makes the connection vulnerable to MITM attacks!
-            hostnameVerifier { _, _ -> true }
-        }.build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://konkukcapstone.dwer.kr:3000/")
-            .client(unsafeOkHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-
-        val service = retrofit.create(TokenService::class.java)
+        val service = RetrofitClient.getClient()!!.create(TokenService::class.java)
         service.sendToken(userId, userEmail, userProfile_image, userName)!!.enqueue(object : Callback<List<User?>> {
 
             override fun onFailure(call: Call<List<User?>>, t: Throwable) {
