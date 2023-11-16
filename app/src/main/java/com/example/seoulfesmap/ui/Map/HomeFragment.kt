@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.Data.FestivalHitCountService
 import com.example.seoulfesmap.Data.FestivalService
@@ -33,17 +34,11 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
-import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.security.cert.X509Certificate
 import java.time.LocalDateTime
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
+import kotlinx.coroutines.*
 
 class HomeFragment : Fragment() {
 
@@ -51,6 +46,8 @@ class HomeFragment : Fragment() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
 
     private var list: ArrayList<FestivalData> = ArrayList()
+    private var visitedlist: ArrayList<FestivalData> = ArrayList()
+
 
 
     // This property is only valid between onCreateView and
@@ -78,7 +75,6 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         ShowMapFesDataFromServer()
-
         homeViewModel.text.observe(viewLifecycleOwner) {
             binding.mapFragment.id
         }
@@ -107,6 +103,14 @@ class HomeFragment : Fragment() {
         )
     }
 
+    fun getVisitedFes()
+    {
+        visitedlist.add(FestivalData(8833, "교육/체험", "https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=4205c385c5304e0d8285b9214ef8a231&thumb=Y"
+        ,"https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143127&menuNo=200011",
+            "국립극장 공연예술박물관 어린이 해설 및 견학 프로그램 [별별공연탐험대]", "국립극장 공연예술박물관, 국립극장 해오름극장",
+            "2023-09-05T00:00:00.000Z", "2023-12-01T00:00:00.000Z", "0", "0"))
+    }
+
     fun PinMarkerInMap(latitude : Double, longitude : Double)
     {
         val mapFragment = childFragmentManager.findFragmentById(binding.mapFragment.id) as MapFragment?
@@ -118,7 +122,7 @@ class HomeFragment : Fragment() {
 
             // 현재 위치를 네이버 지도에 표시
             val currentLocationMarker = Marker()
-            currentLocationMarker.icon = OverlayImage.fromResource(R.drawable.current_location_icon)
+            currentLocationMarker.icon = OverlayImage.fromResource(R.drawable.baseline_location_on_24)
             currentLocationMarker.position = currentLatLng
             currentLocationMarker.map = mapView
 
@@ -138,12 +142,19 @@ class HomeFragment : Fragment() {
 
     fun CreateFestivalMarker(x: Double, y :Double, index : Int): Marker {
         val marker = Marker()
-        marker.icon = OverlayImage.fromResource(R.drawable.icon)
+        if(visitedlist.any { it.fid == list[index].fid!!})
+        {
+            marker.icon = OverlayImage.fromResource(R.drawable.baseline_star_24)
+        }else
+        {
+            marker.icon = OverlayImage.fromResource(R.drawable.icon)
+        }
         marker.position = LatLng(x, y)
         marker.setOnClickListener {
+            Log.i("Markertouch", list[index].toString())
             hitcountupSend(list[index].fid!!)
+            marker.icon = OverlayImage.fromResource(R.drawable.icon3)
             showFesDataPopUp(list[index])
-            marker.icon = OverlayImage.fromResource(R.drawable.current_location_icon)
             true
         }
         return marker
@@ -212,44 +223,51 @@ class HomeFragment : Fragment() {
 
     fun ShowMapFesDataFromServer()
     {
-        val service = RetrofitClient.getClient()!!.create(FestivalService::class.java)
-        service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?>  {
-            override fun onResponse(
-                call: Call<List<FestivalData?>?>,
-                response: Response<List<FestivalData?>?>
-            ) {
-                if (response.isSuccessful) {
-                    // 성공적으로 데이터를 받아왔을 때의 처리
-                    activity?.runOnUiThread {
-                        list = response.body() as ArrayList<FestivalData>
-                        for(fes in list)
-                        {
-                            fes.changeStringToOtherType()
+        lifecycleScope.launch {
+            async {
+                val service = RetrofitClient.getClient()!!.create(FestivalService::class.java)
+                service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?>  {
+                    override fun onResponse(
+                        call: Call<List<FestivalData?>?>,
+                        response: Response<List<FestivalData?>?>
+                    ) {
+                        if (response.isSuccessful) {
+                            // 성공적으로 데이터를 받아왔을 때의 처리
+                            activity?.runOnUiThread {
+                                list = response.body() as ArrayList<FestivalData>
+                                for(fes in list)
+                                {
+                                    fes.changeStringToOtherType()
+                                }
+                                list = list.filter {
+                                    val currentDateTime = LocalDateTime.now()
+                                    val startDate = it.FesStartDate
+                                    val endDate = it.FesEndDate
+
+                                    currentDateTime.isBefore(endDate) and currentDateTime.isAfter(startDate)
+                                } as ArrayList<FestivalData>
+                            }
+
+                        } else {
+                            // 서버 에러 처리
+                            Log.e("FestivalError", "Response not successful: " + response.code())
                         }
-                        Log.i("Before Filter", list.size.toString())
-                        list = list.filter {
-                            val currentDateTime = LocalDateTime.now()
-                            val startDate = it.FesStartDate
-                            val endDate = it.FesEndDate
-
-                            currentDateTime.isBefore(endDate) and currentDateTime.isAfter(startDate)
-                        } as ArrayList<FestivalData>
-                        Log.i("After Filter", list.size.toString())
-
-
-                        initializeMap()
                     }
 
-                } else {
-                    // 서버 에러 처리
-                    Log.e("FestivalError", "Response not successful: " + response.code())
-                }
-            }
+                    override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
+                        Log.e("FestivalError", "Network error or the request was aborted", t)
+                    }
+                })
+            }.await()
 
-            override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
-                Log.e("FestivalError", "Network error or the request was aborted", t)
-            }
-        })
+            async {
+                getVisitedFes()
+            }.await()
+
+            initializeMap()
+
+        }
+
 
         // list.add(FestivalData(8037, "콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143909&menuNo=200008",
         //    "마포아트센터 M 레트로 시리즈 2024 신년맞이 어떤가요 #7", "마포아트센터 아트홀 맥", "2024-01-18T00:00:00.000Z" , "2024-01-18T00:00:00.000Z", "37.5499060881738", "126.945533810385"))
