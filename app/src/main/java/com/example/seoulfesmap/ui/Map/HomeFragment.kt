@@ -1,9 +1,9 @@
 package com.example.seoulfesmap.ui.Map
 
+import kotlin.math.*
+
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Context.LOCATION_SERVICE
-import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
@@ -15,7 +15,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -26,8 +25,6 @@ import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
 import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.MapFragment
@@ -47,6 +44,11 @@ class HomeFragment : Fragment() {
 
     private var list: ArrayList<FestivalData> = ArrayList()
     private var visitedlist: ArrayList<FestivalData> = ArrayList()
+
+    private lateinit  var currentLocation : LatLng
+
+    private val markers = mutableListOf<Marker>()
+
 
 
 
@@ -75,6 +77,14 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         ShowMapFesDataFromServer()
+
+        binding.renewButton.setOnClickListener(){
+            initializeMapLocation()
+        }
+        binding.gotoCurrentLoationButton.setOnClickListener(){
+            initializeMapInCurrentLocation()
+        }
+
         homeViewModel.text.observe(viewLifecycleOwner) {
             binding.mapFragment.id
         }
@@ -82,7 +92,7 @@ class HomeFragment : Fragment() {
     }
 
     @SuppressLint("MissingPermission")
-    fun initializeMap()
+    fun initializeMapInCurrentLocation()
     {
         val locationManager: LocationManager by lazy {
             requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -92,7 +102,8 @@ class HomeFragment : Fragment() {
             val latitude = location.latitude
             val longitude = location.longitude
             Log.d("activity", "latitude : $latitude, longitude : $longitude")
-            PinMarkerInMap(latitude, longitude)
+            currentLocation = LatLng(latitude, longitude)
+            PinMarkerInMap(latitude, longitude,10.0)
         }
 
         locationManager.requestLocationUpdates(
@@ -103,6 +114,23 @@ class HomeFragment : Fragment() {
         )
     }
 
+    fun initializeMapLocation()
+    {
+        val mapFragment = childFragmentManager.findFragmentById(binding.mapFragment.id) as MapFragment?
+        mapFragment?.getMapAsync { naverMap ->
+            // 다른 작업 수행...
+
+            val currentCameraPosition = naverMap.cameraPosition
+            val currentCenter = currentCameraPosition.target // 중심점 LatLng
+            val currentZoom = currentCameraPosition.zoom // 줌 레벨
+
+            PinMarkerInMap(currentCameraPosition.target.latitude, currentCameraPosition.target.longitude,  currentZoom)
+
+            Log.d("NaverMap", "Center: $currentCenter, Zoom: $currentZoom")
+        }
+
+    }
+
     fun getVisitedFes()
     {
         visitedlist.add(FestivalData(8833, "교육/체험", "https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=4205c385c5304e0d8285b9214ef8a231&thumb=Y"
@@ -111,32 +139,62 @@ class HomeFragment : Fragment() {
             "2023-09-05T00:00:00.000Z", "2023-12-01T00:00:00.000Z", "0", "0"))
     }
 
-    fun PinMarkerInMap(latitude : Double, longitude : Double)
+    fun ClearMarker()
+    {
+        for (marker in markers) {
+            marker.map = null // 마커 제거
+        }
+        markers.clear()
+    }
+
+
+
+    fun PinMarkerInMap(latitude : Double, longitude : Double, zoom : Double)
     {
         val mapFragment = childFragmentManager.findFragmentById(binding.mapFragment.id) as MapFragment?
         mapFragment?.getMapAsync { mapView ->
 
-            val currentLatLng = LatLng(latitude, longitude)
-            val cameraPosition = CameraPosition(currentLatLng, 10.0)
-            mapView.cameraPosition = cameraPosition
+            mapView.cameraPosition = CameraPosition(LatLng(latitude, longitude), zoom)
 
-            // 현재 위치를 네이버 지도에 표시
+            ClearMarker()
+
             val currentLocationMarker = Marker()
             currentLocationMarker.icon = OverlayImage.fromResource(R.drawable.baseline_location_on_24)
-            currentLocationMarker.position = currentLatLng
+            currentLocationMarker.position = currentLocation
             currentLocationMarker.map = mapView
+            markers.add(currentLocationMarker)
+
+            // 현재 위치를 네이버 지도에 표시
 
             var index = 0
 
-            val subList: List<FestivalData> = list.subList(0, 100)
+            val subList = list.filter {
+                val distance = calculateDistance(it.xpos!!, it.ypos!!, latitude, longitude)
+                distance < 5
+            } as ArrayList<FestivalData>
+
+            Log.d("FIltter", list.size.toString() + " " + subList.size.toString())
 
             for (fesData in subList) {
                 val marker = CreateFestivalMarker(fesData.xpos!!, fesData.ypos!!, index)
                 marker.map = mapView
+                markers.add(marker)
                 index++
             }
 
         }
+    }
+
+    fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val earthRadius = 6371.0 // 지구 반지름 (킬로미터 단위)
+
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+
+        val a = sin(dLat / 2).pow(2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(dLon / 2).pow(2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        return earthRadius * c
     }
 
 
@@ -264,8 +322,7 @@ class HomeFragment : Fragment() {
                 getVisitedFes()
             }.await()
 
-            initializeMap()
-
+            initializeMapInCurrentLocation()
         }
 
 
