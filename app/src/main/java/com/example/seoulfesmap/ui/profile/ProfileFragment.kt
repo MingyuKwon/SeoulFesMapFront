@@ -11,13 +11,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.seoulfesmap.Data.FestivalData
+import com.example.seoulfesmap.Data.FestivalService
+import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.R
+import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
+import com.example.seoulfesmap.RecyclerView.filterApdater
+import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentProfileBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+
+    private var stickerlist: ArrayList<String> = ArrayList()
+    lateinit var stickeradapter: filterApdater
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,29 +50,32 @@ class ProfileFragment : Fragment() {
             ViewModelProvider(this).get(ProfileViewModel::class.java)
 
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
+
+        binding.ProfileName.text = appStaticData.USER?.name
+        binding.ProfileExplain.text = appStaticData.USER?.email
+
+        initStickerRecyclerView()
+
         val root: View = binding.root
-
         return root
-
-        return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.profile_menu_button1 -> {
-                Log.d("HomeFragment", "Button Clicked Home Fragment");
-                return true
+    fun initStickerRecyclerView() {
+        stickerlist.add("전체")
+        stickeradapter = filterApdater(stickerlist)
+
+        stickeradapter.itemClickListener = object : filterApdater.OnItemClickListener{
+            override fun OnItemClick(position: Int) {
+                val selectedCategory = stickeradapter.items[position]
+                // 다른 RecyclerView의 데이터를 정렬하는 메서드 호출
+                stickeradapter.currentIndex = position
+                stickeradapter.notifyDataSetChanged()
             }
         }
-        return super.onOptionsItemSelected(item)
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.profile_menu, menu)
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.stickerrecyclerview.setLayoutManager(layoutManager)
+        binding.stickerrecyclerview.adapter = stickeradapter
     }
 }
