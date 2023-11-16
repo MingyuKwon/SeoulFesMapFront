@@ -40,7 +40,7 @@ class stickerAdapter(var items: ArrayList<String>) : RecyclerView.Adapter<sticke
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            changeViewBorderColor(holder.binding.root, getBorderColorForItem(position));
+            changeViewBorderColor(holder.binding.imageView3, getBorderColorForItem(position));
             if(items[position] == "none")
             {
                 val drawable = ContextCompat.getDrawable(holder.itemView.context, R.drawable.baseline_cross_24)
@@ -53,7 +53,7 @@ class stickerAdapter(var items: ArrayList<String>) : RecyclerView.Adapter<sticke
         fun changeViewBorderColor(view: View, newColor: Int) {
             val background = view.background
             if (background is GradientDrawable) {
-                background.setStroke(2, newColor) // borderWidth는 테두리의 두께입니다.
+                background.setStroke(5, newColor) // borderWidth는 테두리의 두께입니다.
             }
         }
 
