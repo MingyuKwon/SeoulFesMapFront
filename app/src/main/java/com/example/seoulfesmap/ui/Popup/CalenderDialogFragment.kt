@@ -92,6 +92,10 @@ class CalendarDialogFragment (var startFilter : String? ,
         startButton = dialogView.findViewById<Button>(R.id.DateStartButton)
         endButton = dialogView.findViewById<Button>(R.id.DateEndButton)
 
+        startButton!!.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_500))
+        endButton!!.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_500))
+
+
         var startClearButton = dialogView.findViewById<Button>(R.id.DateStartClearButton)
         var EndClearButton = dialogView.findViewById<Button>(R.id.DateEndClearButton)
 
