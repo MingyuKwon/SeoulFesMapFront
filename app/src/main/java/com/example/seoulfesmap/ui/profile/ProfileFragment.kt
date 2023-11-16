@@ -19,6 +19,7 @@ import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.RecyclerView.filterApdater
+import com.example.seoulfesmap.RecyclerView.stickerAdapter
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentProfileBinding
 import retrofit2.Call
@@ -31,7 +32,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var stickerlist: ArrayList<String> = ArrayList()
-    lateinit var stickeradapter: filterApdater
+    lateinit var stickeradapter: stickerAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,20 +62,25 @@ class ProfileFragment : Fragment() {
     }
 
     fun initStickerRecyclerView() {
-        stickerlist.add("전체")
-        stickeradapter = filterApdater(stickerlist)
+        stickerlist.add("none")
+        stickerlist.add("none")
+        stickerlist.add("none")
+        stickerlist.add("none")
+        stickerlist.add("none")
 
-        stickeradapter.itemClickListener = object : filterApdater.OnItemClickListener{
+
+        stickeradapter = stickerAdapter(stickerlist)
+
+        stickeradapter.itemClickListener = object : stickerAdapter.OnItemClickListener{
             override fun OnItemClick(position: Int) {
                 val selectedCategory = stickeradapter.items[position]
                 // 다른 RecyclerView의 데이터를 정렬하는 메서드 호출
-                stickeradapter.currentIndex = position
                 stickeradapter.notifyDataSetChanged()
             }
         }
 
 
-        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.stickerrecyclerview.setLayoutManager(layoutManager)
         binding.stickerrecyclerview.adapter = stickeradapter
     }
