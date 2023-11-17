@@ -1,30 +1,18 @@
 package com.example.seoulfesmap.ui.profile
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.ImageButton
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.seoulfesmap.Data.FestivalData
-import com.example.seoulfesmap.Data.FestivalService
-import com.example.seoulfesmap.Data.RetrofitClient
-import com.example.seoulfesmap.R
-import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
-import com.example.seoulfesmap.RecyclerView.filterApdater
 import com.example.seoulfesmap.RecyclerView.stickerAdapter
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentProfileBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.seoulfesmap.isGuest
+import com.navercorp.nid.NaverIdLoginSDK
 
 class ProfileFragment : Fragment() {
 
@@ -52,10 +40,23 @@ class ProfileFragment : Fragment() {
 
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        binding.ProfileName.text = appStaticData.USER?.name
-        binding.ProfileExplain.text = appStaticData.USER?.email
+        if(isGuest == false) {
+            binding.ProfileName.text = appStaticData.USER?.name
+            binding.ProfileExplain.text = appStaticData.USER?.email
 
-        initStickerRecyclerView()
+            initStickerRecyclerView()
+        }
+        else {
+            binding.ProfileName.text = "Guest"
+            binding.ProfileExplain.text = "게스트 모드로 접속 중입니다."
+        }
+
+        val btnLogout: ImageButton = binding.logoutBtn
+        if(isGuest == false) {
+            btnLogout.setOnClickListener {
+                NaverLogout()
+            }
+        }
 
         val root: View = binding.root
         return root
@@ -83,5 +84,10 @@ class ProfileFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.stickerrecyclerview.setLayoutManager(layoutManager)
         binding.stickerrecyclerview.adapter = stickeradapter
+    }
+
+    private fun NaverLogout(){
+        isGuest = true
+        NaverIdLoginSDK.logout()
     }
 }
