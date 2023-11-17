@@ -11,8 +11,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.seoulfesmap.Data.FestivalData
-import com.example.seoulfesmap.Data.FestivalHitService
 import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.Data.TokenService
 import com.example.seoulfesmap.Data.User
@@ -22,16 +20,11 @@ import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.navercorp.nid.profile.NidProfileCallback
 import com.navercorp.nid.profile.data.NidProfileResponse
-import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.security.cert.X509Certificate
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
+
+var isGuest = false;
 
 class StartActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
@@ -47,10 +40,15 @@ class StartActivity : AppCompatActivity() {
 
 
         val btnNaverLogin = findViewById<ImageView>(R.id.btn_naverLogin)
+        val btnGuestLogin = findViewById<ImageView>(R.id.btn_guestLogin)
 //        val btnGoogleLogin = findViewById<ImageView>(R.id.btn_googleLogin)
 
         btnNaverLogin.setOnClickListener {
             naverLogin()
+        }
+
+        btnGuestLogin.setOnClickListener() {
+            guestLogin()
         }
 
 //        btnGoogleLogin.setOnClickListener {
@@ -59,6 +57,11 @@ class StartActivity : AppCompatActivity() {
 
         requestLocationPermission()
 //      moveToMainActivity()
+    }
+
+    private fun guestLogin() {
+        isGuest = true
+        moveToMainActivity()
     }
 
     fun naverLogin(){
