@@ -30,9 +30,6 @@ class ProfileFragment : Fragment() {
     private var stickerlist: ArrayList<String> = ArrayList()
     lateinit var stickeradapter: stickerAdapter
 
-    private var list: ArrayList<FestivalData> = ArrayList()
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -50,7 +47,7 @@ class ProfileFragment : Fragment() {
 
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        initVisitedFesArray()
+        appStaticData.initVisitedFes()
 
         if (isGuest == false) {
             binding.ProfileName.text = appStaticData.USER?.name
@@ -102,35 +99,5 @@ class ProfileFragment : Fragment() {
         NaverIdLoginSDK.logout()
     }
 
-    fun initVisitedFesArray() {
-        val service = RetrofitClient.getClient()!!.create(VisitiedFestivalService::class.java)
 
-        if(appStaticData.USER == null) return
-        service.listFestivals(appStaticData.USER!!.uID!!.toInt())!!.enqueue(object : Callback<List<FestivalData?>?> {
-
-            override fun onResponse(
-                call: Call<List<FestivalData?>?>,
-                response: Response<List<FestivalData?>?>
-            ) {
-                if (response.isSuccessful) {
-                    // 성공적으로 데이터를 받아왔을 때의 처리
-                    activity?.runOnUiThread {
-                        list = response.body() as ArrayList<FestivalData>
-                        for (fes in list) {
-                            fes.changeStringToOtherType()
-                        }
-                        Log.d("Profile", list.size.toString())
-                    }
-
-                } else {
-                    // 서버 에러 처리
-                    Log.e("FestivalError", "Response not successful: " + response.code())
-                }
-            }
-
-            override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
-                Log.e("FestivalError", "Network error or the request was aborted", t)
-            }
-        })
-    }
 }

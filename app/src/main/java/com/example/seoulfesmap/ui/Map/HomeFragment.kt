@@ -45,7 +45,6 @@ class HomeFragment : Fragment() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
 
     private var showFeslist: ArrayList<FestivalData> = ArrayList()
-    private var visitedlist: ArrayList<FestivalData> = ArrayList()
 
     private lateinit  var currentLocation : LatLng
 
@@ -135,10 +134,10 @@ class HomeFragment : Fragment() {
 
     fun getVisitedFes()
     {
-        visitedlist.add(FestivalData(8833, "교육/체험", "https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=4205c385c5304e0d8285b9214ef8a231&thumb=Y"
-        ,"https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143127&menuNo=200011",
-            "국립극장 공연예술박물관 어린이 해설 및 견학 프로그램 [별별공연탐험대]", "국립극장 공연예술박물관, 국립극장 해오름극장",
-            "2023-09-05T00:00:00.000Z", "2023-12-01T00:00:00.000Z", "0", "0"))
+//        visitedlist.add(FestivalData(8833, "교육/체험", "https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=4205c385c5304e0d8285b9214ef8a231&thumb=Y"
+//        ,"https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143127&menuNo=200011",
+//            "국립극장 공연예술박물관 어린이 해설 및 견학 프로그램 [별별공연탐험대]", "국립극장 공연예술박물관, 국립극장 해오름극장",
+//            "2023-09-05T00:00:00.000Z", "2023-12-01T00:00:00.000Z", "0", "0"))
     }
 
     fun ClearMarker()
@@ -200,7 +199,7 @@ class HomeFragment : Fragment() {
 
     fun CreateFestivalMarker(x: Double, y :Double, index : Int): Marker {
         val marker = Marker()
-        if(visitedlist.any { it.fid == showFeslist[index].fid!!})
+        if(appStaticData.visitedFesDatalist.any { it.fid == showFeslist[index].fid!!})
         {
             marker.icon = OverlayImage.fromResource(R.drawable.baseline_star_24)
         }else

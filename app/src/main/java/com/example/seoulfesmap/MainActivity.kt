@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         appStaticData.InitFesDataList()
+        appStaticData.initVisitedFes()
 
         val navView: BottomNavigationView = binding.navView
 
