@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.Data.FestivalService
 import com.example.seoulfesmap.Data.RetrofitClient
@@ -54,6 +55,7 @@ class ProfileFragment : Fragment() {
             binding.ProfileExplain.text = appStaticData.USER?.email
 
             initStickerRecyclerView()
+            initVisitRecyclerView()
         } else {
             binding.ProfileName.text = "Guest"
             binding.ProfileExplain.text = "게스트 모드로 접속 중입니다."
@@ -92,6 +94,29 @@ class ProfileFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.stickerrecyclerview.setLayoutManager(layoutManager)
         binding.stickerrecyclerview.adapter = stickeradapter
+    }
+
+    fun initVisitRecyclerView() {
+
+        if(appStaticData.visitedFesDatalist.size < 1) return
+        Glide.with(requireActivity())
+            .load(appStaticData.visitedFesDatalist.get(0).imageResourceUrl)
+            .into(binding.profileVisitedImage)
+
+        binding.profileVisitedFesTitle.text = appStaticData.visitedFesDatalist.get(0).FesTitle
+        binding.profileVisitedFesLocaiton.text = appStaticData.visitedFesDatalist.get(0).FesLocation
+        binding.profileVisitedFesDate.text = appStaticData.visitedFesDatalist.get(0).visitedDate?.substring(0,10)
+
+        if(appStaticData.visitedFesDatalist.size < 2) return
+        Glide.with(requireActivity())
+            .load(appStaticData.visitedFesDatalist.get(1).imageResourceUrl)
+            .into(binding.profileVisitedImageSmall1)
+
+        if(appStaticData.visitedFesDatalist.size < 3) return
+        Glide.with(requireActivity())
+            .load(appStaticData.visitedFesDatalist.get(2).imageResourceUrl)
+            .into(binding.profileVisitedImageSmall2)
+
     }
 
     private fun NaverLogout() {

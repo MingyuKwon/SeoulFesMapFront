@@ -95,6 +95,7 @@ class HomeFragment : Fragment() {
     @SuppressLint("MissingPermission")
     fun initializeMapInCurrentLocation()
     {
+
         val locationManager: LocationManager by lazy {
             requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         }
@@ -102,7 +103,6 @@ class HomeFragment : Fragment() {
         val locationListener = LocationListener { location ->
             val latitude = location.latitude
             val longitude = location.longitude
-            Log.d("activity", "latitude : $latitude, longitude : $longitude")
             currentLocation = LatLng(latitude, longitude)
             PinMarkerInMap(latitude, longitude,10.0)
         }
@@ -184,19 +184,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val earthRadius = 6371.0 // 지구 반지름 (킬로미터 단위)
-
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-
-        val a = sin(dLat / 2).pow(2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(dLon / 2).pow(2)
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        return earthRadius * c
-    }
-
-
     fun CreateFestivalMarker(x: Double, y :Double, index : Int): Marker {
         val marker = Marker()
         if(appStaticData.visitedFesDatalist.any { it.fid == showFeslist[index].fid!!})
@@ -215,6 +202,18 @@ class HomeFragment : Fragment() {
             true
         }
         return marker
+    }
+
+    fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val earthRadius = 6371.0 // 지구 반지름 (킬로미터 단위)
+
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+
+        val a = sin(dLat / 2).pow(2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(dLon / 2).pow(2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        return earthRadius * c
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -246,6 +245,7 @@ class HomeFragment : Fragment() {
 
     fun ShowMapFesDataFromServer()
     {
+        appStaticData.initVisitedFes()
         showFeslist = appStaticData.FesDatalist.toMutableList() as ArrayList<FestivalData>
         for(fes in showFeslist)
         {

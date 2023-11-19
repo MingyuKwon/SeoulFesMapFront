@@ -89,13 +89,7 @@ class appStaticData : Application() {
 
                 override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
                     if (response.isSuccessful) {
-                        // 성공적으로 데이터를 받아왔을 때의 처리
-                        visitedFesDatalist = response.body() as ArrayList<FestivalData>
-                        for (fes in visitedFesDatalist) {
-                            fes.changeStringToOtherType()
-                        }
                         Log.d("Profile", visitedFesDatalist.size.toString())
-
 
                     } else {
                         // 서버 에러 처리

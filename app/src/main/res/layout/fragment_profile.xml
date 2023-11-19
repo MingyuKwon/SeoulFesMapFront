@@ -108,7 +108,7 @@
         android:layout_marginLeft="20dp"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="252dp"
+        android:layout_marginTop="240dp"
         android:background="@drawable/roundborderstyle"
         android:padding="10dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -116,13 +116,13 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="150dp"
-        android:layout_height="30dp"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:text="스티커 컬렉션"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar3" />
@@ -132,9 +132,127 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="364dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginTop="330dp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+         />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="최근 방문한 축제"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar4" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar4"
+        android:background="@drawable/roundborderstyle">
+
+        <ImageView
+            android:id="@+id/profile_visited_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/fesimageexample" />
+
+        <TextView
+            android:id="@+id/profile_visited_fesTitle"
+            android:layout_width="270dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:text="Title"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/profile_visited_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/profile_visited_fesLocaiton"
+            android:layout_width="150dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
+            android:text="location"
+            android:textSize="12dp"
+            app:layout_constraintStart_toEndOf="@+id/profile_visited_image"
+            app:layout_constraintTop_toBottomOf="@+id/profile_visited_fesTitle" />
+
+        <TextView
+            android:id="@+id/profile_visited_fesDate"
+            android:layout_width="150dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
+            android:text="date"
+            android:textSize="12dp"
+            app:layout_constraintStart_toEndOf="@+id/profile_visited_image"
+            app:layout_constraintTop_toBottomOf="@+id/profile_visited_fesLocaiton" />
+
+        <ImageView
+            android:id="@+id/profile_visited_image_small1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="250dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/borderstyle"
+            app:srcCompat="@drawable/baseline_cross_24" />
+
+        <ImageView
+            android:id="@+id/profile_visited_image_small2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="285dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/borderstyle"
+            app:srcCompat="@drawable/baseline_cross_24" />
+
+        <ImageView
+            android:id="@+id/profile_visited_image_small3"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="320dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/borderstyle"
+            app:srcCompat="@drawable/baseline_cross_24" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar5"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="490dp"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
