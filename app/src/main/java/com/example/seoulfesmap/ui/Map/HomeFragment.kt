@@ -151,6 +151,7 @@ class HomeFragment : Fragment() {
 
     fun PinMarkerInMap(latitude : Double, longitude : Double, zoom : Double)
     {
+        if(_binding == null) return
         val mapFragment = childFragmentManager.findFragmentById(binding.mapFragment.id) as MapFragment?
         mapFragment?.getMapAsync { mapView ->
 
@@ -243,7 +244,6 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 
 

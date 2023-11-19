@@ -24,6 +24,11 @@ interface FestivalHitService {
     fun listFestivals(): Call<List<FestivalData?>?>?
 }
 
+interface VisitiedFestivalService {
+    @GET("visit/view")
+    fun listFestivals(@Query("uID") userId : Int): Call<List<FestivalData?>?>?
+}
+
 
 class FestivalData(FID : Int?, Category : String?,imageResource : String?, homepageurl : String?,title: String?, location: String?, startTime: String?, endTime: String?, Xpos: String?, Ypos: String?) {
 
