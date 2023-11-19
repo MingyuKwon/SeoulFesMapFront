@@ -28,6 +28,7 @@ import com.example.seoulfesmap.appStaticData.Companion.calculateDistance
 import com.example.seoulfesmap.appStaticData.Companion.currentLocation
 import com.example.seoulfesmap.appStaticData.Companion.hitcountupSend
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
+import com.example.seoulfesmap.isGuest
 import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
@@ -49,6 +50,8 @@ class HomeFragment : Fragment() {
     private var showFeslist: ArrayList<FestivalData> = ArrayList()
 
     private val markers = mutableListOf<Marker>()
+
+    private var isStickerMode = false
 
 
 
@@ -103,7 +106,7 @@ class HomeFragment : Fragment() {
             val latitude = location.latitude
             val longitude = location.longitude
             appStaticData.currentLocation = LatLng(latitude, longitude)
-            PinMarkerInMap(latitude, longitude,10.0)
+            PinMarkerInMap(latitude, longitude,12.0)
         }
 
         locationManager.requestLocationUpdates(
@@ -156,40 +159,51 @@ class HomeFragment : Fragment() {
 
             // 현재 위치를 네이버 지도에 표시
 
-            var index = -1
-            var index2 = 0
+            if(isStickerMode)
+            {
+                for (fesData in showFeslist) {
+                    val isVisited = appStaticData.visitedFesDatalist.any { it.fid == fesData.fid!!}
 
+                    if(isVisited)
+                    {
+                        val marker = CreateFestivalMarker(fesData)
+                        marker.map = mapView
+                        markers.add(marker)
+                    }
+                }
+            }else
+            {
+                var subList = showFeslist.filter {
+                    val distance = appStaticData.calculateDistance(it.xpos!!, it.ypos!!, latitude, longitude)
+                    distance < 4
+                } as ArrayList<FestivalData>
 
-            val subList = showFeslist.filter {
-                val distance = appStaticData.calculateDistance(it.xpos!!, it.ypos!!, latitude, longitude)
-                distance < 5
-            } as ArrayList<FestivalData>
-            var str = ""
-            val markerMap = mutableMapOf<Double, Double>()
-            for (fesData in subList) {
-                index++
-
-                val marker = CreateFestivalMarker(fesData.xpos!!, fesData.ypos!!, index)
-                marker.map = mapView
-                markers.add(marker)
+                for (fesData in subList) {
+                    val isVisited = appStaticData.visitedFesDatalist.any { it.fid == fesData.fid!!}
+                    if(!isVisited)
+                    {
+                        val marker = CreateFestivalMarker(fesData)
+                        marker.map = mapView
+                        markers.add(marker)
+                    }
+                }
             }
         }
     }
 
-    fun CreateFestivalMarker(x: Double, y :Double, index : Int): Marker {
+    fun CreateFestivalMarker(fesData: FestivalData): Marker {
         val marker = Marker()
-        if(appStaticData.visitedFesDatalist.any { it.fid == showFeslist[index].fid!!})
-        {
+        if(isStickerMode) {
             marker.icon = OverlayImage.fromResource(R.drawable.baseline_star_24)
-        }else
-        {
+        } else {
             marker.icon = OverlayImage.fromResource(R.drawable.icon)
         }
-        marker.position = LatLng(x, y)
+
+        marker.position = LatLng(fesData.xpos!!, fesData.ypos!!)
         marker.setOnClickListener {
-            Log.i("Markertouch", showFeslist[index].toString())
-            appStaticData.hitcountupSend(showFeslist[index].fid!!)
-            showFesDataPopUp(showFeslist[index])
+            Log.i("Markertouch", fesData.toString())
+            appStaticData.hitcountupSend(fesData.fid!!)
+            showFesDataPopUp(fesData)
             true
         }
         return marker
@@ -198,7 +212,10 @@ class HomeFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.map_menu_button1 -> {
-                Log.d("HomeFragment", "Button Clicked Home Fragment");
+                if(isGuest) return true
+
+                isStickerMode = !isStickerMode
+                initializeMapLocation()
                 return true
             }
         }
