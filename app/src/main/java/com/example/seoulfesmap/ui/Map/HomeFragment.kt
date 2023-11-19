@@ -24,6 +24,8 @@ import com.example.seoulfesmap.Data.FestivalService
 import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.appStaticData
+import com.example.seoulfesmap.appStaticData.Companion.calculateDistance
+import com.example.seoulfesmap.appStaticData.Companion.currentLocation
 import com.example.seoulfesmap.appStaticData.Companion.hitcountupSend
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
 import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
@@ -46,10 +48,7 @@ class HomeFragment : Fragment() {
 
     private var showFeslist: ArrayList<FestivalData> = ArrayList()
 
-    private lateinit  var currentLocation : LatLng
-
     private val markers = mutableListOf<Marker>()
-
 
 
 
@@ -103,7 +102,7 @@ class HomeFragment : Fragment() {
         val locationListener = LocationListener { location ->
             val latitude = location.latitude
             val longitude = location.longitude
-            currentLocation = LatLng(latitude, longitude)
+            appStaticData.currentLocation = LatLng(latitude, longitude)
             PinMarkerInMap(latitude, longitude,10.0)
         }
 
@@ -126,18 +125,8 @@ class HomeFragment : Fragment() {
             val currentZoom = currentCameraPosition.zoom // 줌 레벨
 
             PinMarkerInMap(currentCameraPosition.target.latitude, currentCameraPosition.target.longitude,  currentZoom)
-
-            Log.d("NaverMap", "Center: $currentCenter, Zoom: $currentZoom")
         }
 
-    }
-
-    fun getVisitedFes()
-    {
-//        visitedlist.add(FestivalData(8833, "교육/체험", "https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=4205c385c5304e0d8285b9214ef8a231&thumb=Y"
-//        ,"https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143127&menuNo=200011",
-//            "국립극장 공연예술박물관 어린이 해설 및 견학 프로그램 [별별공연탐험대]", "국립극장 공연예술박물관, 국립극장 해오름극장",
-//            "2023-09-05T00:00:00.000Z", "2023-12-01T00:00:00.000Z", "0", "0"))
     }
 
     fun ClearMarker()
@@ -161,26 +150,29 @@ class HomeFragment : Fragment() {
 
             val currentLocationMarker = Marker()
             currentLocationMarker.icon = OverlayImage.fromResource(R.drawable.baseline_location_on_24)
-            currentLocationMarker.position = currentLocation
+            currentLocationMarker.position = appStaticData.currentLocation!!
             currentLocationMarker.map = mapView
             markers.add(currentLocationMarker)
 
             // 현재 위치를 네이버 지도에 표시
 
-            var index = 0
+            var index = -1
+            var index2 = 0
+
 
             val subList = showFeslist.filter {
-                val distance = calculateDistance(it.xpos!!, it.ypos!!, latitude, longitude)
+                val distance = appStaticData.calculateDistance(it.xpos!!, it.ypos!!, latitude, longitude)
                 distance < 5
             } as ArrayList<FestivalData>
-
+            var str = ""
+            val markerMap = mutableMapOf<Double, Double>()
             for (fesData in subList) {
+                index++
+
                 val marker = CreateFestivalMarker(fesData.xpos!!, fesData.ypos!!, index)
                 marker.map = mapView
                 markers.add(marker)
-                index++
             }
-
         }
     }
 
@@ -197,23 +189,10 @@ class HomeFragment : Fragment() {
         marker.setOnClickListener {
             Log.i("Markertouch", showFeslist[index].toString())
             appStaticData.hitcountupSend(showFeslist[index].fid!!)
-            marker.icon = OverlayImage.fromResource(R.drawable.icon3)
             showFesDataPopUp(showFeslist[index])
             true
         }
         return marker
-    }
-
-    fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val earthRadius = 6371.0 // 지구 반지름 (킬로미터 단위)
-
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-
-        val a = sin(dLat / 2).pow(2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(dLon / 2).pow(2)
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        return earthRadius * c
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -241,32 +220,20 @@ class HomeFragment : Fragment() {
         dialogFragment.show(requireFragmentManager(), "FesDataPopUp")
     }
 
-
-
     fun ShowMapFesDataFromServer()
     {
-        appStaticData.initVisitedFes()
         showFeslist = appStaticData.FesDatalist.toMutableList() as ArrayList<FestivalData>
-        for(fes in showFeslist)
-        {
-            fes.changeStringToOtherType()
-        }
         showFeslist = showFeslist.filter {
             val currentDateTime = LocalDateTime.now()
             val startDate = it.FesStartDate
             val endDate = it.FesEndDate
 
-            currentDateTime.isBefore(endDate) and currentDateTime.isAfter(startDate)
+            !currentDateTime.isBefore(startDate) && !currentDateTime.isAfter(endDate)
         } as ArrayList<FestivalData>
 
-        // list.add(FestivalData(8037, "콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143909&menuNo=200008",
-        //    "마포아트센터 M 레트로 시리즈 2024 신년맞이 어떤가요 #7", "마포아트센터 아트홀 맥", "2024-01-18T00:00:00.000Z" , "2024-01-18T00:00:00.000Z", "37.5499060881738", "126.945533810385"))
-        // list.add(FestivalData(8038,"콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=d5e5494491b1481081180ac991c410db&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143406&menuNo=200008",
-        //     "딕펑스×두번째달_Spice of life", "꿈의숲 퍼포먼스홀", "2023-12-23T00:00:00.000Z" , "2023-12-23T00:00:00.000Z", "37.6202544613023", "127.044324732036"))
-        // list.add(FestivalData(8039, "전시/미술","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=cc68500bcc0a4e0f89143a5a89d5facb&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143763&menuNo=200009",
-        //    "서울일러스트레이션페어V.16", "코엑스 B&D1홀", "2023-12-21T00:00:00.000Z", "2023-12-24T00:00:00.000Z", "37.5103947", "127.0611127")
-    }
+        Log.d("ShowMapFesDataFromServer", showFeslist.size.toString())
 
+    }
 
 
 }

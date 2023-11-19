@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -16,7 +17,10 @@ import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.appStaticData
+import com.example.seoulfesmap.appStaticData.Companion.plusVisitedFes
 import com.example.seoulfesmap.ui.NewActivity.ChattingRoomActivity
+import com.naver.maps.map.overlay.OverlayImage
+import java.time.LocalDateTime
 
 class FesDataDialogFragment (var fesData : FestivalData) : DialogFragment() {
 
@@ -34,6 +38,9 @@ class FesDataDialogFragment (var fesData : FestivalData) : DialogFragment() {
         val detailbutton: Button = dialogView.findViewById(R.id.button1)
         val communitybutton: Button = dialogView.findViewById(R.id.button2)
         val closebutton: Button = dialogView.findViewById(R.id.button3)
+
+        val stampButton : ImageButton = dialogView.findViewById(R.id.Stamp)
+        stampButton.isEnabled  = false
 
 
         Glide.with(requireContext())
@@ -61,6 +68,30 @@ class FesDataDialogFragment (var fesData : FestivalData) : DialogFragment() {
         }
         closebutton.setOnClickListener {
             dismiss()
+        }
+
+        if(appStaticData.visitedFesDatalist.any { it.fid == fesData.fid!!})
+        {
+            stampButton.setImageResource(R.drawable.baseline_star_24)
+        }else
+        {
+            stampButton.setImageResource(R.drawable.baseline_stardisable_24)
+            val currentDate = LocalDateTime.now() // 현재 날짜와 시간
+            if(
+            //appStaticData.calculateDistance(fesData.xpos!!, fesData.ypos!!, appStaticData.currentLocation!!.latitude, appStaticData.currentLocation!!.longitude) < 0.05 &&
+                (!currentDate.isBefore(fesData.FesStartDate) && !currentDate.isAfter(fesData.FesEndDate)))
+            {
+                stampButton.setImageResource(R.drawable.baseline_star_outline_24)
+                stampButton.isEnabled  = true
+            }
+        }
+
+
+
+        stampButton.setOnClickListener {
+            plusVisitedFes(fesData)
+            stampButton.setImageResource(R.drawable.baseline_star_24)
+            stampButton.isEnabled  = false
         }
 
         return AlertDialog.Builder(requireContext())

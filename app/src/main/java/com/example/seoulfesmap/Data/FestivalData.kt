@@ -101,6 +101,12 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
         str += end_date
         str += "\n"
 
+        str += xpos
+        str += "\n"
+
+        str += ypos
+        str += "\n"
+
         Log.i("FesData" , str)
         return super.toString()
     }

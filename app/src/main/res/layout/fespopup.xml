@@ -10,7 +10,7 @@
         android:layout_width="140dp"
         android:layout_height="200dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintBottom_toTopOf="@+id/button1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,17 +21,17 @@
         android:id="@+id/FesTitle"
         android:layout_width="180dp"
         android:layout_height="80dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="180dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
         android:gravity="center"
         android:text="Title"
         android:textSize="18dp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/FesDateStart"
@@ -74,8 +74,8 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="280dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="300dp"
         android:layout_marginBottom="20dp"
         android:text="세부정보"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -86,22 +86,30 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:text="커뮤니티"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@+id/button1"
-        app:layout_constraintTop_toTopOf="@+id/button1"
-        />
+        app:layout_constraintTop_toTopOf="@+id/button1" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="닫기"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@+id/button2"
         app:layout_constraintTop_toTopOf="@+id/button2"
-        app:layout_constraintEnd_toEndOf="parent"
 
         />
+
+    <ImageButton
+        android:id="@+id/Stamp"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="35dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:srcCompat="@drawable/baseline_stardisable_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
