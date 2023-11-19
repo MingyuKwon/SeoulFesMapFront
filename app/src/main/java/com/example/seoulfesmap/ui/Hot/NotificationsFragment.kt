@@ -1,10 +1,6 @@
 package com.example.seoulfesmap.ui.Hot
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
-import android.graphics.Point
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,43 +9,23 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.FestivalData
-import com.example.seoulfesmap.Data.FestivalHitCountService
 import com.example.seoulfesmap.Data.FestivalHitService
-import com.example.seoulfesmap.Data.FestivalService
 import com.example.seoulfesmap.Data.RetrofitClient
-import com.example.seoulfesmap.Data.User
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.appStaticData
-import com.example.seoulfesmap.appStaticData.Companion.hitcountupSend
 import com.example.seoulfesmap.databinding.FragmentNotificationsBinding
-import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
 import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
-import com.google.android.play.integrity.internal.t
-import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.security.cert.X509Certificate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
 
 
 class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {

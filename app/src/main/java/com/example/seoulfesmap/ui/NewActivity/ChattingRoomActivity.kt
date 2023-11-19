@@ -1,10 +1,8 @@
-package com.example.seoulfesmap.ui.Chatting
+package com.example.seoulfesmap.ui.NewActivity
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
@@ -12,12 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.Message
-import com.example.seoulfesmap.Data.User
-import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerMessagesAdapter
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.ActivityChattingRoomBinding
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference

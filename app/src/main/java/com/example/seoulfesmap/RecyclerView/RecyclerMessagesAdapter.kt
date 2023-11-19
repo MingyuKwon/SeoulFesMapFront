@@ -12,8 +12,7 @@ import com.example.seoulfesmap.R
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.MychatboxBinding
 import com.example.seoulfesmap.databinding.OpponentchatboxBinding
-import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
-import com.google.firebase.auth.FirebaseAuth
+import com.example.seoulfesmap.ui.NewActivity.ChattingRoomActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase

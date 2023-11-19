@@ -11,7 +11,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.ArrayList
 
-class RecyclerAdapter(var items: ArrayList<FestivalData>)
+class RecyclerAdapter(var items: ArrayList<FestivalData>, var isVisited : Boolean = false)
     : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
 
     var filteredList: List<FestivalData> = items
@@ -102,7 +102,13 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>)
 
         holder.binding.FesTitle.text = filteredList[position].FesTitle
         holder.binding.FestLocation.text = filteredList[position].FesLocation
-        holder.binding.FesDate.text = filteredList[position].FesStartDate?.toLocalDate().toString() + " ~ "  + filteredList[position].FesEndDate?.toLocalDate().toString()
+        if(isVisited) {
+            holder.binding.FesDate.text =
+                filteredList[position].visitedDate!!.substring(0, 10)
+        }
+        else{
+            holder.binding.FesDate.text = filteredList[position].FesStartDate?.toLocalDate().toString() + " ~ "  + filteredList[position].FesEndDate?.toLocalDate().toString()
+        }
     }
 
 }

@@ -3,11 +3,9 @@ package com.example.seoulfesmap.ui.Popup
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.Point
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,7 +16,7 @@ import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.appStaticData
-import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
+import com.example.seoulfesmap.ui.NewActivity.ChattingRoomActivity
 
 class FesDataDialogFragment (var fesData : FestivalData) : DialogFragment() {
 

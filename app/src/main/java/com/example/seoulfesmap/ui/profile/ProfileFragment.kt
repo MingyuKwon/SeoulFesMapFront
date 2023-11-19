@@ -1,5 +1,6 @@
 package com.example.seoulfesmap.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,10 +15,12 @@ import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.Data.FestivalService
 import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.Data.VisitiedFestivalService
+import com.example.seoulfesmap.MainActivity
 import com.example.seoulfesmap.RecyclerView.stickerAdapter
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentProfileBinding
 import com.example.seoulfesmap.isGuest
+import com.example.seoulfesmap.ui.NewActivity.VisitedFestivalActivity
 import com.navercorp.nid.NaverIdLoginSDK
 import retrofit2.Call
 import retrofit2.Callback
@@ -98,6 +101,10 @@ class ProfileFragment : Fragment() {
 
     fun initVisitRecyclerView() {
 
+        binding.visitedConatiner.setOnClickListener{
+            moveToVisitedActivity()
+        }
+
         if(appStaticData.visitedFesDatalist.size < 1) return
         Glide.with(requireActivity())
             .load(appStaticData.visitedFesDatalist.get(0).imageResourceUrl)
@@ -118,6 +125,13 @@ class ProfileFragment : Fragment() {
             .into(binding.profileVisitedImageSmall2)
 
     }
+
+    private fun moveToVisitedActivity()
+    {
+        val intent = Intent(requireContext(), VisitedFestivalActivity::class.java)
+        startActivity(intent)
+    }
+
 
     private fun NaverLogout() {
         isGuest = true

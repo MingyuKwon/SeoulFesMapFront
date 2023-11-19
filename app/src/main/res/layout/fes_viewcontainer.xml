@@ -21,6 +21,7 @@
         android:id="@+id/FesTitle"
         android:layout_width="210dp"
         android:layout_height="50dp"
+        android:layout_marginStart="44dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="42dp"
         android:gravity="center"
@@ -28,29 +29,34 @@
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/FesImage"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/FestLocation"
         android:layout_width="210dp"
         android:layout_height="30dp"
+        android:layout_marginStart="44dp"
         android:layout_marginTop="85dp"
         android:layout_marginEnd="42dp"
         android:gravity="center"
         android:text="Location"
         android:textSize="13dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/FesImage"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/FesDate"
         android:layout_width="210dp"
         android:layout_height="30dp"
+        android:layout_marginStart="44dp"
         android:layout_marginTop="130dp"
         android:layout_marginEnd="42dp"
         android:gravity="center"
         android:text="Start Date"
         android:textSize="13dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/FesImage"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
