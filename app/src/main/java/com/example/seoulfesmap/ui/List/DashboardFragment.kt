@@ -32,6 +32,7 @@ import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.RecyclerView.filterApdater
 import com.example.seoulfesmap.appStaticData
+import com.example.seoulfesmap.appStaticData.Companion.hitcountupSend
 import com.example.seoulfesmap.databinding.FragmentDashboardBinding
 import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
 import com.example.seoulfesmap.ui.Popup.CalendarDialogFragment
@@ -57,7 +58,6 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
     private var _binding: FragmentDashboardBinding? = null
     private lateinit var activityContext: Context
 
-    private var list: ArrayList<FestivalData> = ArrayList()
     private var filterlist: ArrayList<String> = ArrayList()
     lateinit var adapter: RecyclerAdapter
     lateinit var filteradapter: filterApdater
@@ -112,7 +112,7 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        initRecyclerView()
+        setupRecyclerView()
 
         return root
     }
@@ -123,43 +123,18 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
     }
 
     override fun OnItemClick(position: Int) {
-        hitcountupSend(adapter.filteredList[position].fid!!)
+        appStaticData.hitcountupSend(adapter.filteredList[position].fid!!)
         showFesDataPopUp(adapter.filteredList[position])
-    }
-
-    fun hitcountupSend(fid : Int)
-    {
-        // Retrofit 인스턴스 생성
-// 서비스 구현체 생성
-        val service = RetrofitClient.getClient()!!.create(FestivalHitCountService::class.java)
-
-// 요청 실행
-        val call = service.incrementFestivalHit(fid)
-        call!!.enqueue(object : Callback<Void?> {
-            override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
-                if (response.isSuccessful) {
-                    // 요청 성공 처리
-                } else {
-                    Log.e("FestivalError", "Network error or the request was aborted")
-                }
-            }
-
-            override fun onFailure(call: Call<Void?>, t: Throwable) {
-                Log.e("FestivalError", "Network error or the request was aborted", t)
-            }
-        }
-        )
-
     }
 
     private fun setupRecyclerView() {
 
-        val uniqueCategories = list.map { it.category }.toSet().filterNotNull()
+        val uniqueCategories = appStaticData.FesDatalist.map { it.category }.toSet().filterNotNull()
         val uniqueCategoriesList = ArrayList(uniqueCategories)
         filterlist.add("전체")
         filterlist.addAll(uniqueCategoriesList)
 
-        adapter = RecyclerAdapter(list)
+        adapter = RecyclerAdapter(appStaticData.FesDatalist)
         filteradapter = filterApdater(filterlist)
 
         filteradapter.itemClickListener = object : filterApdater.OnItemClickListener{
@@ -185,35 +160,6 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
 
     fun initRecyclerView()
     {
-        val service = RetrofitClient.getClient()!!.create(FestivalService::class.java)
-        service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?>  {
-
-            override fun onResponse(
-                call: Call<List<FestivalData?>?>,
-                response: Response<List<FestivalData?>?>
-            ) {
-                if (response.isSuccessful) {
-                    // 성공적으로 데이터를 받아왔을 때의 처리
-                    activity?.runOnUiThread {
-                        list = response.body() as ArrayList<FestivalData>
-                        for(fes in list)
-                        {
-                            fes.changeStringToOtherType()
-                        }
-                        setupRecyclerView() // 여기서 RecyclerView를 초기화합니다.
-                    }
-
-                } else {
-                    // 서버 에러 처리
-                    Log.e("FestivalError", "Response not successful: " + response.code())
-                }
-            }
-
-            override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
-                Log.e("FestivalError", "Network error or the request was aborted", t)
-            }
-        })
-
         // list.add(FestivalData(8037, "콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143909&menuNo=200008",
         //    "마포아트센터 M 레트로 시리즈 2024 신년맞이 어떤가요 #7", "마포아트센터 아트홀 맥", "2024-01-18T00:00:00.000Z" , "2024-01-18T00:00:00.000Z", "37.5499060881738", "126.945533810385"))
        // list.add(FestivalData(8038,"콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=d5e5494491b1481081180ac991c410db&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143406&menuNo=200008",

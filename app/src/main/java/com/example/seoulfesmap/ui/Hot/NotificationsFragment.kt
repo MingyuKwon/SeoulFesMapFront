@@ -33,6 +33,7 @@ import com.example.seoulfesmap.Data.User
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.appStaticData
+import com.example.seoulfesmap.appStaticData.Companion.hitcountupSend
 import com.example.seoulfesmap.databinding.FragmentNotificationsBinding
 import com.example.seoulfesmap.ui.Chatting.ChattingRoomActivity
 import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
@@ -98,34 +99,9 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
 
     override fun OnItemClick(position: Int) {
-        hitcountupSend(adapter.filteredList[position].fid!!);
+        appStaticData.hitcountupSend(adapter.filteredList[position].fid!!);
         showFesDataPopUp(adapter.filteredList[position])
     }
-    fun hitcountupSend(fid : Int)
-    {
-        // Retrofit 인스턴스 생성
-// 서비스 구현체 생성
-        val service = RetrofitClient.getClient()!!.create(FestivalHitCountService::class.java)
-
-// 요청 실행
-        val call = service.incrementFestivalHit(fid)
-        call!!.enqueue(object : Callback<Void?> {
-            override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
-                if (response.isSuccessful) {
-                    // 요청 성공 처리
-                } else {
-                    Log.e("FestivalError", "Network error or the request was aborted")
-                }
-            }
-
-            override fun onFailure(call: Call<Void?>, t: Throwable) {
-                Log.e("FestivalError", "Network error or the request was aborted", t)
-            }
-        }
-        )
-
-    }
-
     private fun setupRecyclerView() {
         adapter = RecyclerAdapter(list)
 
