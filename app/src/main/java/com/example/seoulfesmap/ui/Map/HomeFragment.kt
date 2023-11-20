@@ -1,7 +1,5 @@
 package com.example.seoulfesmap.ui.Map
 
-import kotlin.math.*
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationListener
@@ -14,35 +12,25 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.seoulfesmap.Data.FestivalData
-import com.example.seoulfesmap.Data.FestivalHitCountService
-import com.example.seoulfesmap.Data.FestivalService
-import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.appStaticData
-import com.example.seoulfesmap.appStaticData.Companion.calculateDistance
-import com.example.seoulfesmap.appStaticData.Companion.currentLocation
-import com.example.seoulfesmap.appStaticData.Companion.hitcountupSend
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
 import com.example.seoulfesmap.isGuest
+import com.example.seoulfesmap.ui.Popup.DialogListener
 import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.time.LocalDateTime
 import kotlinx.coroutines.*
+import java.time.LocalDateTime
+import kotlin.math.*
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), DialogListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
@@ -233,7 +221,7 @@ class HomeFragment : Fragment() {
 
 
     fun showFesDataPopUp(fesData : FestivalData) {
-        val dialogFragment = FesDataDialogFragment(fesData)
+        val dialogFragment = FesDataDialogFragment(fesData, this)
         dialogFragment.show(requireFragmentManager(), "FesDataPopUp")
     }
 
@@ -250,6 +238,10 @@ class HomeFragment : Fragment() {
 
         Log.d("ShowMapFesDataFromServer", showFeslist.size.toString())
 
+    }
+
+    override fun onDialogClosed() {
+        initializeMapLocation()
     }
 
 

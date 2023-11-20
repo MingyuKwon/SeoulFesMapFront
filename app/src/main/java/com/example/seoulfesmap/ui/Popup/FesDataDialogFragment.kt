@@ -22,7 +22,11 @@ import com.example.seoulfesmap.ui.NewActivity.ChattingRoomActivity
 import com.naver.maps.map.overlay.OverlayImage
 import java.time.LocalDateTime
 
-class FesDataDialogFragment (var fesData : FestivalData) : DialogFragment() {
+interface DialogListener {
+    fun onDialogClosed()
+}
+
+class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: DialogListener? = null) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?) : Dialog{
         val dialogView = LayoutInflater.from(context).inflate(R.layout.fespopup, null)
@@ -99,6 +103,13 @@ class FesDataDialogFragment (var fesData : FestivalData) : DialogFragment() {
             .create()
     }
 
+
+    override fun onDetach() {
+        super.onDetach()
+        dialogListener?.onDialogClosed()
+    }
+
+
     private fun moveToChattingRoom(fesId : Int, fesName: String)
     {
         val exampleChatRoom = ChatRoom(users= mapOf(appStaticData.USER?.uID!! to true))
@@ -115,4 +126,5 @@ class FesDataDialogFragment (var fesData : FestivalData) : DialogFragment() {
 // Activity 시작
         startActivity(intent)
     }
+
 }
