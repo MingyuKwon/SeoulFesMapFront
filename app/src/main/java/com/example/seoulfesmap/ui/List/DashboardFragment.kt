@@ -108,7 +108,10 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
         filterlist.addAll(uniqueCategoriesList)
 
         adapter = RecyclerAdapter(appStaticData.FesDatalist)
-        filteradapter = filterApdater(filterlist)
+        filteradapter = filterApdater(filterlist) {
+            position ->
+
+        }
 
         filteradapter.itemClickListener = object : filterApdater.OnItemClickListener{
             override fun OnItemClick(position: Int) {

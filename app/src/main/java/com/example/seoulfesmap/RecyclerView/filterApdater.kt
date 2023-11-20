@@ -14,7 +14,8 @@ import com.example.seoulfesmap.databinding.FilterbuttonBinding
 import com.google.android.material.color.utilities.MaterialDynamicColors.background
 
 
-class filterApdater(var items: ArrayList<String>)
+class filterApdater(var items: ArrayList<String>,
+    val itemClick : (position : Int) -> Unit)
     : RecyclerView.Adapter<filterApdater.MyViewHolder>(){
 
     interface OnItemClickListener{
@@ -34,6 +35,7 @@ class filterApdater(var items: ArrayList<String>)
         init{
             binding.textView.setOnClickListener{
                 itemClickListener?.OnItemClick(adapterPosition)
+                itemClick(absoluteAdapterPosition)
             }
 
         }

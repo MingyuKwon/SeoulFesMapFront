@@ -1,19 +1,26 @@
 package com.example.seoulfesmap
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.seoulfesmap.Data.RetrofitClient
+import com.example.seoulfesmap.Data.TokenGoogleService
 import com.example.seoulfesmap.Data.TokenService
 import com.example.seoulfesmap.Data.User
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
@@ -28,6 +35,26 @@ var isGuest = false;
 
 class StartActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        Log.d("result.data", result.data.toString())
+
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                Log.e("Account", account.id + " " + account.email )
+
+                googleSignInResult(task)
+                // 로그인 성공, 계정 정보 처리
+            } catch (e: ApiException) {
+                Log.i("GoogleLoginError" , e.toString())
+            }
+        } else if (result.resultCode == Activity.RESULT_CANCELED) {
+            // 로그인 창이 닫힘, 사용자가 로그인을 취소
+            Log.d("cancelded", "Login canceled by user")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +68,7 @@ class StartActivity : AppCompatActivity() {
 
         val btnNaverLogin = findViewById<ImageView>(R.id.btn_naverLogin)
         val btnGuestLogin = findViewById<ImageView>(R.id.btn_guestLogin)
-//        val btnGoogleLogin = findViewById<ImageView>(R.id.btn_googleLogin)
+        val btnGoogleLogin = findViewById<ImageView>(R.id.btn_googleLogin)
 
         btnNaverLogin.setOnClickListener {
             naverLogin()
@@ -51,9 +78,9 @@ class StartActivity : AppCompatActivity() {
             guestLogin()
         }
 
-//        btnGoogleLogin.setOnClickListener {
-//            googleLogin()
-//        }
+        btnGoogleLogin.setOnClickListener {
+            googleLogin()
+        }
 
         requestLocationPermission()
 //      moveToMainActivity()
@@ -149,10 +176,59 @@ class StartActivity : AppCompatActivity() {
         })
     }
 
-    fun googleLogin(){
-        val googleLoginUrl = "https://konkukcapstone.dwer.kr:3000/login/google"
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(googleLoginUrl))
-        startActivity(intent)
+    fun SetUserDataGoogle(userId :String?, userEmail :String?, userProfile_image :String?, userName :String? )
+    {
+        Log.d("CHEKC", userId + " " + userEmail + " " + userProfile_image + " " + userName)
+        val service = RetrofitClient.getClient()!!.create(TokenGoogleService::class.java)
+        service.sendToken(userId, userEmail, userProfile_image, userName)!!.enqueue(object : Callback<List<User?>> {
+
+            override fun onFailure(call: Call<List<User?>>, t: Throwable) {
+                Log.e("TokenError", "Network error or the request was aborted", t)
+            }
+
+            override fun onResponse(call: Call<List<User?>>, response: Response<List<User?>>) {
+                if (response.isSuccessful) {
+                    // 성공적으로 데이터를 받아왔을 때의 처리
+                    val jsonResponse = (response.body() as ArrayList<User>).get(0)
+                    appStaticData.USER = jsonResponse
+                    moveToMainActivity()
+                } else {
+                    // 서버 에러 처리
+                    Log.e("TokenError", "Response not successful: " + response.code())
+                }
+            }
+        })
+    }
+
+    private fun googleLogin(){
+        try {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+
+            val mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+            val signInIntent = mGoogleSignInClient.signInIntent
+            resultLauncher.launch(signInIntent)
+        } catch (e: Exception) {
+            Log.w("failed", "what is wrong? : " + e);
+        }
+    }
+
+    private fun googleSignInResult(completedTask: Task<GoogleSignInAccount>){
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            var userId = account?.id.toString()
+            var userEmail = account?.email.toString()
+            var userProfile_image = account?.photoUrl.toString()
+            var userName = account?.displayName.toString()
+            SetUserDataGoogle(userId, userEmail, userProfile_image, userName)
+//            val familyname = account?.familyName
+//            val givenname = account?.givenName
+//            val name = familyname + givenname
+        } catch (e: ApiException){
+            Log.w("failed", "signInResult:failed code=" + e.statusCode)
+        }
     }
 
     private fun moveToMainActivity()

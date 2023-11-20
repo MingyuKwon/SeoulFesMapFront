@@ -21,6 +21,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.NewActivity.ChattingRoomActivity"
+            android:launchMode="singleTop"
             android:exported="false" />
         <activity
             android:name=".StartActivity"

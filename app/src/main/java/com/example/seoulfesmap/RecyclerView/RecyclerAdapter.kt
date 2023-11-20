@@ -76,11 +76,11 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>, var isVisited : Boolea
     {
         init{
             binding.VieTotal.setOnClickListener{
-                itemClickListener?.OnItemClick(adapterPosition)
+                itemClickListener?.OnItemClick(absoluteAdapterPosition)
             }
 
             binding.VieTotal.setOnLongClickListener{
-                itemLongClickListener?.OnItemLongClick(adapterPosition)!!
+                itemLongClickListener?.OnItemLongClick(absoluteAdapterPosition)!!
             }
         }
 

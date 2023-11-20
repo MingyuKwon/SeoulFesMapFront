@@ -26,7 +26,7 @@ class appStaticData : Application() {
         var visitedFesDatalist: ArrayList<FestivalData> = ArrayList()
 
 
-        var currentLocation : LatLng? = null
+        var currentLocation : LatLng = LatLng(37.5519, 126.9918)
 
         fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
             val earthRadius = 6371.0 // 지구 반지름 (킬로미터 단위)

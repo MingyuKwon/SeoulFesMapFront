@@ -27,13 +27,10 @@ class VisitedFestivalActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_visited_festival)
-
-        val actionBar = supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true) // 뒤로 가기 버튼 활성화
-
         _binding = ActivityVisitedFestivalBinding.inflate(layoutInflater)
         setContentView(binding.root) // 수정된 부분
+        val actionBar = supportActionBar
+        actionBar?.setDisplayHomeAsUpEnabled(true) // 뒤로 가기 버튼 활성화
 
         initRecyclerView()
 

@@ -152,6 +152,7 @@ class CalendarDialogFragment (var startFilter : String? ,
         calendarView.setup(startMonth, endMonth, daysOfWeek.first())
         calendarView.scrollToMonth(currentMonth)
 
+
         return AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()

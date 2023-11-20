@@ -75,14 +75,14 @@
         app:layout_constraintStart_toStartOf="parent">
     </ImageView>
 
-<!--    <ImageView-->
-<!--        android:id="@+id/btn_googleLogin"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:src="@drawable/google_login_btn"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent">-->
-<!--    </ImageView>-->
+    <ImageView
+        android:id="@+id/btn_googleLogin"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:src="@drawable/google_login_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+    </ImageView>
 
     <TextView
         android:id="@+id/textView"

@@ -17,6 +17,7 @@ import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.Data.VisitiedFestivalService
 import com.example.seoulfesmap.MainActivity
 import com.example.seoulfesmap.RecyclerView.stickerAdapter
+import com.example.seoulfesmap.StartActivity
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentProfileBinding
 import com.example.seoulfesmap.isGuest
@@ -136,6 +137,10 @@ class ProfileFragment : Fragment() {
     private fun NaverLogout() {
         isGuest = true
         NaverIdLoginSDK.logout()
+
+        val intent = Intent(requireContext(), StartActivity()::class.java)
+        startActivity(intent)
+        requireActivity().finish()
     }
 
 
