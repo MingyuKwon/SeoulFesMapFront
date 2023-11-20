@@ -3,17 +3,22 @@ package com.example.seoulfesmap
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.Data.TokenService
 import com.example.seoulfesmap.Data.User
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
@@ -28,6 +33,15 @@ var isGuest = false;
 
 class StartActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
+    var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == 1) {
+                val data: Intent? = result.data
+                val task: Task<GoogleSignInAccount> =
+                    GoogleSignIn.getSignedInAccountFromIntent(data)
+                googleSignInResult(task)
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +55,7 @@ class StartActivity : AppCompatActivity() {
 
         val btnNaverLogin = findViewById<ImageView>(R.id.btn_naverLogin)
         val btnGuestLogin = findViewById<ImageView>(R.id.btn_guestLogin)
-//        val btnGoogleLogin = findViewById<ImageView>(R.id.btn_googleLogin)
+        val btnGoogleLogin = findViewById<ImageView>(R.id.btn_googleLogin)
 
         btnNaverLogin.setOnClickListener {
             naverLogin()
@@ -51,9 +65,9 @@ class StartActivity : AppCompatActivity() {
             guestLogin()
         }
 
-//        btnGoogleLogin.setOnClickListener {
-//            googleLogin()
-//        }
+        btnGoogleLogin.setOnClickListener {
+            googleLogin()
+        }
 
         requestLocationPermission()
 //      moveToMainActivity()
@@ -149,10 +163,35 @@ class StartActivity : AppCompatActivity() {
         })
     }
 
-    fun googleLogin(){
-        val googleLoginUrl = "https://konkukcapstone.dwer.kr:3000/login/google"
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(googleLoginUrl))
-        startActivity(intent)
+    private fun googleLogin(){
+        try {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+
+            val mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+            val signInIntent = mGoogleSignInClient.signInIntent
+            resultLauncher.launch(signInIntent)
+        } catch (e: Exception) {
+            Log.w("failed", "what is wrong? : " + e);
+        }
+    }
+
+    private fun googleSignInResult(completedTask: Task<GoogleSignInAccount>){
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            var userId = account?.id.toString()
+            var userEmail = account?.email.toString()
+            var userProfile_image = account?.photoUrl.toString()
+            var userName = account?.displayName.toString()
+            SetUserData(userId, userEmail, userProfile_image, userName)
+//            val familyname = account?.familyName
+//            val givenname = account?.givenName
+//            val name = familyname + givenname
+        } catch (e: ApiException){
+            Log.w("failed", "signInResult:failed code=" + e.statusCode)
+        }
     }
 
     private fun moveToMainActivity()
