@@ -29,6 +29,7 @@ import com.example.seoulfesmap.appStaticData.Companion.currentLocation
 import com.example.seoulfesmap.appStaticData.Companion.hitcountupSend
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
 import com.example.seoulfesmap.isGuest
+import com.example.seoulfesmap.ui.Popup.DialogListener
 import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
@@ -42,7 +43,7 @@ import retrofit2.Response
 import java.time.LocalDateTime
 import kotlinx.coroutines.*
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), DialogListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
@@ -233,7 +234,7 @@ class HomeFragment : Fragment() {
 
 
     fun showFesDataPopUp(fesData : FestivalData) {
-        val dialogFragment = FesDataDialogFragment(fesData)
+        val dialogFragment = FesDataDialogFragment(fesData, this)
         dialogFragment.show(requireFragmentManager(), "FesDataPopUp")
     }
 
@@ -250,6 +251,10 @@ class HomeFragment : Fragment() {
 
         Log.d("ShowMapFesDataFromServer", showFeslist.size.toString())
 
+    }
+
+    override fun onDialogClosed() {
+        initializeMapLocation()
     }
 
 
