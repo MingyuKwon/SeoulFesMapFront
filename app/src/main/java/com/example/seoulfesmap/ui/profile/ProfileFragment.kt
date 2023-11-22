@@ -2,7 +2,6 @@ package com.example.seoulfesmap.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,21 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.seoulfesmap.Data.FestivalData
-import com.example.seoulfesmap.Data.FestivalService
-import com.example.seoulfesmap.Data.RetrofitClient
-import com.example.seoulfesmap.Data.VisitiedFestivalService
-import com.example.seoulfesmap.MainActivity
 import com.example.seoulfesmap.RecyclerView.stickerAdapter
 import com.example.seoulfesmap.StartActivity
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentProfileBinding
 import com.example.seoulfesmap.isGuest
+import com.example.seoulfesmap.loginNaver
 import com.example.seoulfesmap.ui.NewActivity.VisitedFestivalActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.navercorp.nid.NaverIdLoginSDK
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class ProfileFragment : Fragment() {
 
@@ -67,9 +61,17 @@ class ProfileFragment : Fragment() {
 
         val btnLogout: ImageButton = binding.logoutBtn
         if (isGuest == false) {
-            btnLogout.setOnClickListener {
-                NaverLogout()
+            if(loginNaver == true) {
+                btnLogout.setOnClickListener {
+                    NaverLogout()
+                }
             }
+            else { // Google
+                btnLogout.setOnClickListener {
+                    GoogleLogout()
+                }
+            }
+
         }
 
         val root: View = binding.root
@@ -137,6 +139,19 @@ class ProfileFragment : Fragment() {
     private fun NaverLogout() {
         isGuest = true
         NaverIdLoginSDK.logout()
+
+        val intent = Intent(requireContext(), StartActivity()::class.java)
+        startActivity(intent)
+        requireActivity().finish()
+    }
+
+    private fun GoogleLogout() {
+        isGuest = true
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        val mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+        mGoogleSignInClient.signOut()
 
         val intent = Intent(requireContext(), StartActivity()::class.java)
         startActivity(intent)

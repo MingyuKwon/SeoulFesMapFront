@@ -31,7 +31,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-var isGuest = false;
+var isGuest = false
+var loginNaver = false
 
 class StartActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 123 // 원하는 숫자로 설정
@@ -110,6 +111,7 @@ class StartActivity : AppCompatActivity() {
                 userEmail = response.profile?.email
                 userProfile_image = response.profile?.profileImage
                 userName = response.profile?.name
+                loginNaver = true
                 SetUserData(userId, userEmail, userProfile_image, userName)
 
             }
@@ -150,6 +152,37 @@ class StartActivity : AppCompatActivity() {
         }
 
         NaverIdLoginSDK.authenticate(this, oauthLoginCallback)
+    }
+
+    private fun googleLogin(){
+        try {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+
+            val mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+            val signInIntent = mGoogleSignInClient.signInIntent
+            resultLauncher.launch(signInIntent)
+        } catch (e: Exception) {
+            Log.w("failed", "what is wrong? : " + e);
+        }
+    }
+
+    private fun googleSignInResult(completedTask: Task<GoogleSignInAccount>){
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            var userId = account?.id.toString()
+            var userEmail = account?.email.toString()
+            var userProfile_image = account?.photoUrl.toString()
+            var userName = account?.displayName.toString()
+            SetUserDataGoogle(userId, userEmail, userProfile_image, userName)
+//            val familyname = account?.familyName
+//            val givenname = account?.givenName
+//            val name = familyname + givenname
+        } catch (e: ApiException){
+            Log.w("failed", "signInResult:failed code=" + e.statusCode)
+        }
     }
 
     fun SetUserData(userId :String?, userEmail :String?, userProfile_image :String?, userName :String? )
@@ -198,37 +231,6 @@ class StartActivity : AppCompatActivity() {
                 }
             }
         })
-    }
-
-    private fun googleLogin(){
-        try {
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build()
-
-            val mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-            val signInIntent = mGoogleSignInClient.signInIntent
-            resultLauncher.launch(signInIntent)
-        } catch (e: Exception) {
-            Log.w("failed", "what is wrong? : " + e);
-        }
-    }
-
-    private fun googleSignInResult(completedTask: Task<GoogleSignInAccount>){
-        try {
-            val account = completedTask.getResult(ApiException::class.java)
-            var userId = account?.id.toString()
-            var userEmail = account?.email.toString()
-            var userProfile_image = account?.photoUrl.toString()
-            var userName = account?.displayName.toString()
-            SetUserDataGoogle(userId, userEmail, userProfile_image, userName)
-//            val familyname = account?.familyName
-//            val givenname = account?.givenName
-//            val name = familyname + givenname
-        } catch (e: ApiException){
-            Log.w("failed", "signInResult:failed code=" + e.statusCode)
-        }
     }
 
     private fun moveToMainActivity()
