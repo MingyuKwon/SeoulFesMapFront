@@ -2,11 +2,14 @@ package com.example.seoulfesmap.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -72,10 +75,27 @@ class ProfileFragment : Fragment() {
                 }
             }
 
+        }else
+        {
+            btnLogout.setOnClickListener {
+                movetoStartActivity()
+            }
+        }
+
+        if(isGuest)
+        {
+            binding.visitedConatiner.visibility = View.GONE
         }
 
         val root: View = binding.root
         return root
+    }
+
+    fun movetoStartActivity()
+    {
+        val intent = Intent(requireContext(), StartActivity()::class.java)
+        startActivity(intent)
+        requireActivity().finish()
     }
 
     fun initStickerRecyclerView() {
@@ -133,9 +153,7 @@ class ProfileFragment : Fragment() {
         isGuest = true
         NaverIdLoginSDK.logout()
 
-        val intent = Intent(requireContext(), StartActivity()::class.java)
-        startActivity(intent)
-        requireActivity().finish()
+        movetoStartActivity()
     }
 
     private fun GoogleLogout() {
@@ -146,9 +164,7 @@ class ProfileFragment : Fragment() {
         val mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
         mGoogleSignInClient.signOut()
 
-        val intent = Intent(requireContext(), StartActivity()::class.java)
-        startActivity(intent)
-        requireActivity().finish()
+        movetoStartActivity()
     }
 
 

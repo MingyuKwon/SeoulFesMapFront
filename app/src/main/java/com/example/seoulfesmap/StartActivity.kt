@@ -200,6 +200,7 @@ class StartActivity : AppCompatActivity() {
                     // 성공적으로 데이터를 받아왔을 때의 처리
                     val jsonResponse = (response.body() as ArrayList<User>).get(0)
                     appStaticData.USER = jsonResponse
+                    isGuest = false
                     moveToMainActivity()
                 } else {
                     // 서버 에러 처리
@@ -224,6 +225,7 @@ class StartActivity : AppCompatActivity() {
                     // 성공적으로 데이터를 받아왔을 때의 처리
                     val jsonResponse = (response.body() as ArrayList<User>).get(0)
                     appStaticData.USER = jsonResponse
+                    isGuest = false
                     moveToMainActivity()
                 } else {
                     // 서버 에러 처리
