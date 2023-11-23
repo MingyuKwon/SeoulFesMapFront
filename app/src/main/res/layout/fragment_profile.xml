@@ -180,32 +180,41 @@
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:text="Title"
-            android:textSize="14dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="15sp"
+            android:autoSizeStepGranularity="1sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/profile_visited_image"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/profile_visited_fesLocaiton"
-            android:layout_width="150dp"
+            android:layout_width="140dp"
             android:layout_height="20dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
             android:text="location"
-            android:textSize="12dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeStepGranularity="1sp"
             app:layout_constraintStart_toEndOf="@+id/profile_visited_image"
             app:layout_constraintTop_toBottomOf="@+id/profile_visited_fesTitle" />
 
         <TextView
             android:id="@+id/profile_visited_fesDate"
-            android:layout_width="150dp"
+            android:layout_width="140dp"
             android:layout_height="20dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
             android:text="date"
-            android:textSize="12dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeStepGranularity="1sp"
             app:layout_constraintStart_toEndOf="@+id/profile_visited_image"
             app:layout_constraintTop_toBottomOf="@+id/profile_visited_fesLocaiton" />
 
@@ -213,33 +222,33 @@
             android:id="@+id/profile_visited_image_small1"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="250dp"
+            android:layout_marginStart="230dp"
             android:layout_marginTop="40dp"
+            android:background="@drawable/borderstyle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/borderstyle"
             app:srcCompat="@drawable/baseline_cross_24" />
 
         <ImageView
             android:id="@+id/profile_visited_image_small2"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="285dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="40dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/borderstyle"
+            app:layout_constraintStart_toEndOf="@+id/profile_visited_image_small1"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/baseline_cross_24" />
 
         <ImageView
             android:id="@+id/profile_visited_image_small3"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="320dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="40dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/borderstyle"
+            app:layout_constraintStart_toEndOf="@+id/profile_visited_image_small2"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/baseline_cross_24" />
 
 
