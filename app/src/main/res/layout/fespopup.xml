@@ -5,9 +5,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     >
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="140dp"
@@ -24,15 +26,15 @@
             android:id="@+id/FesTitle"
             android:layout_width="150dp"
             android:layout_height="80dp"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeMinTextSize="5sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
             android:gravity="center"
             android:text="Title"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="5sp"
-            android:autoSizeMaxTextSize="20sp"
-            android:autoSizeStepGranularity="1sp"
 
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -44,47 +46,55 @@
             android:id="@+id/FesDateStart"
             android:layout_width="150dp"
             android:layout_height="30dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="40dp"
+            android:autoSizeMaxTextSize="15sp"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
             android:gravity="center"
             android:text="Start Date"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="8sp"
-            android:autoSizeMaxTextSize="15sp"
-            android:autoSizeStepGranularity="1sp"
-            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="@+id/FestLocation"
-            app:layout_constraintTop_toBottomOf ="@+id/FestLocation"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/FestLocation" />
 
         <TextView
             android:id="@+id/FesDateEnd"
             android:layout_width="150dp"
             android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:autoSizeMaxTextSize="15sp"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
             android:gravity="center"
             android:text="End Date"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="8sp"
-            android:autoSizeMaxTextSize="15sp"
-            android:autoSizeStepGranularity="1sp"
-            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="@+id/FesDateStart"
-            app:layout_constraintTop_toBottomOf ="@+id/FesDateStart"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/FesDateStart" />
 
         <TextView
             android:id="@+id/FestLocation"
             android:layout_width="150dp"
             android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:autoSizeMaxTextSize="15sp"
+            android:autoSizeMinTextSize="5sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
             android:gravity="center"
             android:text="Location"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="5sp"
-            android:autoSizeMaxTextSize="15sp"
-            android:autoSizeStepGranularity="1sp"
-            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="@+id/FesTitle"
-            app:layout_constraintTop_toBottomOf ="@+id/FesTitle"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/FesTitle" />
+
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="닫기"
+            app:layout_constraintStart_toEndOf="@+id/button2"
+            app:layout_constraintTop_toTopOf="@+id/button2" />
+
 
         <Button
             android:id="@+id/button1"
@@ -92,9 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="300dp"
-            android:layout_marginBottom="20dp"
             android:text="세부정보"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -102,31 +110,77 @@
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="커뮤니티"
             android:layout_marginStart="20dp"
+            android:text="커뮤니티"
             app:layout_constraintStart_toEndOf="@+id/button1"
             app:layout_constraintTop_toTopOf="@+id/button1" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="닫기"
-            android:layout_marginStart="20dp"
-            app:layout_constraintStart_toEndOf="@+id/button2"
-            app:layout_constraintTop_toTopOf="@+id/button2"
-
-            />
 
         <ImageButton
             android:id="@+id/Stamp"
             android:layout_width="100dp"
             android:layout_height="70dp"
-            android:layout_marginTop="5dp"
             android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView"
             app:srcCompat="@drawable/baseline_stardisable_24" />
+
+        <TextView
+            android:id="@+id/proposal"
+            android:layout_width="180dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:text="이런 곳은 어떠세요?"
+            android:autoSizeMaxTextSize="18sp"
+            android:autoSizeMinTextSize="5sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            app:layout_constraintStart_toEndOf="@+id/tourView"
+            app:layout_constraintTop_toTopOf="@+id/tourView" />
+
+        <TextView
+            android:id="@+id/district"
+            android:layout_width="90dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:text="구 이름"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="5sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            app:layout_constraintStart_toStartOf="@+id/tour"
+            app:layout_constraintTop_toBottomOf="@+id/tour" />
+
+        <TextView
+            android:id="@+id/tour"
+            android:layout_width="90dp"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:text="추천 관광지"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeMinTextSize="5sp"
+            android:autoSizeStepGranularity="1sp"
+            android:autoSizeTextType="uniform"
+            app:layout_constraintStart_toStartOf="@+id/proposal"
+            app:layout_constraintTop_toBottomOf="@+id/proposal" />
+
+        <ImageView
+            android:id="@+id/tourView"
+            android:layout_width="140dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="370dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/fesimageexample"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
