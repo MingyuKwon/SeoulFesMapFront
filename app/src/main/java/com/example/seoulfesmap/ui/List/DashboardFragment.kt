@@ -102,10 +102,19 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
 
     private fun setupRecyclerView() {
 
-        val uniqueCategories = appStaticData.FesDatalist.map { it.category }.toSet().filterNotNull()
-        val uniqueCategoriesList = ArrayList(uniqueCategories)
+//        val uniqueCategories = appStaticData.FesDatalist.map { it.category }.toSet().filterNotNull()
+//        val uniqueCategoriesList = ArrayList(uniqueCategories)
         filterlist.add("전체")
-        filterlist.addAll(uniqueCategoriesList)
+
+        filterlist.add("음악")
+        filterlist.add("뮤지컬/오페라")
+        filterlist.add("국악")
+        filterlist.add("전시/미술")
+        filterlist.add("교육/체험")
+        filterlist.add("영화")
+        filterlist.add("기타")
+
+//        filterlist.addAll(uniqueCategoriesList)
 
         adapter = RecyclerAdapter(appStaticData.FesDatalist)
         filteradapter = filterApdater(filterlist) {

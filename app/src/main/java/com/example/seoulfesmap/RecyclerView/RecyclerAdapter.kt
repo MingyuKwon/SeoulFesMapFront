@@ -25,7 +25,50 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>, var isVisited : Boolea
     fun filter(categortType: String, dateStart: String, dateEnd: String) {
         filteredList = when {
             categortType == "전체" -> items
-            else -> items.filter { it.category == categortType }
+            else -> {
+                if(categortType == "음악")
+                {
+                    items.filter { it.category == "콘서트"
+                            || it.category == "무용"
+                            || it.category == "클래식"}
+                }else if(categortType == "뮤지컬/오페라")
+                {
+                    items.filter { it.category == "뮤지컬/오페라"
+                            || it.category == "연극"}
+
+                }else if(categortType == "국악")
+                {
+                    items.filter { it.category == "국악" }
+
+                }else if(categortType == "전시/미술")
+                {
+                    items.filter { it.category == "전시/미술" }
+
+                }else if(categortType == "교육/체험")
+                {
+                    items.filter { it.category == "교육/체험" }
+
+                }else if(categortType == "영화")
+                {
+                    items.filter { it.category == "영화" }
+
+                }else
+                {
+                    items.filter {
+                        it.category != "콘서트"
+                                && it.category != "무용"
+                                && it.category != "클래식"
+                                && it.category != "뮤지컬/오페라"
+                                && it.category != "연극"
+                                && it.category != "국악"
+                                && it.category != "전시/미술"
+                                && it.category != "교육/체험"
+                                && it.category != "영화" }
+
+                }
+
+            }
+
         }
 
         filteredList = when {

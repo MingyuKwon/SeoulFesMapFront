@@ -44,6 +44,7 @@ class filterApdater(var items: ArrayList<String>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view : FilterbuttonBinding = FilterbuttonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
         return MyViewHolder(view)
     }
 
