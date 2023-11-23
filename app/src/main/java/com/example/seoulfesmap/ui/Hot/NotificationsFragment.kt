@@ -35,7 +35,7 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
     private lateinit var activityContext: Context
 
     private var list: ArrayList<FestivalData> = ArrayList()
-    lateinit var adapter: RecyclerAdapter
+    var adapter: RecyclerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,17 +75,23 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
 
     override fun OnItemClick(position: Int) {
-        appStaticData.hitcountupSend(adapter.filteredList[position].fid!!);
-        showFesDataPopUp(adapter.filteredList[position])
+        appStaticData.hitcountupSend(adapter!!.filteredList[position].fid!!);
+        showFesDataPopUp(adapter!!.filteredList[position])
     }
     private fun setupRecyclerView() {
-        adapter = RecyclerAdapter(list)
+        if(adapter == null)
+        {
+            adapter = RecyclerAdapter(list)
+            binding.recyclerView.layoutManager = LinearLayoutManager(context)
+            val dividerDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+            binding.recyclerView.addItemDecoration(dividerDecoration)
+            adapter!!.itemClickListener = this
+            binding.recyclerView.adapter = adapter
+        }else
+        {
+            adapter!!.refillData(list)
+        }
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        val dividerDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-        binding.recyclerView.addItemDecoration(dividerDecoration)
-        adapter.itemClickListener = this
-        binding.recyclerView.adapter = adapter
     }
 
     fun initRecyclerView()

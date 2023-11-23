@@ -16,6 +16,12 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>, var isVisited : Boolea
 
     var filteredList: List<FestivalData> = items
 
+    fun refillData(newitems: ArrayList<FestivalData>)
+    {
+        filteredList = newitems
+        notifyDataSetChanged()
+    }
+
     fun filter(categortType: String, dateStart: String, dateEnd: String) {
         filteredList = when {
             categortType == "전체" -> items
