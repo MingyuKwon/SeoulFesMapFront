@@ -74,6 +74,9 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
     @SerializedName("time")
     var visitedDate: String? = null
 
+    @SerializedName("gu_name")
+    var gu_name: String? = null
+
 
     override fun toString(): String {
         var str = ""

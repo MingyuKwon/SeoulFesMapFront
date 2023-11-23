@@ -27,7 +27,20 @@ interface DialogListener {
 }
 
 class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: DialogListener? = null) : DialogFragment() {
+    var seoulDistrict:Array<String> = arrayOf("강서구", "양천구", "구로구", "영등포구", "금천구",
+        "동작구", "관악구", "서초구", "강남구", "송파구", "강동구", "은평구", "서대문구", "마포구", "종로구",
+        "중구", "용산구", "강북구", "성북구", "도봉구", "노원구", "중랑구", "동대문구", "성동구", "광진구")
 
+    val images = arrayOf(R.drawable.gangseo, R.drawable.yangchun, R.drawable.guro, R.drawable.yeongdeongpo, R.drawable.geumchun,
+        R.drawable.dongjak, R.drawable.kwanak, R.drawable.seocho, R.drawable.gangnam, R.drawable.songpa, R.drawable.gangdong,
+        R.drawable.eunpyeong, R.drawable.seodaemun, R.drawable.mapo, R.drawable.jongro, R.drawable.jung, R.drawable.yongsan,
+        R.drawable.gangbuk, R.drawable.seocho, R.drawable.dobong, R.drawable.nowon, R.drawable.jungrang, R.drawable.dongdaemun,
+        R.drawable.seodaemun, R.drawable.kwangjin)
+
+    val tournames = arrayOf("소악루", "조계종 국제선센터", "고척스카이돔", "밤도깨비 야시장", "예술의 시간",
+        "수산물 도매시장", "151동 미술관", "예술의 전당", "별마당 도서관", "롯데월드", "광나루 한강공원",
+        "역사 한옥 박물관", "자연사 박물관", "하늘공원", "쌈지길", "DDP", "N서울타워", "북서울 꿈의 숲",
+        "정릉", "창포원", "서울시립 과학관", "중랑장미공원", "서울풍물시장", "응봉산 팔각정", "일감호")
     override fun onCreateDialog(savedInstanceState: Bundle?) : Dialog{
         val dialogView = LayoutInflater.from(context).inflate(R.layout.fespopup, null)
 
@@ -58,35 +71,13 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
         val districtName: TextView = dialogView.findViewById(R.id.district)
         val tourName : TextView = dialogView.findViewById(R.id.tour)
         val tourImage : ImageView = dialogView.findViewById(R.id.tourView)
-        var seoulDistrict:Array<String> = arrayOf("강서구", "양천구", "구로구", "영등포구", "금천구",
-            "동작구", "관악구", "서초구", "강남구", "송파구", "강동구", "은평구", "서대문구", "마포구", "종로구",
-            "중구", "용산구", "강북구", "성북구", "도봉구", "노원구", "중랑구", "동대문구", "성동구", "광진구")
-
-        val images = arrayOf("gangseo.jpeg", "yangchun.jpeg", "guro.jpeg", "yeongdeungpo.jpeg", "geumchun.jpeg",
-            "dongjak.jpeg", "kwanak.jpeg", "seocho.jpeg", "gangnam.jpeg", "songpa.jpeg", "gangdong.jpeg",
-            "eunpyeong.jpeg", "seodaemun.jpeg", "mapo.jpeg", "jongro.jpeg", "jong.jpeg", "yongsan.jpeg",
-            "gangbuk.jpeg", "seongbuk.jpeg", "dobong.jpeg", "nowon.jpeg", "jungrang.jpeg", "dongdaemun.jpeg",
-            "seongdong.jpeg", "kwangjin.jpeg")
-
-        val tournames = arrayOf("소악루", "조계종 국제선센터", "고척스카이돔", "밤도깨비 야시장", "예술의 시간",
-            "수산물 도매시장", "151동 미술관", "예술의 전당", "별마당 도서관", "롯데월드", "광나루 한강공원",
-            "역사 한옥 박물관", "자연사 박물관", "하늘공원", "쌈지길", "DDP", "N서울타워", "북서울 꿈의 숲",
-            "정릉", "창포원", "서울시립 과학관", "중랑장미공원", "서울풍물시장", "응봉산 팔각정", "일감호")
-        Log.e("fesdata", fesData.FesLocation.toString())
-        Log.e("district", seoulDistrict[0])
         for(i: Int in 0 .. 24) {
-            if(fesData.FesLocation.toString().indexOf(seoulDistrict[i]) != -1) {
+            if(fesData.gu_name == seoulDistrict[i]) {
                 districtName.text = seoulDistrict[i]
                 tourName.text = tournames[i]
-                tourImage.setImageResource(resources.getIdentifier(images[i], "drawable",
-                    requireContext().toString()
-                ))
-//                Glide.with(requireContext())
-//                    .load(images[i])
-//                    .into(tourImage)
+                tourImage.setImageResource(images[i])
             }
         }
-//        addTour()
 
 
         detailbutton.setOnClickListener {
@@ -159,34 +150,5 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
         startActivity(intent)
     }
 
-    private fun addTour() {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.fespopup, null)
-        val districtName: TextView = dialogView.findViewById(R.id.district)
-        val tourName : TextView = dialogView.findViewById(R.id.tour)
-        val tourImage : ImageView = dialogView.findViewById(R.id.tourView)
-        var seoulDistrict:Array<String> = arrayOf("강서구", "양천구", "구로구", "영등포구", "금천구",
-            "동작구", "관악구", "서초구", "강남구", "송파구", "강동구", "은평구", "서대문구", "마포구", "종로구",
-            "중구", "용산구", "강북구", "성북구", "도봉구", "노원구", "중랑구", "동대문구", "성동구", "광진구")
-
-        val images = arrayOf("gangseo.jpeg", "yangchun.jpeg", "guro.jpeg", "yeongdeungpo.jpeg", "geumchun.jpeg",
-            "dongjak.jpeg", "kwanak.jpeg", "seocho.jpeg", "gangnam.jpeg", "songpa.jpeg", "gangdong.jpeg",
-            "eunpyeong.jpeg", "seodaemun.jpeg", "mapo.jpeg", "jongro.jpeg", "jong.jpeg", "yongsan.jpeg",
-            "gangbuk.jpeg", "seongbuk.jpeg", "dobong.jpeg", "nowon.jpeg", "jungrang.jpeg", "dongdaemun.jpeg",
-            "seongdong.jpeg", "kwangjin.jpeg")
-
-        val tournames = arrayOf("소악루", "조계종 국제선센터", "고척스카이돔", "밤도깨비 야시장", "예술의 시간",
-            "수산물 도매시장", "151동 미술관", "예술의 전당", "별마당 도서관", "롯데월드", "광나루 한강공원",
-            "역사 한옥 박물관", "자연사 박물관", "하늘공원", "쌈지길", "DDP", "N서울타워", "북서울 꿈의 숲",
-            "정릉", "창포원", "서울시립 과학관", "중랑장미공원", "서울풍물시장", "응봉산 팔각정", "일감호")
-        for(i: Int in 0 .. 24) {
-            if(fesData.FesLocation == seoulDistrict[i]) {
-                districtName.text = seoulDistrict[i]
-                tourName.text = tournames[i]
-                Glide.with(requireContext())
-                    .load(images[i])
-                    .into(tourImage)
-            }
-        }
-    }
 
 }
