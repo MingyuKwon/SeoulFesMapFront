@@ -19,7 +19,6 @@ import com.example.seoulfesmap.R
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.appStaticData.Companion.plusVisitedFes
 import com.example.seoulfesmap.ui.NewActivity.ChattingRoomActivity
-import com.naver.maps.map.overlay.OverlayImage
 import java.time.LocalDateTime
 
 interface DialogListener {
@@ -45,7 +44,6 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
 
         val stampButton : ImageButton = dialogView.findViewById(R.id.Stamp)
         stampButton.isEnabled  = false
-
 
         Glide.with(requireContext())
             .load(fesData.imageResourceUrl)
@@ -125,6 +123,36 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
 
 // Activity 시작
         startActivity(intent)
+    }
+
+    private fun addTour() {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.fespopup, null)
+        val districtName: TextView = dialogView.findViewById(R.id.district)
+        val tourName : TextView = dialogView.findViewById(R.id.tour)
+        val tourImage : ImageView = dialogView.findViewById(R.id.tourView)
+        var seoulDistrict:Array<String> = arrayOf("강서구", "양천구", "구로구", "영등포구", "금천구",
+            "동작구", "관악구", "서초구", "강남구", "송파구", "강동구", "은평구", "서대문구", "마포구", "종로구",
+            "중구", "용산구", "강북구", "성북구", "도봉구", "노원구", "중랑구", "동대문구", "성동구", "광진구")
+
+        val images = arrayOf("강서구.jpeg", "양천구.jpeg", "구로구.jpeg", "영등포구.jpeg", "금천구.jpeg",
+            "동작구.jpeg", "관악구.jpeg", "서초구.jpeg", "강남구.jpeg", "송파구.jpeg", "강동구.jpeg",
+            "은평구.jpeg", "서대문구.jpeg", "마포구.jpeg", "종로구.jpeg", "중구.jpeg", "용산구.jpeg",
+            "강북구.jpeg", "성북구.jpeg", "도봉구.jpeg", "노원구.jpeg", "중랑구.jpeg", "동대문구.jpeg",
+            "성동구.jpeg", "광진구.jpeg")
+
+        val tournames = arrayOf("소악루", "조계종 국제선센터", "고척스카이돔", "밤도깨비 야시장", "예술의 시간",
+            "수산물 도매시장", "151동 미술관", "예술의 전당", "별마당 도서관", "롯데월드", "광나루 한강공원",
+            "역사 한옥 박물관", "자연사 박물관", "하늘공원", "쌈지길", "DDP", "N서울타워", "북서울 꿈의 숲",
+            "정릉", "창포원", "서울시립 과학관", "중랑장미공원", "서울풍물시장", "응봉산 팔각정", "일감호")
+        for(i: Int in 0 .. 24) {
+            if(fesData.FesLocation == seoulDistrict[i]) {
+                districtName.text = seoulDistrict[i]
+                tourName.text = tournames[i]
+                Glide.with(requireContext())
+                    .load(images[i])
+                    .into(tourImage)
+            }
+        }
     }
 
 }
