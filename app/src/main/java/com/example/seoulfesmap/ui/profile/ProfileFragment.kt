@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.seoulfesmap.RecyclerView.clickInterface
 import com.example.seoulfesmap.RecyclerView.stickerAdapter
 import com.example.seoulfesmap.StartActivity
 import com.example.seoulfesmap.appStaticData
@@ -78,17 +80,16 @@ class ProfileFragment : Fragment() {
 
     fun initStickerRecyclerView() {
 
-        stickeradapter = stickerAdapter(appStaticData.visitedFesDatalist)
-
-        stickeradapter.itemClickListener = object : stickerAdapter.OnItemClickListener {
+        stickeradapter = stickerAdapter(appStaticData.visitedFesDatalist, object : clickInterface {
             override fun OnItemClick(position: Int) {
-                val selectedCategory = stickeradapter.items[position]
-                // 다른 RecyclerView의 데이터를 정렬하는 메서드 호출
-                stickeradapter.notifyDataSetChanged()
+                val exlainText =  arrayOf("로그인에 성공했습니다","영화 카테고리 축제 3개 이상을 방문하였습니다","오페라/뮤지컬 카테고리 축제 3개 이상을 방문하였습니다"
+                    ,"음악 카테고리 축제 3개 이상을 방문하였습니다","국악 카테고리 축제 3개 이상을 방문하였습니다","전시회 카테고리 축제 3개 이상을 방문하였습니다",
+                    "교육 카테고리 축제 3개 이상을 방문하였습니다","기타 카테고리 축제 3개 이상을 방문하였습니다","모든 스티커를 수집하였습니다",)
+                if(stickeradapter.stickerItems[position] != "none")
+                    Toast.makeText(requireContext(), exlainText[position], Toast.LENGTH_SHORT).show()
             }
-        }
 
-
+        })
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.stickerrecyclerview.setLayoutManager(layoutManager)
         binding.stickerrecyclerview.adapter = stickeradapter

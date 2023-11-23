@@ -5,6 +5,8 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seoulfesmap.Data.FestivalData
@@ -12,20 +14,17 @@ import com.example.seoulfesmap.R
 import com.example.seoulfesmap.databinding.FilterbuttonBinding
 import com.example.seoulfesmap.databinding.StickerContainerBinding
 
-class stickerAdapter(var items: ArrayList<FestivalData>) : RecyclerView.Adapter<stickerAdapter.MyViewHolder>(){
+interface clickInterface
+{
+    fun OnItemClick(position: Int)
+}
+class stickerAdapter(var items: ArrayList<FestivalData>, var callback : clickInterface) : RecyclerView.Adapter<stickerAdapter.MyViewHolder>(){
 
     var stickerItems = arrayOf("newbee","none","none","none","none","none","none","none","none",)
     val images = arrayOf(R.drawable.newbee, R.drawable.movie, R.drawable.opera, R.drawable.music, R.drawable.korea_music,
         R.drawable.exihibition, R.drawable.education, R.drawable.guitar, R.drawable.grandslam)
-    interface OnItemClickListener{
-            fun OnItemClick(position : Int)
-        }
 
-        var itemClickListener: OnItemClickListener? = object : stickerAdapter.OnItemClickListener{
-            override fun OnItemClick(position: Int) {
-                notifyDataSetChanged()
-            }
-        }
+
 
         inner class MyViewHolder(val binding: com.example.seoulfesmap.databinding.StickerContainerBinding) : RecyclerView.ViewHolder(binding.root)
         {
@@ -46,7 +45,10 @@ class stickerAdapter(var items: ArrayList<FestivalData>) : RecyclerView.Adapter<
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            changeViewBorderColor(holder.binding.imageView3, getBorderColorForItem(position));
+            changeViewBorderColor(holder.binding.imageView3, getBorderColorForItem(position))
+            holder.binding.imageView3.setOnClickListener {
+                callback.OnItemClick(position)
+            }
             if(stickerItems[position] == "none")
             {
                 val drawable = ContextCompat.getDrawable(holder.itemView.context, R.drawable.baseline_cross_24)
