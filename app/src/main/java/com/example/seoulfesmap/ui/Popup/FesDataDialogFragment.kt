@@ -53,6 +53,7 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
         locationText.text = fesData.FesLocation
         dateStartText.text = fesData.FesStartDate!!.toString()
         dateEndText.text = fesData.FesEndDate!!.toString()
+        addTour()
 
 
         detailbutton.setOnClickListener {
