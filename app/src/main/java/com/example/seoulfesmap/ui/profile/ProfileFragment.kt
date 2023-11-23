@@ -25,8 +25,6 @@ class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-
-    private var stickerlist: ArrayList<String> = ArrayList()
     lateinit var stickeradapter: stickerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,14 +77,8 @@ class ProfileFragment : Fragment() {
     }
 
     fun initStickerRecyclerView() {
-        stickerlist.add("none")
-        stickerlist.add("none")
-        stickerlist.add("none")
-        stickerlist.add("none")
-        stickerlist.add("none")
 
-
-        stickeradapter = stickerAdapter(stickerlist)
+        stickeradapter = stickerAdapter(appStaticData.visitedFesDatalist)
 
         stickeradapter.itemClickListener = object : stickerAdapter.OnItemClickListener {
             override fun OnItemClick(position: Int) {

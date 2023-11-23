@@ -10,9 +10,11 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:srcCompat="@drawable/baseline_cross_24"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:background="@drawable/empty_sticker"
-        />
+        android:scaleType="fitCenter"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/baseline_cross_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>
