@@ -108,16 +108,16 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
 
         if(appStaticData.visitedFesDatalist.any { it.fid == fesData.fid!!})
         {
-            stampButton.setImageResource(R.drawable.baseline_star_24)
+            stampButton.setImageResource(R.drawable.stamp_ok)
         }else
         {
-            stampButton.setImageResource(R.drawable.baseline_stardisable_24)
+            stampButton.setImageResource(R.drawable.stamp_no)
             val currentDate = LocalDateTime.now() // 현재 날짜와 시간
             if(
             //appStaticData.calculateDistance(fesData.xpos!!, fesData.ypos!!, appStaticData.currentLocation!!.latitude, appStaticData.currentLocation!!.longitude) < 0.05 &&
                 (!currentDate.isBefore(fesData.FesStartDate) && !currentDate.isAfter(fesData.FesEndDate)))
             {
-                stampButton.setImageResource(R.drawable.baseline_star_outline_24)
+                stampButton.setImageResource(R.drawable.stamp_clickable)
                 stampButton.isEnabled  = true
             }
         }
@@ -126,7 +126,7 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
 
         stampButton.setOnClickListener {
             plusVisitedFes(fesData)
-            stampButton.setImageResource(R.drawable.baseline_star_24)
+            stampButton.setImageResource(R.drawable.stamp_ok)
             stampButton.isEnabled  = false
         }
 

@@ -187,7 +187,7 @@ class HomeFragment : Fragment(), DialogListener {
     fun CreateFestivalMarker(fesData: FestivalData): Marker {
         val marker = Marker()
         if(isStickerMode) {
-            marker.icon = OverlayImage.fromResource(R.drawable.baseline_star_24)
+            marker.icon = OverlayImage.fromResource(R.drawable.stamp_ok)
         } else {
             marker.icon = OverlayImage.fromResource(R.drawable.icon)
         }

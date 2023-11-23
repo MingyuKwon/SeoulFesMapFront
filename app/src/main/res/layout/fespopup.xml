@@ -124,7 +124,9 @@
             android:layout_marginTop="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView"
-            app:srcCompat="@drawable/baseline_stardisable_24" />
+            app:srcCompat="@drawable/stamp_no"
+            android:scaleType="fitCenter"
+            />
 
         <TextView
             android:id="@+id/proposal"
