@@ -3,24 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
 
     <TextView
         android:id="@+id/month"
         android:layout_width="170dp"
         android:layout_height="0dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
         android:text="Month"
         android:textAlignment="center"
         android:textSize="25sp"
-        android:textStyle="bold"
-        android:layout_marginLeft="40dp"
 
-        android:layout_marginTop="20dp"
+        android:textStyle="bold"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
- />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.kizitonwose.calendar.view.CalendarView
         android:id="@+id/calendarView"
@@ -34,88 +33,68 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
+s
 
     <Button
-        android:id="@+id/DateStartButton"
+        android:id="@+id/FilterStartButton"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="80dp"
-        android:text="시작 날짜 정하기"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"
+        android:text="날짜 범위 정하기"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
-
-    <Button
-        android:id="@+id/DateStartClearButton"
-        android:layout_width="00dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginStart="20dp"
-        android:text="시작 날짜 초기화"
-        android:layout_marginBottom="40dp"
-        android:textSize="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/DateStartButton"
-        app:layout_constraintStart_toStartOf="@+id/DateStartButton"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <Button
-        android:id="@+id/DateEndClearButton"
+        android:id="@+id/FilterClearButton"
         android:layout_width="00dp"
         android:layout_height="40dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginStart="20dp"
-        android:text="마감 날짜 초기화"
-        android:layout_marginBottom="40dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:text="날짜 필터 해제"
         android:textSize="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/DateEndButton"
-        app:layout_constraintStart_toStartOf="@+id/DateEndButton"
-        />
-
-
-    <Button
-        android:id="@+id/DateEndButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="180dp"
-        android:layout_marginTop="80dp"
-        android:text="마감 날짜 정하기"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+        app:layout_constraintStart_toEndOf="@+id/FilterStartButton"
+        app:layout_constraintTop_toTopOf="@+id/FilterStartButton" />
 
     <TextView
         android:id="@+id/DateStartText"
-        android:layout_width="150dp"
+        android:layout_width="130dp"
         android:layout_height="30dp"
-        android:text="startDate"
-        android:gravity="center"
-        android:textSize="15sp"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/borderstyle"
+        android:gravity="center"
 
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/DateStartButton"
-        app:layout_constraintStart_toStartOf="@+id/DateStartButton" />
+        android:text="startDate"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/FilterStartButton"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/DateEndText"
-        android:layout_width="150dp"
+        android:layout_width="130dp"
         android:layout_height="30dp"
-        android:text="endDate"
-        android:gravity="center"
-        android:textSize="15sp"
+        android:layout_marginStart="20dp"
         android:background="@drawable/borderstyle"
 
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/DateEndButton"
-        app:layout_constraintStart_toStartOf="@+id/DateEndButton" />
+        android:gravity="center"
+        android:text="endDate"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/DateStartText"
+        app:layout_constraintTop_toTopOf="@+id/DateStartText"
+
+        />
 
     <Button
         android:id="@+id/CLoseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Apply"
-        android:layout_marginLeft="250dp"
+        android:layout_marginLeft="230dp"
         android:layout_marginTop="15dp"
+        android:text="Apply"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

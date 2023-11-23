@@ -19,5 +19,7 @@
     android:layout_height="0dp"
     android:padding="20sp"
     android:layout_weight="1"
-    android:background="@drawable/borderstyle" />
+        android:layout_margin="10sp"
+
+        android:background="@drawable/borderstyle" />
 </LinearLayout>

@@ -3,11 +3,13 @@ package com.example.seoulfesmap.ui.Popup
 import android.app.AlertDialog
 import android.app.Dialog
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.example.seoulfesmap.R
@@ -37,17 +39,19 @@ class CalendarDialogFragment (var startFilter : String? ,
                 if(mode  == 1)
                 {
                     startText!!.text = day.date.toString()
-                    mode = 0
-                    startButton!!.setBackgroundColor(ContextCompat.getColor(view.context, R.color.purple_500))
-                    startButton!!.isEnabled = true
-                    endButton!!.isEnabled = true
+                    changeViewBorderColor(startText!!, R.color.black)
+                    changeViewBorderColor(endText!!, R.color.purple_500)
+
+                    mode = 2
                 }else if(mode  == 2)
                 {
                     endText!!.text = day.date.toString()
                     mode = 0
-                    endButton!!.setBackgroundColor(ContextCompat.getColor(view.context, R.color.purple_500))
-                    startButton!!.isEnabled = true
-                    endButton!!.isEnabled = true
+                    filterButton!!.setBackgroundColor(ContextCompat.getColor(view.context, R.color.purple_500))
+                    filterButton!!.isEnabled = true
+                    changeViewBorderColor(startText!!, R.color.black)
+                    changeViewBorderColor(endText!!, R.color.black)
+
 
                 }
 
@@ -57,11 +61,20 @@ class CalendarDialogFragment (var startFilter : String? ,
 
     companion object {
         // 이곳에 정적(static-like) 변수와 메소드를 정의할 수 있습니다.
-        var mode = 0 // 1은 start 입력, 2는 end 입력
+        var mode = 0 // 1은 start 입력, 2는 end 입력, 0은 기본
         var startText : TextView? = null
         var endText : TextView? = null
-        var startButton : Button? = null
-        var endButton : Button? = null
+        var filterButton : Button? = null
+
+        fun changeViewBorderColor(view: View, newColor: Int) {
+            val background = view.background
+            var borderWidth = 10
+            if(newColor != R.color.black) borderWidth = 15
+
+            if (background is GradientDrawable) {
+                background.setStroke(borderWidth, newColor) // borderWidth는 테두리의 두께입니다.
+            }
+        }
     }
 
     override fun onDetach() {
@@ -69,8 +82,7 @@ class CalendarDialogFragment (var startFilter : String? ,
         mode = 0
         startText = null
         endText = null
-        startButton = null
-        endButton = null
+        filterButton = null
 
     }
 
@@ -89,15 +101,16 @@ class CalendarDialogFragment (var startFilter : String? ,
 
         startText = dialogView.findViewById<TextView>(R.id.DateStartText)
         endText = dialogView.findViewById<TextView>(R.id.DateEndText)
-        startButton = dialogView.findViewById<Button>(R.id.DateStartButton)
-        endButton = dialogView.findViewById<Button>(R.id.DateEndButton)
+        filterButton = dialogView.findViewById<Button>(R.id.FilterStartButton)
 
-        startButton!!.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_500))
-        endButton!!.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_500))
+        changeViewBorderColor(startText!!, R.color.black)
+        changeViewBorderColor(endText!!, R.color.black)
 
 
-        var startClearButton = dialogView.findViewById<Button>(R.id.DateStartClearButton)
-        var EndClearButton = dialogView.findViewById<Button>(R.id.DateEndClearButton)
+        filterButton!!.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_500))
+
+
+        var filterClearButton = dialogView.findViewById<Button>(R.id.FilterClearButton)
 
 
         val closeButton = dialogView.findViewById<Button>(R.id.CLoseButton)
@@ -105,26 +118,20 @@ class CalendarDialogFragment (var startFilter : String? ,
         startText!!.text = startFilter
         endText!!.text = endFilter
 
-        startButton!!.setOnClickListener {
+        filterButton!!.setOnClickListener {
             mode = 1 // 시작 날짜를 선택하는 모드로 설정
-            startButton!!.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_200))
-            endButton!!.isEnabled = false
-            startButton!!.isEnabled = false
+            filterButton!!.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_200))
+            filterButton!!.isEnabled = false
+            changeViewBorderColor(startText!!, R.color.purple_500)
+            changeViewBorderColor(endText!!, R.color.black)
+
         }
-        endButton!!.setOnClickListener {
-            mode = 2 // 시작 날짜를 선택하는 모드로 설정
-            endButton!!.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_200))
-            startButton!!.isEnabled = false
-            endButton!!.isEnabled = false
-        }
-        startClearButton.setOnClickListener {
+        
+        filterClearButton.setOnClickListener {
             startText!!.text = ""
-        }
-
-        EndClearButton.setOnClickListener {
             endText!!.text = ""
-        }
 
+        }
 
         closeButton.setOnClickListener {
             calendarDialogListener!!.onDateSelected(startText!!.text.toString(), endText!!.text.toString())
