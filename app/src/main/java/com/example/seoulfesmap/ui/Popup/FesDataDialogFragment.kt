@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageButton
@@ -53,7 +54,39 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
         locationText.text = fesData.FesLocation
         dateStartText.text = fesData.FesStartDate!!.toString()
         dateEndText.text = fesData.FesEndDate!!.toString()
-        addTour()
+
+        val districtName: TextView = dialogView.findViewById(R.id.district)
+        val tourName : TextView = dialogView.findViewById(R.id.tour)
+        val tourImage : ImageView = dialogView.findViewById(R.id.tourView)
+        var seoulDistrict:Array<String> = arrayOf("강서구", "양천구", "구로구", "영등포구", "금천구",
+            "동작구", "관악구", "서초구", "강남구", "송파구", "강동구", "은평구", "서대문구", "마포구", "종로구",
+            "중구", "용산구", "강북구", "성북구", "도봉구", "노원구", "중랑구", "동대문구", "성동구", "광진구")
+
+        val images = arrayOf("gangseo.jpeg", "yangchun.jpeg", "guro.jpeg", "yeongdeungpo.jpeg", "geumchun.jpeg",
+            "dongjak.jpeg", "kwanak.jpeg", "seocho.jpeg", "gangnam.jpeg", "songpa.jpeg", "gangdong.jpeg",
+            "eunpyeong.jpeg", "seodaemun.jpeg", "mapo.jpeg", "jongro.jpeg", "jong.jpeg", "yongsan.jpeg",
+            "gangbuk.jpeg", "seongbuk.jpeg", "dobong.jpeg", "nowon.jpeg", "jungrang.jpeg", "dongdaemun.jpeg",
+            "seongdong.jpeg", "kwangjin.jpeg")
+
+        val tournames = arrayOf("소악루", "조계종 국제선센터", "고척스카이돔", "밤도깨비 야시장", "예술의 시간",
+            "수산물 도매시장", "151동 미술관", "예술의 전당", "별마당 도서관", "롯데월드", "광나루 한강공원",
+            "역사 한옥 박물관", "자연사 박물관", "하늘공원", "쌈지길", "DDP", "N서울타워", "북서울 꿈의 숲",
+            "정릉", "창포원", "서울시립 과학관", "중랑장미공원", "서울풍물시장", "응봉산 팔각정", "일감호")
+        Log.e("fesdata", fesData.FesLocation.toString())
+        Log.e("district", seoulDistrict[0])
+        for(i: Int in 0 .. 24) {
+            if(fesData.FesLocation.toString().indexOf(seoulDistrict[i]) != -1) {
+                districtName.text = seoulDistrict[i]
+                tourName.text = tournames[i]
+                tourImage.setImageResource(resources.getIdentifier(images[i], "drawable",
+                    requireContext().toString()
+                ))
+//                Glide.with(requireContext())
+//                    .load(images[i])
+//                    .into(tourImage)
+            }
+        }
+//        addTour()
 
 
         detailbutton.setOnClickListener {
