@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_notifications -> {
                 }
                 R.id.navigation_profile -> {
+                    loadDataProfile()
                 }
             }
         }
@@ -65,6 +66,17 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
+    private fun loadDataProfile()
+    {
+        lifecycleScope.launch {
+            showLoading(true)
+            RetrofitClient.initVisitedFes()
+            RetrofitClient.initChallenge()
+            showLoading(false)
+        }
+    }
+
 
     fun showLoading(open : Boolean)
     {

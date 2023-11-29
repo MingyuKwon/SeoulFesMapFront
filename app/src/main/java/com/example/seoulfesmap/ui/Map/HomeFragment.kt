@@ -69,8 +69,6 @@ class HomeFragment : Fragment(), DialogListener {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        initializeMapInCurrentLocation()
-
         binding.renewButton.setOnClickListener(){
             initializeMapLocation()
         }
@@ -120,11 +118,6 @@ class HomeFragment : Fragment(), DialogListener {
             PinMarkerInMap(currentCameraPosition.target.latitude, currentCameraPosition.target.longitude,  currentZoom)
         }
 
-    }
-
-    override fun onResume() {
-        super.onResume()
-        initializeMapLocation()
     }
 
     fun ClearMarker()

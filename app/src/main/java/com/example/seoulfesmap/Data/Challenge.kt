@@ -22,6 +22,10 @@ class Challenge {
     var unclearedList : ArrayList<String> = ArrayList()
     var totlaList : ArrayList<String> = ArrayList()
 
+    val userLevel get() : Int{
+        return stampCount * 10 +  stickerCount * 100  + clearedList.size * 50
+    }
+
     val functionMap: Map<String, () -> Int> = mapOf(
         "stamp1" to {
             100 * stampCount / 1

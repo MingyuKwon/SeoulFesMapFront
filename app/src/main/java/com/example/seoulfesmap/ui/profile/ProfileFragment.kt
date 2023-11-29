@@ -20,6 +20,7 @@ import com.example.seoulfesmap.RecyclerView.clickInterface
 import com.example.seoulfesmap.RecyclerView.stickerAdapter
 import com.example.seoulfesmap.StartActivity
 import com.example.seoulfesmap.appStaticData
+import com.example.seoulfesmap.appStaticData.Companion.resetStickerItem
 import com.example.seoulfesmap.appStaticData.Companion.stickerItems
 import com.example.seoulfesmap.databinding.FragmentProfileBinding
 import com.example.seoulfesmap.isGuest
@@ -62,9 +63,11 @@ class ProfileFragment : Fragment() {
             binding.ProfileName.text = appStaticData.USER?.name
             binding.ProfileExplain.text = appStaticData.USER?.email
 
+            seethroghListforSticker()
             initStickerRecyclerView()
             initVisitRecyclerView()
             initChallengeRecyclerView()
+            initUserLevel()
         } else {
             binding.ProfileName.text = "Guest"
             binding.ProfileExplain.text = "게스트 모드로 접속 중입니다."
@@ -109,6 +112,125 @@ class ProfileFragment : Fragment() {
         val intent = Intent(requireContext(), StartActivity()::class.java)
         startActivity(intent)
         requireActivity().finish()
+    }
+
+    fun countLevel(expp : Float) : Float
+    {
+        var level = 1
+        var exp = expp
+        val levelStandard = arrayListOf<Int>(100,200,400,800,1600,3200,6400)
+
+        while(exp >= levelStandard.get(level-1))
+        {
+            exp -= levelStandard.get(level-1)
+            level++
+        }
+
+        return level + exp / levelStandard.get(level-1)
+    }
+
+
+    fun initUserLevel() {
+        Log.e("UserLEvel", appStaticData.challengeData.userLevel.toString())
+        val result = countLevel(appStaticData.challengeData.userLevel.toFloat())
+        val level = result.toInt()
+        val exp = ((result - level) * 100 ).toInt()
+
+        binding.ProfileLevel.text = level.toString()
+        binding.progressBar2.max = 100
+        binding.progressBar2.progress = exp
+    }
+
+    private fun seethroghListforSticker()
+    {
+        resetStickerItem()
+
+        var moviecount = 0
+        var operacount = 0
+        var musicount = 0
+        var koreamusiccount = 0
+        var exhibitioncount = 0
+        var educationcount = 0
+        var guitarcount = 0
+
+        for(a in appStaticData.visitedFesDatalist)
+        {
+            if(a.category == "콘서트"
+                || a.category == "무용"
+                || a.category == "클래식")
+            {
+                musicount++
+            }else if(a.category == "뮤지컬/오페라"
+                || a.category == "연극")
+            {
+                operacount++
+            }else if(a.category == "국악")
+            {
+                koreamusiccount++
+            }else if(a.category == "전시/미술")
+            {
+                exhibitioncount++
+            }else if(a.category == "교육/체험")
+            {
+                educationcount++
+            }else if(a.category == "영화")
+            {
+                moviecount++
+            }else
+            {
+                guitarcount++
+            }
+        }
+
+        var stickercount = 1
+
+        if(moviecount > 2)
+        {
+            stickerItems.set(stickercount, "movie")
+            stickercount++
+        }
+        if(operacount > 2)
+        {
+            stickerItems.set(stickercount, "opera")
+            stickercount++
+        }
+        if(musicount > 2)
+        {
+            stickerItems.set(stickercount, "music")
+            stickercount++
+
+        }
+        if(koreamusiccount > 2)
+        {
+            stickerItems.set(stickercount, "koreanmusic")
+            stickercount++
+
+        }
+        if(exhibitioncount > 2)
+        {
+            stickerItems.set(stickercount, "exhibition")
+            stickercount++
+
+        }
+        if(educationcount > 2)
+        {
+            stickerItems.set(stickercount, "education")
+            stickercount++
+
+        }
+        if(guitarcount > 2)
+        {
+            stickerItems.set(stickercount, "guitar")
+            stickercount++
+
+        }
+
+        if(stickercount == 8)
+        {
+            stickerItems.set(stickercount, "grandslam")
+            stickercount++
+        }
+
     }
 
     fun initStickerRecyclerView() {

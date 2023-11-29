@@ -28,6 +28,10 @@ class appStaticData : Application() {
         var challengeData: Challenge = Challenge()
         var stickerItems = arrayOf("newbee","none","none","none","none","none","none","none","none",)
 
+        fun resetStickerItem()
+        {
+            stickerItems = arrayOf("newbee","none","none","none","none","none","none","none","none",)
+        }
 
         val stampCount get() = visitedFesDatalist.size
         val stickerCount get() : Int

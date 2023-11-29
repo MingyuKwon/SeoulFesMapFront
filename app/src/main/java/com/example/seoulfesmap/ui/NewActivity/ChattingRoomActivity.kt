@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.Message
+import com.example.seoulfesmap.Data.RetrofitClient.Companion.sendNewChat
 import com.example.seoulfesmap.RecyclerView.RecyclerMessagesAdapter
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.ActivityChattingRoomBinding
@@ -79,7 +80,11 @@ class ChattingRoomActivity : AppCompatActivity() {
 
     fun setupChatRooms() {              //채팅방 목록 초기화 및 표시
         if (chatRoomKey.isNullOrBlank())
+        {
+            sendNewChat()
             setupChatRoomKey()
+        }
+
         else
             setupRecycler()
     }

@@ -3,6 +3,7 @@ package com.example.seoulfesmap.Data
 import android.util.Log
 import com.example.seoulfesmap.appStaticData
 import okhttp3.OkHttpClient
+import org.checkerframework.checker.units.qual.C
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -147,6 +148,29 @@ class RetrofitClient {
             })
         }
 
+        fun sendNewChat() {
+            val service = RetrofitClient.getClient()!!.create(newChat::class.java)
+
+            if(appStaticData.USER == null) return
+            service.getData(appStaticData.USER!!.uID!!.toInt())!!.enqueue(object :
+                Callback<Void?> {
+
+                override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
+                    if (response.isSuccessful) {
+                        Log.d("Profile", appStaticData.visitedFesDatalist.size.toString())
+
+                    } else {
+                        // 서버 에러 처리
+                        Log.e("FestivalError", "Response not successful: " + response.code())
+                    }
+                }
+
+                override fun onFailure(call: Call<Void?>, t: Throwable) {
+                    Log.e("FestivalError", "Network error or the request was aborted", t)
+                }
+            })
+        }
+
         fun hitcountupSend(fid : Int)
         {
             val service = RetrofitClient.getClient()!!.create(FestivalHitCountService::class.java)
@@ -200,6 +224,11 @@ interface PostVisitiedFestivalService {
 interface GetChallenge {
     @GET("challenge/view")
     suspend fun getData(@Query("uID") userId : Int): Response<Challenge?>?
+}
+
+interface newChat {
+    @GET("challenge/newchat")
+    fun getData(@Query("uID") userId : Int): Call<Void?>?
 }
 
 interface TokenService {
