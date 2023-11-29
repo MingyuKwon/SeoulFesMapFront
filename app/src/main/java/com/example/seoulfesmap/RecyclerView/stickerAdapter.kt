@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.R
+import com.example.seoulfesmap.appStaticData.Companion.stickerItems
 import com.example.seoulfesmap.databinding.FilterbuttonBinding
 import com.example.seoulfesmap.databinding.StickerContainerBinding
 
@@ -20,11 +21,8 @@ interface clickInterface
 }
 class stickerAdapter(var items: ArrayList<FestivalData>, var callback : clickInterface) : RecyclerView.Adapter<stickerAdapter.MyViewHolder>(){
 
-    var stickerItems = arrayOf("newbee","none","none","none","none","none","none","none","none",)
     val images = arrayOf(R.drawable.newbee, R.drawable.movie, R.drawable.opera, R.drawable.music, R.drawable.korea_music,
         R.drawable.exihibition, R.drawable.education, R.drawable.guitar, R.drawable.grandslam)
-
-
 
         inner class MyViewHolder(val binding: com.example.seoulfesmap.databinding.StickerContainerBinding) : RecyclerView.ViewHolder(binding.root)
         {

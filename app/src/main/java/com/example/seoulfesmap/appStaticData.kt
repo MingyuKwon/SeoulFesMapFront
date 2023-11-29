@@ -26,6 +26,25 @@ class appStaticData : Application() {
         var FesDatalist: ArrayList<FestivalData> = ArrayList()
         var visitedFesDatalist: ArrayList<FestivalData> = ArrayList()
         var challengeData: Challenge = Challenge()
+        var stickerItems = arrayOf("newbee","none","none","none","none","none","none","none","none",)
+
+
+        val stampCount get() = visitedFesDatalist.size
+        val stickerCount get() : Int
+        {
+            var count = 0
+            for(a in stickerItems)
+            {
+                if(a != "none")
+                {
+                    count++
+                }
+            }
+
+            return count
+        }
+
+
 
 
         var currentLocation : LatLng = LatLng(37.5519, 126.9918)

@@ -2,6 +2,8 @@ package com.example.seoulfesmap.Data
 
 import android.util.Log
 import com.example.seoulfesmap.R
+import com.example.seoulfesmap.appStaticData.Companion.stampCount
+import com.example.seoulfesmap.appStaticData.Companion.stickerCount
 
 class Challenge {
     var uID : String? = null
@@ -19,6 +21,64 @@ class Challenge {
     var clearedList : ArrayList<String> = ArrayList()
     var unclearedList : ArrayList<String> = ArrayList()
     var totlaList : ArrayList<String> = ArrayList()
+
+    val functionMap: Map<String, () -> Int> = mapOf(
+        "stamp1" to {
+            100 * stampCount / 1
+                    },
+        "stamp10" to {
+            100 * stampCount / 10
+        },
+        "stamp100" to {
+            100 * stampCount / 100
+        },
+        "stamp1000" to {
+            100 * stampCount / 1000
+        },
+
+        "sticker1" to {
+            100 * stickerCount / 1
+        },
+
+        "sticker5" to {
+            100 * stickerCount / 5
+        },
+
+        "sticker10" to {
+            100 * stickerCount / 10
+        },
+
+        "newchat" to {
+            if(newchat == "1")
+            {
+                100
+            }else
+            {
+                0
+            }
+        },
+
+        "gods" to {
+            if(gods == "1")
+            {
+                100
+            }else
+            {
+                0
+            }
+        },
+
+        "login" to {
+            if(login == "1")
+            {
+                100
+            }else
+            {
+                0
+            }
+        }
+    )
+
 
     val imageMap: Map<String, Int> = mapOf(
         "stamp1" to R.drawable.stamp_01,

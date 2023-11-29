@@ -20,6 +20,7 @@ import com.example.seoulfesmap.RecyclerView.clickInterface
 import com.example.seoulfesmap.RecyclerView.stickerAdapter
 import com.example.seoulfesmap.StartActivity
 import com.example.seoulfesmap.appStaticData
+import com.example.seoulfesmap.appStaticData.Companion.stickerItems
 import com.example.seoulfesmap.databinding.FragmentProfileBinding
 import com.example.seoulfesmap.isGuest
 import com.example.seoulfesmap.loginNaver
@@ -112,7 +113,7 @@ class ProfileFragment : Fragment() {
                 val exlainText =  arrayOf("로그인에 성공했습니다","영화 카테고리 축제 3개 이상을 방문하였습니다","오페라/뮤지컬 카테고리 축제 3개 이상을 방문하였습니다"
                     ,"음악 카테고리 축제 3개 이상을 방문하였습니다","국악 카테고리 축제 3개 이상을 방문하였습니다","전시회 카테고리 축제 3개 이상을 방문하였습니다",
                     "교육 카테고리 축제 3개 이상을 방문하였습니다","기타 카테고리 축제 3개 이상을 방문하였습니다","모든 스티커를 수집하였습니다",)
-                if(stickeradapter.stickerItems[position] != "none")
+                if(stickerItems[position] != "none")
                     Toast.makeText(requireContext(), exlainText[position], Toast.LENGTH_SHORT).show()
             }
 

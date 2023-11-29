@@ -41,6 +41,9 @@ class ChallengeAdapter()
             }
 
             challengeProgress.max = 100
+            challengeProgress.progress = appStaticData.challengeData.functionMap.get(challName)!!.invoke()
+
+            progressRate.text = (appStaticData.challengeData.functionMap.get(challName)!!.invoke().coerceIn(0, 100)).toString() + "%"
 
         }
     }
