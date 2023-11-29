@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.Message
 import com.example.seoulfesmap.Data.RetrofitClient.Companion.sendNewChat
+import com.example.seoulfesmap.Data.newChat
 import com.example.seoulfesmap.RecyclerView.RecyclerMessagesAdapter
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.ActivityChattingRoomBinding
@@ -78,13 +79,12 @@ class ChattingRoomActivity : AppCompatActivity() {
         }
     }
 
-    fun setupChatRooms() {              //채팅방 목록 초기화 및 표시
+    fun setupChatRooms() {
+        //채팅방 목록 초기화 및 표시
         if (chatRoomKey.isNullOrBlank())
         {
-            sendNewChat()
             setupChatRoomKey()
         }
-
         else
             setupRecycler()
     }
@@ -105,10 +105,15 @@ class ChattingRoomActivity : AppCompatActivity() {
 
     }
 
-    fun putMessage() {       //메시지 전송
+    fun putMessage() {
+        if((recycler_talks.adapter as RecyclerMessagesAdapter).messages.size == 0 )
+        {
+            sendNewChat()
+        }
+
+        //메시지 전송
         try {
             var message = Message(appStaticData.USER?.name!!, getDateTimeString(), edt_message.text.toString())    //메시지 정보 초기화
-            Log.i("ChatRoomKey", chatRoomKey)
             FirebaseDatabase.getInstance().getReference("ChatRoom").child("chatRooms")
                 .child(chatRoomKey).child("messages")                   //현재 채팅방에 메시지 추가
                 .push().setValue(message).addOnSuccessListener {

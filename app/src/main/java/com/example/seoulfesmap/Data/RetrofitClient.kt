@@ -149,24 +149,27 @@ class RetrofitClient {
         }
 
         fun sendNewChat() {
-            val service = RetrofitClient.getClient()!!.create(newChat::class.java)
+            val service = getClient()!!.create(newChat::class.java)
+            Log.e("sendNewChat1", "")
 
             if(appStaticData.USER == null) return
+            Log.e("sendNewChat2", "")
+
             service.getData(appStaticData.USER!!.uID!!.toInt())!!.enqueue(object :
                 Callback<Void?> {
 
                 override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
                     if (response.isSuccessful) {
-                        Log.d("Profile", appStaticData.visitedFesDatalist.size.toString())
+                        Log.e("sendNewChat", "Response not successful: " + response.code())
 
                     } else {
                         // 서버 에러 처리
-                        Log.e("FestivalError", "Response not successful: " + response.code())
+                        Log.e("sendNewChat", "Response not successful: " + response.code())
                     }
                 }
 
                 override fun onFailure(call: Call<Void?>, t: Throwable) {
-                    Log.e("FestivalError", "Network error or the request was aborted", t)
+                    Log.e("sendNewChat", "Network error or the request was aborted", t)
                 }
             })
         }
