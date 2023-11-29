@@ -2,6 +2,7 @@ package com.example.seoulfesmap.RecyclerView
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -92,6 +93,15 @@ class RecyclerMessagesAdapter(
         var txtMessage = itemView.txtMessage
         var txtDate = itemView.txtDate
         var IDShow = itemView.opponentID
+        var box = itemView.box
+
+        fun changeViewBorderColor(view: View, newColor: Int) {
+            val background = view.background
+            if (background is GradientDrawable) {
+                background.setStroke(5, newColor) // borderWidth는 테두리의 두께입니다.
+            }
+        }
+
 
         fun setMessageColor(string : String) : Int
         {
@@ -115,6 +125,7 @@ class RecyclerMessagesAdapter(
 
             val color = setMessageColor(message.senderUid)
             IDShow.setTextColor(color)
+            changeViewBorderColor(box, color)
 
             setShown(position)             //해당 메시지 확인하여 서버로 전송
         }

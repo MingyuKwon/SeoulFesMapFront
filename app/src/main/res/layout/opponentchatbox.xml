@@ -8,20 +8,38 @@
     android:layout_marginTop="20dp"
     android:layout_marginBottom="20dp">
 
-    <TextView
-        android:id="@+id/txt_message"
+    <LinearLayout
+        android:id="@+id/box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:autoLink="web"
-        android:background="@drawable/opponentchatboxstyle"
         android:gravity="start|center_vertical"
         android:linksClickable="true"
-        android:padding="10dp"
-        android:text="안녕하세요."
+        android:padding="3dp"
         android:textColor="@color/black"
+        android:background="@drawable/opponentcorner"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/txt_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/opponentchatboxstyle"
+            android:gravity="start|center_vertical"
+            android:linksClickable="true"
+            android:padding="10dp"
+            android:text="안녕하세요."
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </LinearLayout>
+
+
 
     <TextView
         android:id="@+id/txt_date"
@@ -31,9 +49,9 @@
         android:layout_marginLeft="10dp"
         android:text="오전 10:23"
         android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/txt_message"
-        app:layout_constraintStart_toEndOf="@+id/txt_message"
-        app:layout_constraintTop_toTopOf="@+id/txt_message"
+        app:layout_constraintBottom_toBottomOf="@+id/box"
+        app:layout_constraintStart_toEndOf="@+id/box"
+        app:layout_constraintTop_toTopOf="@+id/box"
         app:layout_constraintVertical_bias="0.8" />
 
     <TextView
