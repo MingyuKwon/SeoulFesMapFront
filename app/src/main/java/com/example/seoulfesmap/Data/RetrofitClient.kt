@@ -54,91 +54,70 @@ class RetrofitClient {
 
 
         suspend fun InitFesDataList(){
-            val service = RetrofitClient.getClient()!!.create(FestivalService::class.java)
-            service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?> {
+            if(appStaticData.USER == null) return
 
-                override fun onResponse(
-                    call: Call<List<FestivalData?>?>,
-                    response: Response<List<FestivalData?>?>
-                ) {
-                    if (response.isSuccessful) {
-                        appStaticData.FesDatalist = response.body() as ArrayList<FestivalData>
-                        for(fes in appStaticData.FesDatalist)
-                        {
-                            fes.changeStringToOtherType()
-                        }
+            Log.e("InitFesDataList", "")
 
-                        Log.d("FesStartInitalize", appStaticData.FesDatalist.size.toString())
+            val service = getClient()!!.create(FestivalService::class.java)
+            try {
+                val response = service.listFestivals()
 
-
-                    } else {
-                        // 서버 에러 처리
-                        Log.e("FestivalError", "Response not successful: " + response.code())
+                if (response!!.isSuccessful) {
+                    appStaticData.FesDatalist = response.body() as ArrayList<FestivalData>
+                    for(fes in appStaticData.FesDatalist)
+                    {
+                        fes.changeStringToOtherType()
                     }
+                } else {
+                    Log.e("getRecommendData Error", response.message())
                 }
-
-                override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
-                    Log.e("FestivalError", "Network error or the request was aborted", t)
-                }
-            })
+            } catch (e: Exception) {
+                Log.e("getRecommendData Error", e.message ?: "Unknown error")
+            }
         }
 
         suspend fun initVisitedFes() {
-            val service = RetrofitClient.getClient()!!.create(VisitiedFestivalService::class.java)
-
             if(appStaticData.USER == null) return
-            service.listFestivals(appStaticData.USER!!.uID!!.toInt())!!.enqueue(object :
-                Callback<List<FestivalData?>?> {
 
-                override fun onResponse(
-                    call: Call<List<FestivalData?>?>,
-                    response: Response<List<FestivalData?>?>
-                ) {
-                    if (response.isSuccessful) {
-                        // 성공적으로 데이터를 받아왔을 때의 처리
-                        appStaticData.visitedFesDatalist = response.body() as ArrayList<FestivalData>
-                        for (fes in appStaticData.visitedFesDatalist) {
-                            fes.changeStringToOtherType()
-                        }
-                        Log.d("Profile", appStaticData.visitedFesDatalist.size.toString())
+            Log.e("initVisitedFes", "")
 
 
-                    } else {
-                        // 서버 에러 처리
-                        Log.e("FestivalError", "Response not successful: " + response.code())
+            val service = getClient()!!.create(VisitiedFestivalService::class.java)
+            try {
+                val response = service.listFestivals(appStaticData.USER!!.uID!!.toInt())
+
+                if (response!!.isSuccessful) {
+                    appStaticData.visitedFesDatalist = response.body() as ArrayList<FestivalData>
+                    for (fes in appStaticData.visitedFesDatalist) {
+                        fes.changeStringToOtherType()
                     }
+                } else {
+                    Log.e("getRecommendData Error", response.message())
                 }
-
-                override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
-                    Log.e("FestivalError", "Network error or the request was aborted", t)
-                }
-            })
+            } catch (e: Exception) {
+                Log.e("getRecommendData Error", e.message ?: "Unknown error")
+            }
         }
 
         suspend fun initChallenge() {
-            val service = RetrofitClient.getClient()!!.create(GetChallenge::class.java)
-
             if(appStaticData.USER == null) return
-            service.getData(appStaticData.USER!!.uID!!.toInt())!!.enqueue(object :
-                Callback<Challenge?> {
 
-                override fun onResponse(call: Call<Challenge?>, response: Response<Challenge?>) {
-                    if (response.isSuccessful) {
-                        // 성공적으로 데이터를 받아왔을 때의 처리
-                        appStaticData.challengeData = response.body()!!
-                        appStaticData.challengeData.updateClearedChallenge()
-                        Log.d("Challenge", appStaticData.challengeData.toString())
+            Log.e("initChallenge", "")
 
-                    } else {
-                        // 서버 에러 처리
-                        Log.e("FestivalError", "Response not successful: " + response.code())
-                    }
+
+            val service = getClient()!!.create(GetChallenge::class.java)
+            try {
+                val response = service.getData(appStaticData.USER!!.uID!!.toInt())
+
+                if (response!!.isSuccessful) {
+                    appStaticData.challengeData = response.body()!!
+                    appStaticData.challengeData.updateClearedChallenge()
+                } else {
+                    Log.e("getRecommendData Error", response.message())
                 }
-
-                override fun onFailure(call: Call<Challenge?>, t: Throwable) {
-                    Log.e("ChallengeError", "Network error or the request was aborted", t)
-                }
-            })
+            } catch (e: Exception) {
+                Log.e("getRecommendData Error", e.message ?: "Unknown error")
+            }
         }
 
         fun plusVisitedFes(fesData : FestivalData)
@@ -203,17 +182,17 @@ interface FestivalHitCountService {
 
 interface FestivalService {
     @GET("festival")
-    fun listFestivals(): Call<List<FestivalData?>?>?
+    suspend fun listFestivals(): Response<List<FestivalData?>?>?
 }
 
 interface FestivalHitService {
     @GET("festival/hit")
-    fun listFestivals(): Call<List<FestivalData?>?>?
+    suspend fun listFestivals(): Response<List<FestivalData?>?>?
 }
 
 interface VisitiedFestivalService {
     @GET("visit/view")
-    fun listFestivals(@Query("uID") userId : Int): Call<List<FestivalData?>?>?
+    suspend fun listFestivals(@Query("uID") userId : Int): Response<List<FestivalData?>?>?
 }
 
 interface PostVisitiedFestivalService {
@@ -223,7 +202,7 @@ interface PostVisitiedFestivalService {
 
 interface GetChallenge {
     @GET("challenge/view")
-    fun getData(@Query("uID") userId : Int): Call<Challenge?>?
+    suspend fun getData(@Query("uID") userId : Int): Response<Challenge?>?
 }
 
 interface TokenService {

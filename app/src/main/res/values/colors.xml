@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="map">#FFDD00</color>
+
+    <color name="semiTransparentBlack">#80000000</color>
 </resources>

@@ -3,6 +3,7 @@ package com.example.seoulfesmap
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -38,16 +39,12 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.navigation_home -> {
-                    Toast.makeText(this, "Map", Toast.LENGTH_SHORT).show();
                 }
                 R.id.navigation_dashboard -> {
-                    Toast.makeText(this, "List", Toast.LENGTH_SHORT).show();
                 }
                 R.id.navigation_notifications -> {
-                    Toast.makeText(this, "Hot", Toast.LENGTH_SHORT).show();
                 }
                 R.id.navigation_profile -> {
-                    Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -60,10 +57,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadDataFromServer() {
         lifecycleScope.launch {
+            showLoading(true)
             RetrofitClient.InitFesDataList()
             RetrofitClient.initVisitedFes()
             RetrofitClient.initChallenge()
-            Log.e("loadDataFromServer", "")
+            showLoading(false)
+
         }
     }
+
+    fun showLoading(open : Boolean)
+    {
+        if(open)
+        {
+            binding.loadingContainer.visibility = View.VISIBLE
+        }else
+        {
+            binding.loadingContainer.visibility = View.GONE
+
+        }
+    }
+
 }

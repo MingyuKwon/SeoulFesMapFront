@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seoulfesmap.Data.FestivalData
@@ -21,6 +22,7 @@ import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentNotificationsBinding
 import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -96,15 +98,12 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
     fun initRecyclerView()
     {
-        val service = RetrofitClient.getClient()!!.create(FestivalHitService::class.java)
-        service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?> {
+        lifecycleScope.launch {
+            val service = RetrofitClient.getClient()!!.create(FestivalHitService::class.java)
+            try {
+                val response = service.listFestivals()
 
-            override fun onResponse(
-                call: Call<List<FestivalData?>?>,
-                response: Response<List<FestivalData?>?>
-            ) {
-                if (response.isSuccessful) {
-                    // 성공적으로 데이터를 받아왔을 때의 처리
+                if (response!!.isSuccessful) {
                     activity?.runOnUiThread {
                         list = response.body() as ArrayList<FestivalData>
                         for(fes in list)
@@ -113,24 +112,15 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
                         }
                         setupRecyclerView() // 여기서 RecyclerView를 초기화합니다.
                     }
-
                 } else {
-                    // 서버 에러 처리
-                    Log.e("FestivalError", "Response not successful: " + response.code())
+                    Log.e("getRecommendData Error", response.message())
                 }
+            } catch (e: Exception) {
+                Log.e("getRecommendData Error", e.message ?: "Unknown error")
             }
 
-            override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
-                Log.e("FestivalError", "Network error or the request was aborted", t)
-            }
-        })
+        }
 
-        // list.add(FestivalData(8037, "콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=43bd8ae3612e4cb2bb3a7edf9186efbf&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143909&menuNo=200008",
-        //    "마포아트센터 M 레트로 시리즈 2024 신년맞이 어떤가요 #7", "마포아트센터 아트홀 맥", "2024-01-18T00:00:00.000Z" , "2024-01-18T00:00:00.000Z", "37.5499060881738", "126.945533810385"))
-        // list.add(FestivalData(8038,"콘서트","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=d5e5494491b1481081180ac991c410db&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143406&menuNo=200008",
-        //     "딕펑스×두번째달_Spice of life", "꿈의숲 퍼포먼스홀", "2023-12-23T00:00:00.000Z" , "2023-12-23T00:00:00.000Z", "37.6202544613023", "127.044324732036"))
-        // list.add(FestivalData(8039, "전시/미술","https://culture.seoul.go.kr/cmmn/file/getImage.do?atchFileId=cc68500bcc0a4e0f89143a5a89d5facb&thumb=Y", "https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?cultcode=143763&menuNo=200009",
-        //    "서울일러스트레이션페어V.16", "코엑스 B&D1홀", "2023-12-21T00:00:00.000Z", "2023-12-24T00:00:00.000Z", "37.5103947", "127.0611127")
     }
 
     ///////////////////////////////// option Button /////////////////////////////////
