@@ -93,6 +93,11 @@ class ProfileFragment : Fragment() {
         if(isGuest)
         {
             binding.visitedConatiner.visibility = View.GONE
+            binding.challengeConatiner.visibility = View.GONE
+            binding.textView4.visibility = View.GONE
+            binding.ProfileLevel.visibility = View.GONE
+            binding.progressBar2.visibility = View.GONE
+
         }
 
         val root: View = binding.root

@@ -28,6 +28,7 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.coroutines.*
+import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.math.*
 
@@ -235,7 +236,7 @@ class HomeFragment : Fragment(), DialogListener {
     {
         showFeslist = appStaticData.FesDatalist.toMutableList() as ArrayList<FestivalData>
         showFeslist = showFeslist.filter {
-            val currentDateTime = LocalDateTime.now()
+            val currentDateTime = LocalDate.now()
             val startDate = it.FesStartDate
             val endDate = it.FesEndDate
 

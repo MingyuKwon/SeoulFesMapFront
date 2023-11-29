@@ -54,9 +54,6 @@ class RetrofitClient {
 
 
         suspend fun InitFesDataList(){
-            if(appStaticData.USER == null) return
-
-            Log.e("InitFesDataList", "")
 
             val service = getClient()!!.create(FestivalService::class.java)
             try {

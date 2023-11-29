@@ -20,6 +20,7 @@ import com.example.seoulfesmap.Data.RetrofitClient.Companion.plusVisitedFes
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.ui.NewActivity.ChattingRoomActivity
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 interface DialogListener {
@@ -65,8 +66,8 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
 
         titleText.text = fesData.FesTitle
         locationText.text = fesData.FesLocation
-        dateStartText.text = fesData.FesStartDate!!.toString()
-        dateEndText.text = fesData.FesEndDate!!.toString()
+        dateStartText.text = "시작 날짜 : " + fesData.FesStartDate!!.toString()
+        dateEndText.text = "종료 날짜 : " +  fesData.FesEndDate!!.toString()
 
         val districtName: TextView = dialogView.findViewById(R.id.district)
         val tourName : TextView = dialogView.findViewById(R.id.tour)
@@ -103,10 +104,12 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
         }else
         {
             stampButton.setImageResource(R.drawable.stamp_no)
-            val currentDate = LocalDateTime.now() // 현재 날짜와 시간
+            val currentDate = LocalDate.now() // 현재 날짜와 시간
             if(
             //appStaticData.calculateDistance(fesData.xpos!!, fesData.ypos!!, appStaticData.currentLocation!!.latitude, appStaticData.currentLocation!!.longitude) < 0.05 &&
-                (!currentDate.isBefore(fesData.FesStartDate) && !currentDate.isAfter(fesData.FesEndDate)))
+                (currentDate.isEqual(fesData.FesStartDate) || currentDate.isAfter(fesData.FesStartDate)) &&
+                (currentDate.isEqual(fesData.FesEndDate) || currentDate.isBefore(fesData.FesEndDate))
+            )
             {
                 stampButton.setImageResource(R.drawable.stamp_clickable)
                 stampButton.isEnabled  = true

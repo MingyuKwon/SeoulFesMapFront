@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -35,8 +36,8 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
     @SerializedName("end_date")
     var end_date: String? = null
 
-    var FesStartDate: LocalDateTime? = null
-    var FesEndDate: LocalDateTime? = null
+    var FesStartDate: LocalDate? = null
+    var FesEndDate: LocalDate? = null
 
     @SerializedName("xpos")
     var xpos: Double? = null
@@ -110,10 +111,10 @@ class FestivalData(FID : Int?, Category : String?,imageResource : String?, homep
     {
         FesStartDate = ZonedDateTime.parse(start_date)
             .withZoneSameInstant(ZoneId.systemDefault())
-            .toLocalDateTime()
+            .toLocalDate()
         FesEndDate = ZonedDateTime.parse(end_date)
             .withZoneSameInstant(ZoneId.systemDefault())
-            .toLocalDateTime()
+            .toLocalDate()
 
     }
 

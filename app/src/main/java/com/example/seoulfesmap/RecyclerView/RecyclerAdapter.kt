@@ -75,9 +75,9 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>, var isVisited : Boolea
             dateStart.isEmpty()  -> filteredList
             else -> filteredList.filter { item->
                 val startDate =  LocalDate.parse(dateStart)
-                val festivalEnd = item.FesEndDate?.toLocalDate()
+                val festivalEnd = item.FesEndDate
 
-                startDate.isBefore(festivalEnd)
+                startDate.isBefore(festivalEnd) || startDate.isEqual(festivalEnd)
             }
         }
 
@@ -85,9 +85,9 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>, var isVisited : Boolea
             dateEnd.isEmpty()  -> filteredList
             else -> filteredList.filter { item->
                 val endDate =  LocalDate.parse(dateEnd)
-                val festivalStart = item.FesStartDate?.toLocalDate()
+                val festivalStart = item.FesStartDate
 
-                endDate.isAfter(festivalStart)
+                endDate.isAfter(festivalStart) || endDate.isEqual(festivalStart)
             }
         }
 
@@ -156,7 +156,7 @@ class RecyclerAdapter(var items: ArrayList<FestivalData>, var isVisited : Boolea
                 filteredList[position].visitedDate!!.substring(0, 10)
         }
         else{
-            holder.binding.FesDate.text = filteredList[position].FesStartDate?.toLocalDate().toString() + " ~ "  + filteredList[position].FesEndDate?.toLocalDate().toString()
+            holder.binding.FesDate.text = filteredList[position].FesStartDate?.toString() + " ~ "  + filteredList[position].FesEndDate?.toString()
         }
     }
 
