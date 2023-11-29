@@ -13,7 +13,7 @@
     <string name="social_login_info_naver_client_secret">fxTmkjaiRu</string>
     <string name="social_login_info_naver_client_token">ca72431bf6bc7729c82dbb19ed7a9f2c</string>
     <string name="social_login_info_naver_client_name">네이버아이디 로그인</string>
-    
+
     <string name="social_login_info_google_appID">107721086585-gfku9c5gbpml2sced8qa2fhhgr1t6k56.apps.googleusercontent.com</string>
     <string name="social_login_info_google_webID">107721086585-djm3kgu7093j572fiaapmuife8pc3c9t.apps.googleusercontent.com</string>
 

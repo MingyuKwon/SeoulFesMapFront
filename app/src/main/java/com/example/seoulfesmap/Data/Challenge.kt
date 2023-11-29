@@ -17,6 +17,9 @@ class Challenge {
     var login : String? = null
 
     var clearedList : ArrayList<String> = ArrayList()
+    var unclearedList : ArrayList<String> = ArrayList()
+    var totlaList : ArrayList<String> = ArrayList()
+
     val imageMap: Map<String, Int> = mapOf(
         "stamp1" to R.drawable.stamp_01,
         "stamp10" to R.drawable.stamp_10,
@@ -28,6 +31,19 @@ class Challenge {
         "newchat" to R.drawable.chatting,
         "gods" to R.drawable.gods,
         "login" to R.drawable.login,
+    )
+
+    val unableimageMap: Map<String, Int> = mapOf(
+        "stamp1" to R.drawable.stamp_01unable,
+        "stamp10" to R.drawable.stamp_10unable,
+        "stamp100" to R.drawable.stamp_100unable,
+        "stamp1000" to R.drawable.stamp_1000unable,
+        "sticker1" to R.drawable.sticker1_unable,
+        "sticker5" to R.drawable.sticker5_unable,
+        "sticker10" to R.drawable.sticker10_unable,
+        "newchat" to R.drawable.chatting_unable,
+        "gods" to R.drawable.gods_unable,
+        "login" to R.drawable.login_unable,
     )
 
     val titleMap: Map<String, String> = mapOf(
@@ -59,18 +75,40 @@ class Challenge {
     fun updateClearedChallenge()
     {
         clearedList.clear()
+        unclearedList.clear()
+        totlaList.clear()
 
         if(stamp1 != "0") clearedList.add("stamp1")
-        if(stamp10 != "0") clearedList.add("stamp10")
-        if(stamp100 != "0") clearedList.add("stamp100")
-        if(stamp1000 != "0") clearedList.add("stamp1000")
-        if(sticker1 != "0") clearedList.add("sticker1")
-        if(sticker5 != "0") clearedList.add("sticker5")
-        if(sticker10 != "0") clearedList.add("sticker10")
-        if(newchat != "0") clearedList.add("newchat")
-        if(gods != "0") clearedList.add("gods")
-        if(login != "0") clearedList.add("login")
+        else unclearedList.add("stamp1")
 
+        if(stamp10 != "0") clearedList.add("stamp10")
+        else unclearedList.add("stamp10")
+
+        if(stamp100 != "0") clearedList.add("stamp100")
+        else unclearedList.add("stamp100")
+
+        if(stamp1000 != "0") clearedList.add("stamp1000")
+        else unclearedList.add("stamp1000")
+
+        if(sticker1 != "0") clearedList.add("sticker1")
+        else unclearedList.add("sticker1")
+
+        if(sticker5 != "0") clearedList.add("sticker5")
+        else unclearedList.add("sticker5")
+
+        if(sticker10 != "0") clearedList.add("sticker10")
+        else unclearedList.add("sticker10")
+
+        if(newchat != "0") clearedList.add("newchat")
+        else unclearedList.add("newchat")
+
+        if(gods != "0") clearedList.add("gods")
+        else unclearedList.add("gods")
+
+        if(login != "0") clearedList.add("login")
+        else unclearedList.add("login")
+
+        totlaList = (clearedList + unclearedList) as ArrayList<String>
     }
 
     override fun toString(): String {

@@ -23,6 +23,7 @@ import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentProfileBinding
 import com.example.seoulfesmap.isGuest
 import com.example.seoulfesmap.loginNaver
+import com.example.seoulfesmap.ui.NewActivity.ChallengeActivity
 import com.example.seoulfesmap.ui.NewActivity.VisitedFestivalActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -182,7 +183,7 @@ class ProfileFragment : Fragment() {
 
     private fun moveToChallengeActivity()
     {
-        val intent = Intent(requireContext(), VisitedFestivalActivity::class.java)
+        val intent = Intent(requireContext(), ChallengeActivity::class.java)
         startActivity(intent)
     }
 
