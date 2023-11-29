@@ -154,7 +154,12 @@ class ProfileFragment : Fragment() {
             moveToChallengeActivity()
         }
 
-        Log.e("appStaticData.challengeData", appStaticData.challengeData.clearedList.toString())
+        val progressRate = appStaticData.challengeData.clearedList.size * 10
+        binding.challengeDone.text = appStaticData.challengeData.clearedList.size.toString() + "/10 (" + progressRate + "%)"
+        binding.challengeProgress.max = 100
+        binding.challengeProgress.progress = progressRate
+
+
         if(appStaticData.challengeData.clearedList.size < 1) return
         binding.challengeImage.setImageResource(appStaticData.challengeData.imageMap.get(appStaticData.challengeData.clearedList.get(0))!!)
         binding.challengeTitle.text = appStaticData.challengeData.titleMap.get(appStaticData.challengeData.clearedList.get(0))!!
@@ -165,6 +170,7 @@ class ProfileFragment : Fragment() {
 
         if(appStaticData.challengeData.clearedList.size < 3) return
         binding.challengeImageSmall2.setImageResource(appStaticData.challengeData.imageMap.get(appStaticData.challengeData.clearedList.get(2))!!)
+
 
     }
 

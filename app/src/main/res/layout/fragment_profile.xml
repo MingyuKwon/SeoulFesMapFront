@@ -168,8 +168,6 @@
             android:layout_height="50dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/fesimageexample" />
@@ -238,6 +236,36 @@
             app:layout_constraintStart_toEndOf="@+id/challenge_image_small2"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/baseline_cross_24" />
+
+        <ProgressBar
+            android:id="@+id/challengeProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_marginTop="70dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="80dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/progress_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/challengeDone"
+            android:layout_width="65dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="5dp"
+            android:gravity="center_vertical"
+            android:text="description"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="12sp"
+            android:autoSizeStepGranularity="1sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="-3dp"
+            app:layout_constraintStart_toEndOf="@+id/challengeProgress"
+            app:layout_constraintTop_toTopOf="@+id/challengeProgress" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
