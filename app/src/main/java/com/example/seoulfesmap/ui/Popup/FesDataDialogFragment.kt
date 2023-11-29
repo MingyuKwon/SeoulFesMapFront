@@ -16,9 +16,9 @@ import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.example.seoulfesmap.Data.ChatRoom
 import com.example.seoulfesmap.Data.FestivalData
+import com.example.seoulfesmap.Data.RetrofitClient.Companion.plusVisitedFes
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.appStaticData
-import com.example.seoulfesmap.appStaticData.Companion.plusVisitedFes
 import com.example.seoulfesmap.ui.NewActivity.ChattingRoomActivity
 import java.time.LocalDateTime
 

@@ -1,17 +1,21 @@
 package com.example.seoulfesmap
 
+import android.app.ProgressDialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.databinding.ActivityMainBinding
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,9 +23,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        appStaticData.InitFesDataList()
-        appStaticData.initVisitedFes()
 
         val navView: BottomNavigationView = binding.navView
 
@@ -53,5 +54,16 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        loadDataFromServer()
+    }
+
+    private fun loadDataFromServer() {
+        lifecycleScope.launch {
+            RetrofitClient.InitFesDataList()
+            RetrofitClient.initVisitedFes()
+            RetrofitClient.initChallenge()
+            Log.e("loadDataFromServer", "")
+        }
     }
 }

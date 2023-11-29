@@ -9,30 +9,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-interface FestivalHitCountService {
-    @GET("festival/hit/add")
-    fun incrementFestivalHit(@Query("fID") festivalId: Int): Call<Void?>?
-}
-
-interface FestivalService {
-    @GET("festival")
-    fun listFestivals(): Call<List<FestivalData?>?>?
-}
-
-interface FestivalHitService {
-    @GET("festival/hit")
-    fun listFestivals(): Call<List<FestivalData?>?>?
-}
-
-interface VisitiedFestivalService {
-    @GET("visit/view")
-    fun listFestivals(@Query("uID") userId : Int): Call<List<FestivalData?>?>?
-}
-
-interface PostVisitiedFestivalService {
-    @GET("visit/add")
-    fun listFestivals(@Query("uID") userId : Int, @Query("fID") fid : Int): Call<Void?>?
-}
 
 
 class FestivalData(FID : Int?, Category : String?,imageResource : String?, homepageurl : String?,title: String?, location: String?, startTime: String?, endTime: String?, Xpos: String?, Ypos: String?) {

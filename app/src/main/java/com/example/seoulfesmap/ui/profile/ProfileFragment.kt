@@ -12,8 +12,10 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.RecyclerView.clickInterface
 import com.example.seoulfesmap.RecyclerView.stickerAdapter
 import com.example.seoulfesmap.StartActivity
@@ -25,6 +27,7 @@ import com.example.seoulfesmap.ui.NewActivity.VisitedFestivalActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.navercorp.nid.NaverIdLoginSDK
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
 
@@ -49,7 +52,9 @@ class ProfileFragment : Fragment() {
 
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        appStaticData.initVisitedFes()
+        lifecycleScope.launch {
+            RetrofitClient.initVisitedFes()
+        }
 
         if (isGuest == false) {
             binding.ProfileName.text = appStaticData.USER?.name
@@ -57,6 +62,7 @@ class ProfileFragment : Fragment() {
 
             initStickerRecyclerView()
             initVisitRecyclerView()
+            initChallengeRecyclerView()
         } else {
             binding.ProfileName.text = "Guest"
             binding.ProfileExplain.text = "게스트 모드로 접속 중입니다."
@@ -142,7 +148,33 @@ class ProfileFragment : Fragment() {
 
     }
 
+    fun initChallengeRecyclerView() {
+
+        binding.challengeConatiner.setOnClickListener{
+            moveToChallengeActivity()
+        }
+
+        Log.e("appStaticData.challengeData", appStaticData.challengeData.clearedList.toString())
+        if(appStaticData.challengeData.clearedList.size < 1) return
+        binding.challengeImage.setImageResource(appStaticData.challengeData.imageMap.get(appStaticData.challengeData.clearedList.get(0))!!)
+        binding.challengeTitle.text = appStaticData.challengeData.titleMap.get(appStaticData.challengeData.clearedList.get(0))!!
+        binding.challengedescription.text = appStaticData.challengeData.descriptionMap.get(appStaticData.challengeData.clearedList.get(0))!!
+
+        if(appStaticData.challengeData.clearedList.size < 2) return
+        binding.challengeImageSmall1.setImageResource(appStaticData.challengeData.imageMap.get(appStaticData.challengeData.clearedList.get(1))!!)
+
+        if(appStaticData.challengeData.clearedList.size < 3) return
+        binding.challengeImageSmall2.setImageResource(appStaticData.challengeData.imageMap.get(appStaticData.challengeData.clearedList.get(2))!!)
+
+    }
+
     private fun moveToVisitedActivity()
+    {
+        val intent = Intent(requireContext(), VisitedFestivalActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun moveToChallengeActivity()
     {
         val intent = Intent(requireContext(), VisitedFestivalActivity::class.java)
         startActivity(intent)

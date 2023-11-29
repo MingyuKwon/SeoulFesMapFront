@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.seoulfesmap.Data.FestivalData
+import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.appStaticData
 import com.example.seoulfesmap.databinding.FragmentHomeBinding
@@ -195,7 +196,7 @@ class HomeFragment : Fragment(), DialogListener {
         marker.position = LatLng(fesData.xpos!!, fesData.ypos!!)
         marker.setOnClickListener {
             Log.i("Markertouch", fesData.toString())
-            appStaticData.hitcountupSend(fesData.fid!!)
+            RetrofitClient.hitcountupSend(fesData.fid!!)
             showFesDataPopUp(fesData)
             true
         }

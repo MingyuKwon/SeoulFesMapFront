@@ -1,8 +1,15 @@
 package com.example.seoulfesmap.Data
 
+import android.util.Log
+import com.example.seoulfesmap.appStaticData
 import okhttp3.OkHttpClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
 import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
@@ -45,6 +52,192 @@ class RetrofitClient {
             return retrofit
         }
 
+
+        suspend fun InitFesDataList(){
+            val service = RetrofitClient.getClient()!!.create(FestivalService::class.java)
+            service.listFestivals()!!.enqueue(object : Callback<List<FestivalData?>?> {
+
+                override fun onResponse(
+                    call: Call<List<FestivalData?>?>,
+                    response: Response<List<FestivalData?>?>
+                ) {
+                    if (response.isSuccessful) {
+                        appStaticData.FesDatalist = response.body() as ArrayList<FestivalData>
+                        for(fes in appStaticData.FesDatalist)
+                        {
+                            fes.changeStringToOtherType()
+                        }
+
+                        Log.d("FesStartInitalize", appStaticData.FesDatalist.size.toString())
+
+
+                    } else {
+                        // 서버 에러 처리
+                        Log.e("FestivalError", "Response not successful: " + response.code())
+                    }
+                }
+
+                override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
+                    Log.e("FestivalError", "Network error or the request was aborted", t)
+                }
+            })
+        }
+
+        suspend fun initVisitedFes() {
+            val service = RetrofitClient.getClient()!!.create(VisitiedFestivalService::class.java)
+
+            if(appStaticData.USER == null) return
+            service.listFestivals(appStaticData.USER!!.uID!!.toInt())!!.enqueue(object :
+                Callback<List<FestivalData?>?> {
+
+                override fun onResponse(
+                    call: Call<List<FestivalData?>?>,
+                    response: Response<List<FestivalData?>?>
+                ) {
+                    if (response.isSuccessful) {
+                        // 성공적으로 데이터를 받아왔을 때의 처리
+                        appStaticData.visitedFesDatalist = response.body() as ArrayList<FestivalData>
+                        for (fes in appStaticData.visitedFesDatalist) {
+                            fes.changeStringToOtherType()
+                        }
+                        Log.d("Profile", appStaticData.visitedFesDatalist.size.toString())
+
+
+                    } else {
+                        // 서버 에러 처리
+                        Log.e("FestivalError", "Response not successful: " + response.code())
+                    }
+                }
+
+                override fun onFailure(call: Call<List<FestivalData?>?>, t: Throwable) {
+                    Log.e("FestivalError", "Network error or the request was aborted", t)
+                }
+            })
+        }
+
+        suspend fun initChallenge() {
+            val service = RetrofitClient.getClient()!!.create(GetChallenge::class.java)
+
+            if(appStaticData.USER == null) return
+            service.getData(appStaticData.USER!!.uID!!.toInt())!!.enqueue(object :
+                Callback<Challenge?> {
+
+                override fun onResponse(call: Call<Challenge?>, response: Response<Challenge?>) {
+                    if (response.isSuccessful) {
+                        // 성공적으로 데이터를 받아왔을 때의 처리
+                        appStaticData.challengeData = response.body()!!
+                        appStaticData.challengeData.updateClearedChallenge()
+                        Log.d("Challenge", appStaticData.challengeData.toString())
+
+                    } else {
+                        // 서버 에러 처리
+                        Log.e("FestivalError", "Response not successful: " + response.code())
+                    }
+                }
+
+                override fun onFailure(call: Call<Challenge?>, t: Throwable) {
+                    Log.e("ChallengeError", "Network error or the request was aborted", t)
+                }
+            })
+        }
+
+        fun plusVisitedFes(fesData : FestivalData)
+        {
+            appStaticData.visitedFesDatalist.add(0,fesData)
+            sendVisitedFes(fesData.fid!!)
+        }
+
+
+        fun sendVisitedFes(fid : Int) {
+            val service = RetrofitClient.getClient()!!.create(PostVisitiedFestivalService::class.java)
+
+            if(appStaticData.USER == null) return
+            service.listFestivals(appStaticData.USER!!.uID!!.toInt(), fid)!!.enqueue(object :
+                Callback<Void?> {
+
+                override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
+                    if (response.isSuccessful) {
+                        Log.d("Profile", appStaticData.visitedFesDatalist.size.toString())
+
+                    } else {
+                        // 서버 에러 처리
+                        Log.e("FestivalError", "Response not successful: " + response.code())
+                    }
+                }
+
+                override fun onFailure(call: Call<Void?>, t: Throwable) {
+                    Log.e("FestivalError", "Network error or the request was aborted", t)
+                }
+            })
+        }
+
+        fun hitcountupSend(fid : Int)
+        {
+            val service = RetrofitClient.getClient()!!.create(FestivalHitCountService::class.java)
+            val call = service.incrementFestivalHit(fid)
+            call!!.enqueue(object : Callback<Void?> {
+                override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
+                    if (response.isSuccessful) {
+                        // 요청 성공 처리
+                    } else {
+                        Log.e("FestivalError", "Network error or the request was aborted")
+                    }
+                }
+
+                override fun onFailure(call: Call<Void?>, t: Throwable) {
+                    Log.e("FestivalError", "Network error or the request was aborted", t)
+                }
+            }
+            )
+        }
+
     }
 
+}
+
+
+interface FestivalHitCountService {
+    @GET("festival/hit/add")
+    fun incrementFestivalHit(@Query("fID") festivalId: Int): Call<Void?>?
+}
+
+interface FestivalService {
+    @GET("festival")
+    fun listFestivals(): Call<List<FestivalData?>?>?
+}
+
+interface FestivalHitService {
+    @GET("festival/hit")
+    fun listFestivals(): Call<List<FestivalData?>?>?
+}
+
+interface VisitiedFestivalService {
+    @GET("visit/view")
+    fun listFestivals(@Query("uID") userId : Int): Call<List<FestivalData?>?>?
+}
+
+interface PostVisitiedFestivalService {
+    @GET("visit/add")
+    fun listFestivals(@Query("uID") userId : Int, @Query("fID") fid : Int): Call<Void?>?
+}
+
+interface GetChallenge {
+    @GET("challenge/view")
+    fun getData(@Query("uID") userId : Int): Call<Challenge?>?
+}
+
+interface TokenService {
+    @GET("login/redirect/naver")
+    fun sendToken(@Query("userId") userId: String?,
+                  @Query("userEmail") userEmail: String?,
+                  @Query("userProfile_image") userProfileimage: String? ,
+                  @Query("userName") userName: String? ): Call<List<User?>>
+}
+
+interface TokenGoogleService {
+    @GET("login/redirect/google")
+    fun sendToken(@Query("userId") userId: String?,
+                  @Query("userEmail") userEmail: String?,
+                  @Query("userProfile_image") userProfileimage: String? ,
+                  @Query("userName") userName: String? ): Call<List<User?>>
 }

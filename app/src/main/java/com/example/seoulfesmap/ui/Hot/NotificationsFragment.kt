@@ -75,7 +75,7 @@ class NotificationsFragment : Fragment(), RecyclerAdapter.OnItemClickListener {
 
 
     override fun OnItemClick(position: Int) {
-        appStaticData.hitcountupSend(adapter!!.filteredList[position].fid!!);
+        RetrofitClient.hitcountupSend(adapter!!.filteredList[position].fid!!);
         showFesDataPopUp(adapter!!.filteredList[position])
     }
     private fun setupRecyclerView() {

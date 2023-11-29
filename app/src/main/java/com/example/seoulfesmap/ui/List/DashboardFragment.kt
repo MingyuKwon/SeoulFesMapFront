@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.seoulfesmap.Data.FestivalData
+import com.example.seoulfesmap.Data.RetrofitClient
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.RecyclerView.RecyclerAdapter
 import com.example.seoulfesmap.RecyclerView.filterApdater
@@ -96,7 +97,7 @@ class DashboardFragment : Fragment(), RecyclerAdapter.OnItemClickListener, Calen
     }
 
     override fun OnItemClick(position: Int) {
-        appStaticData.hitcountupSend(adapter.filteredList[position].fid!!)
+        RetrofitClient.hitcountupSend(adapter.filteredList[position].fid!!)
         showFesDataPopUp(adapter.filteredList[position])
     }
 
