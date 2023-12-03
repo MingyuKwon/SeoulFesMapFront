@@ -19,6 +19,7 @@ import com.example.seoulfesmap.Data.FestivalData
 import com.example.seoulfesmap.Data.RetrofitClient.Companion.plusVisitedFes
 import com.example.seoulfesmap.R
 import com.example.seoulfesmap.appStaticData
+import com.example.seoulfesmap.isGuest
 import com.example.seoulfesmap.ui.NewActivity.ChattingRoomActivity
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -92,7 +93,7 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
             }
         }
         communitybutton.setOnClickListener {
-            moveToChattingRoom(fesData.fid!!, fesData.FesTitle!!)
+            if(!isGuest) moveToChattingRoom(fesData.fid!!, fesData.FesTitle!!)
         }
         closebutton.setOnClickListener {
             dismiss()
@@ -101,7 +102,12 @@ class FesDataDialogFragment (var fesData : FestivalData, var dialogListener: Dia
         if(appStaticData.visitedFesDatalist.any { it.fid == fesData.fid!!})
         {
             stampButton.setImageResource(R.drawable.stamp_ok)
-        }else
+        }else if(isGuest)
+        {
+            stampButton.setImageResource(R.drawable.stamp_no)
+            stampButton.isEnabled  = false
+        }
+        else
         {
             stampButton.setImageResource(R.drawable.stamp_no)
             val currentDate = LocalDate.now() // 현재 날짜와 시간
