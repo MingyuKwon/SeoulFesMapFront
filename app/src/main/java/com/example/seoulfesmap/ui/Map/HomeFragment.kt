@@ -2,6 +2,7 @@ package com.example.seoulfesmap.ui.Map
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
@@ -22,6 +23,7 @@ import com.example.seoulfesmap.databinding.FragmentHomeBinding
 import com.example.seoulfesmap.isGuest
 import com.example.seoulfesmap.ui.Popup.DialogListener
 import com.example.seoulfesmap.ui.Popup.FesDataDialogFragment
+import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.MapFragment
@@ -83,26 +85,19 @@ class HomeFragment : Fragment(), DialogListener {
     }
 
     @SuppressLint("MissingPermission")
-    fun initializeMapInCurrentLocation()
-    {
+    fun initializeMapInCurrentLocation() {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        val locationManager: LocationManager by lazy {
-            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            location?.let {
+                val latitude = it.latitude
+                val longitude = it.longitude
+                appStaticData.currentLocation = LatLng(latitude, longitude)
+                PinMarkerInMap(latitude, longitude, 12.0)
+            }
+        }.addOnFailureListener {
+            PinMarkerInMap(37.5408, 127.0793, 12.0)
         }
-
-        val locationListener = LocationListener { location ->
-            val latitude = location.latitude
-            val longitude = location.longitude
-            appStaticData.currentLocation = LatLng(latitude, longitude)
-            PinMarkerInMap(latitude, longitude,12.0)
-        }
-
-        locationManager.requestLocationUpdates(
-            LocationManager.GPS_PROVIDER,
-            1000L,
-            10.0F,
-            locationListener
-        )
     }
 
     fun initializeMapLocation()
